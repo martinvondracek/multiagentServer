@@ -21,6 +21,8 @@ public slots:
     void stopMappingClicked(); //zastavi mapovanie
 private:
     Ui::serverForm widget;
+    bool serverStarted = false; //ci je spusteny server
+    bool mappingNow = false; //ci je spustene mapovanie
 };
 
 #endif	/* _SERVERFORM_H */
