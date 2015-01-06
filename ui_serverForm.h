@@ -158,6 +158,9 @@ public:
 
         retranslateUi(serverForm);
         QObject::connect(koniecButton, SIGNAL(clicked()), serverForm, SLOT(close()));
+        QObject::connect(startServerButton, SIGNAL(clicked()), serverForm, SLOT(startServerClicked()));
+        QObject::connect(startMappingButton, SIGNAL(clicked()), serverForm, SLOT(startMappingClicked()));
+        QObject::connect(stopMappingButton, SIGNAL(clicked()), serverForm, SLOT(stopMappingClicked()));
 
         QMetaObject::connectSlotsByName(serverForm);
     } // setupUi

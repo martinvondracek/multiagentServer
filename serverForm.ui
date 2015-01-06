@@ -224,10 +224,63 @@
      <y>365</y>
     </hint>
     <hint type="destinationlabel">
-     <x>221</x>
-     <y>195</y>
+     <x>255</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>startServerButton</sender>
+   <signal>clicked()</signal>
+   <receiver>serverForm</receiver>
+   <slot>startServerClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>260</x>
+     <y>207</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>207</x>
+     <y>206</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>startMappingButton</sender>
+   <signal>clicked()</signal>
+   <receiver>serverForm</receiver>
+   <slot>startMappingClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>135</x>
+     <y>289</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>55</x>
+     <y>328</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>stopMappingButton</sender>
+   <signal>clicked()</signal>
+   <receiver>serverForm</receiver>
+   <slot>stopMappingClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>307</x>
+     <y>286</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>218</x>
+     <y>322</y>
     </hint>
    </hints>
   </connection>
  </connections>
+ <slots>
+  <slot>startServerClicked()</slot>
+  <slot>startMappingClicked()</slot>
+  <slot>stopMappingClicked()</slot>
+ </slots>
 </ui>

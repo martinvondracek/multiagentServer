@@ -15,6 +15,10 @@ class serverForm : public QDialog {
 public:
     serverForm();
     virtual ~serverForm();
+public slots:
+    void startServerClicked(); //spusti server
+    void startMappingClicked(); //spusti mapovanie
+    void stopMappingClicked(); //zastavi mapovanie
 private:
     Ui::serverForm widget;
 };

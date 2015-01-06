@@ -11,5 +11,17 @@ serverForm::serverForm() {
     widget.setupUi(this);
 }
 
+void serverForm::startServerClicked() {
+    
+}
+
+void serverForm::startMappingClicked() {
+    
+}
+
+void serverForm::stopMappingClicked() {
+    
+}
+
 serverForm::~serverForm() {
 }

@@ -22,25 +22,38 @@ static const uint qt_meta_data_serverForm[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       0,    0, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
        0,       // signalCount
 
+ // slots: signature, parameters, type, tag, flags
+      12,   11,   11,   11, 0x0a,
+      33,   11,   11,   11, 0x0a,
+      55,   11,   11,   11, 0x0a,
+
        0        // eod
 };
 
 static const char qt_meta_stringdata_serverForm[] = {
-    "serverForm\0"
+    "serverForm\0\0startServerClicked()\0"
+    "startMappingClicked()\0stopMappingClicked()\0"
 };
 
 void serverForm::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
-    Q_UNUSED(_o);
-    Q_UNUSED(_id);
-    Q_UNUSED(_c);
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        Q_ASSERT(staticMetaObject.cast(_o));
+        serverForm *_t = static_cast<serverForm *>(_o);
+        switch (_id) {
+        case 0: _t->startServerClicked(); break;
+        case 1: _t->startMappingClicked(); break;
+        case 2: _t->stopMappingClicked(); break;
+        default: ;
+        }
+    }
     Q_UNUSED(_a);
 }
 
@@ -75,6 +88,11 @@ int serverForm::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = QDialog::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 3)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 3;
+    }
     return _id;
 }
 QT_END_MOC_NAMESPACE
