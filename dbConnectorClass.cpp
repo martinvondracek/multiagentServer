@@ -17,6 +17,7 @@
 #include <cppconn/exception.h>
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
+#include <cppconn/prepared_statement.h>
 
 dbConnectorClass::dbConnectorClass() {
     
@@ -32,6 +33,7 @@ void dbConnectorClass::test() {
         sql::Connection *con;
         sql::Statement *stmt;
         sql::ResultSet *res;
+        sql::PreparedStatement *pstmt;
 
         /* Create a connection */
         driver = get_driver_instance();
@@ -47,7 +49,9 @@ void dbConnectorClass::test() {
         std::cout << con->getSchema() << "\n";
         stmt = con->createStatement();
         std::cout << "tu5\n";
-        //stmt->executeQuery("insert into spustenia(datestarted) values('defalut')");
+        pstmt = con->prepareStatement("INSERT INTO spustenia(timestarted) VALUES(null)");
+        //pstmt->setString(1, "CURRENT_TIMESTAMP");
+        pstmt->executeUpdate();
         res = stmt->executeQuery("SELECT * from spustenia");
         std::cout << "tu6\n";
         while (res->next()) {
