@@ -6,8 +6,10 @@
  */
 
 #include "serverForm.h"
+#include "dbConnectorClass.h"
 
 #include <stdio.h>      
+#include <unistd.h>
 #include <sys/types.h>
 #include <ifaddrs.h>
 #include <netinet/in.h> 
@@ -19,7 +21,7 @@
 serverForm::serverForm() {
     widget.setupUi(this);
     widget.infoLabel->setText("");
-    widget.portEdit->setText("7677");
+    widget.portEdit->setText("17005");
     widget.maxAgentEdit->setText("5");
     widget.agentCountLabel->setText("0");
     widget.startMappingButton->setEnabled(false);
@@ -56,19 +58,34 @@ serverForm::serverForm() {
 }
 
 void serverForm::startServerClicked() {
-    widget.portEdit->setEnabled(false);
-    widget.maxAgentEdit->setEnabled(false);
-    widget.startMappingButton->setEnabled(true);
-    widget.stopMappingButton->setEnabled(false);
-    widget.startServerButton->setEnabled(false);
+    std::cout << "startServerClicked\n";
     
-    serverStarted = true;
-    if (serverStarted) {
+    socket = new socketClass(widget.portEdit->text().toInt());
+    socket->connect();
+    
+    if (socket->getConnected()) {
+        widget.portEdit->setEnabled(false);
+        widget.maxAgentEdit->setEnabled(false);
+        widget.startMappingButton->setEnabled(true);
+        widget.stopMappingButton->setEnabled(false);
+        widget.startServerButton->setEnabled(false);
+        
+        // TODO spustit nove vlakno na cakanie
+
+        serverStarted = true;
         widget.infoLabel->setText("Server uspesne spusteny");
+        std::cout << "server started on port " << socket->getPortNumber() << "\n";
+    } else {
+        std::cout << "failed to start server\n";
     }
+    
+    dbConnectorClass *db = new dbConnectorClass();
+    db->test();
 }
 
 void serverForm::startMappingClicked() {
+    std::cout << "startMappingClicked\n";
+    
     if (!serverStarted) {
         widget.infoLabel->setText("Najskor spustite server");
         return;
@@ -82,10 +99,11 @@ void serverForm::startMappingClicked() {
     widget.infoLabel->setText("Mapovanie spustene");
     widget.startMappingButton->setEnabled(false);
     widget.stopMappingButton->setEnabled(true);
-    
 }
 
 void serverForm::stopMappingClicked() {
+    std::cout << "stopMappingClicked\n";
+    
     if (!serverStarted) {
         widget.infoLabel->setText("Najskor spustite server");
         return;

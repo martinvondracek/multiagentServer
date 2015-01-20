@@ -9,6 +9,11 @@
 #define	_SERVERFORM_H
 
 #include "ui_serverForm.h"
+#include "socketClass.h"
+
+struct komunikacia_shm {
+    socketClass * socket; //objekt pre komunikáciu cez socket
+};
 
 class serverForm : public QDialog {
     Q_OBJECT
@@ -23,6 +28,8 @@ private:
     Ui::serverForm widget;
     bool serverStarted = false; //ci je spusteny server
     bool mappingNow = false; //ci je spustene mapovanie
+    socketClass * socket; //objekt pre komunikáciu cez socket
+    komunikacia_shm *shm; //
 };
 
 #endif	/* _SERVERFORM_H */

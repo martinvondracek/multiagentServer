@@ -4,8 +4,9 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>ServerClass.h</itemPath>
+      <itemPath>dbConnectorClass.h</itemPath>
       <itemPath>serverForm.h</itemPath>
+      <itemPath>socketClass.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -15,9 +16,10 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>ServerClass.cpp</itemPath>
+      <itemPath>dbConnectorClass.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
       <itemPath>serverForm.cpp</itemPath>
+      <itemPath>socketClass.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -43,10 +45,15 @@
         <modules>core gui widgets</modules>
       </qt>
       <compileType>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibLibItem>mysqlcppconn</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
-      <item path="ServerClass.cpp" ex="false" tool="1" flavor2="0">
+      <item path="dbConnectorClass.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="ServerClass.h" ex="false" tool="3" flavor2="0">
+      <item path="dbConnectorClass.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -55,6 +62,10 @@
       <item path="serverForm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="serverForm.ui" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="socketClass.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="socketClass.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="4">
@@ -81,9 +92,9 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="ServerClass.cpp" ex="false" tool="1" flavor2="0">
+      <item path="dbConnectorClass.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="ServerClass.h" ex="false" tool="3" flavor2="0">
+      <item path="dbConnectorClass.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -92,6 +103,10 @@
       <item path="serverForm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="serverForm.ui" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="socketClass.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="socketClass.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
