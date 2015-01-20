@@ -24,10 +24,6 @@ dbConnectorClass::dbConnectorClass() {
 }
 
 void dbConnectorClass::test() {
-//    printf("tu");
-//    std::cout << "Running 'SELECT 'Hello World!' » AS _message'...";
-    std::cout << "tu\n";
-
     try {
         sql::Driver *driver;
         sql::Connection *con;
@@ -37,27 +33,21 @@ void dbConnectorClass::test() {
 
         /* Create a connection */
         driver = get_driver_instance();
-        std::cout << driver->getName() << "\n";
-        std::cout << "tu2\n";
         con = driver->connect("tcp://localhost:3306", "martin", "heslo");
-//        std::cout << "schema" << con->getSchema() << "\n";
-//        std::cout << con->isReadOnly() << "read\n";
         /* Connect to the MySQL test database */
-        std::cout << "tu3\n";
         con->setSchema("diplomovka");
-        std::cout << "tu4\n";
-        std::cout << con->getSchema() << "\n";
-        stmt = con->createStatement();
-        std::cout << "tu5\n";
+        
         pstmt = con->prepareStatement("INSERT INTO spustenia(timestarted) VALUES(null)");
         //pstmt->setString(1, "CURRENT_TIMESTAMP");
-        pstmt->executeUpdate();
+        //pstmt->executeUpdate();
+        
+        stmt = con->createStatement();
         res = stmt->executeQuery("SELECT * from spustenia");
-        std::cout << "tu6\n";
         while (res->next()) {
             std::cout << res->getString("id") << " : " << res->getString("timestarted") << "\n";
         }
-        std::cout << "tu7\n";
+        
+        delete pstmt;
         delete res;
         delete stmt;
         delete con;
@@ -74,5 +64,6 @@ void dbConnectorClass::test() {
 }
 
 dbConnectorClass::~dbConnectorClass() {
+    std::cout << "destruktor dbConnectorClass\n";
 }
 
