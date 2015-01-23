@@ -80,7 +80,8 @@ void serverForm::startServerClicked() {
     }
     
     dbConnectorClass *db = new dbConnectorClass();
-    db->test();
+    std::cout << "connected " << db->isConnected() << "\n";
+    //db->test();
 }
 
 void serverForm::startMappingClicked() {
