@@ -16,6 +16,9 @@
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
 
+#include "polohaClass.h"
+#include "prekazkaClass.h"
+
 #define DB_HOST "tcp://localhost:3306"
 #define DB_USERNAME "martin"
 #define DB_PASSWORD "heslo"
@@ -30,8 +33,8 @@ public:
     int getNewSpustenieId(); //vytvori a vrati nove ID spustenia
     int getNewPrekazkaId(int idSpustenia); //zisti ake je aktualne najvyssie cislo prekazky
                             //pre dane spustenie a vrati o 1 vacsie
-    int savePoloha(); // ulozi polohu robota do DB pre spustenie
-    int savePrekazka(); // ulozi prekazku do DB pre spustenie
+    int savePoloha(polohaClass poloha); // ulozi polohu robota do DB pre spustenie
+    int savePrekazka(prekazkaClass prekazka); // ulozi prekazku do DB pre spustenie
 private:
     bool connected = false;
     

@@ -97,7 +97,7 @@ int dbConnectorClass::getNewPrekazkaId(int idSpustenia) {
     return newId;
 }
 
-int dbConnectorClass::savePoloha() {
+int dbConnectorClass::savePoloha(polohaClass poloha) {
     if (!connected) {
         return -1;
     }
@@ -106,7 +106,7 @@ int dbConnectorClass::savePoloha() {
     return -1;
 }
 
-int dbConnectorClass::savePrekazka() {
+int dbConnectorClass::savePrekazka(prekazkaClass prekazka) {
     if (!connected) {
         return -1;
     }
@@ -151,7 +151,7 @@ int dbConnectorClass::createTables() {
         pstmt->executeUpdate();
 
         // vytvorime tabulku prekazky ak neexistuje
-        pstmt = con->prepareStatement("CREATE TABLE IF NOT EXISTS `prekazky` (`id` int(11) NOT NULL AUTO_INCREMENT,`id_spustenia` int(11) NOT NULL,`prekazka` int(11) NOT NULL, `x_rob` float NOT NULL, `y_rob` float NOT NULL, `fi_rob` float NOT NULL,  `x_p` float NOT NULL,  `y_p` float NOT NULL,  `naraz_vpravo` tinyint(1) NOT NULL,  `naraz_vlavo` tinyint(1) NOT NULL,  `naraz_vpredu` tinyint(1) NOT NULL, PRIMARY KEY (id)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='ukladame sem suradnice prekazok' AUTO_INCREMENT=1");
+        pstmt = con->prepareStatement("CREATE TABLE IF NOT EXISTS `prekazky` (`id` int(11) NOT NULL AUTO_INCREMENT,`id_spustenia` int(11) NOT NULL,`prekazka` int(11) NOT NULL,`robot` int(11) NOT NULL, `x_rob` float NOT NULL, `y_rob` float NOT NULL, `fi_rob` float NOT NULL,  `x_p` float NOT NULL,  `y_p` float NOT NULL,  `naraz_vpravo` tinyint(1) NOT NULL,  `naraz_vlavo` tinyint(1) NOT NULL,  `naraz_vpredu` tinyint(1) NOT NULL, PRIMARY KEY (id)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='ukladame sem suradnice prekazok' AUTO_INCREMENT=1");
         pstmt->executeUpdate();
 
         delete pstmt;
