@@ -29,6 +29,7 @@ public:
     dbConnectorClass();
     virtual ~dbConnectorClass();
     void test();
+    int connect();
     bool isConnected(); // vrati ci je pripojeny k DB
     int getNewSpustenieId(); //vytvori a vrati nove ID spustenia
     int getNewPrekazkaId(int idSpustenia); //zisti ake je aktualne najvyssie cislo prekazky
@@ -41,7 +42,6 @@ private:
     sql::Driver *driver;
     sql::Connection *con;
     
-    int connect();
     int createTables();
 };
 
