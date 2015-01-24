@@ -210,6 +210,10 @@ prekazkaClass * prekazkaClass::fromJson(const char *json) {
     return new prekazkaClass(id, id_spustenia, prekazka, robot, x_rob, y_rob, fi_rob, x_p, y_p, naraz_vpravo, naraz_vlavo, naraz_vpredu);
 }
 
+const char * prekazkaClass::toString() {
+    return toJson();
+}
+
 prekazkaClass::~prekazkaClass() {
 }
 

@@ -22,6 +22,7 @@ public:
     
     const char * toJson();
     static polohaClass * fromJson(const char *json);
+    const char * toString();
     
     float GetFi();
     void SetFi(float fi);

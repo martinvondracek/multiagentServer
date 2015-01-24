@@ -24,6 +24,7 @@ public:
     
     const char * toJson();
     static prekazkaClass * fromJson(const char *json);
+    const char * toString();
     
     float GetFi_rob();
     void SetFi_rob(float fi_rob);

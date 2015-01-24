@@ -120,6 +120,10 @@ polohaClass * polohaClass::fromJson(const char *json) {
     return new polohaClass(id, id_spustenia, robot, x, y, fi);
 }
 
+const char * polohaClass::toString() {
+    return toJson();
+}
+
 polohaClass::~polohaClass() {
 }
 
