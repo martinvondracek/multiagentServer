@@ -21,24 +21,95 @@ bool dbConnectorClass::isConnected() {
 }
 
 int dbConnectorClass::getNewSpustenieId() {
-    // TODO implementovat
+    if (!connected) {
+        return -1;
+    }
     
-    return -1;
+    sql::Statement *stmt;
+    sql::ResultSet *res;
+    sql::PreparedStatement *pstmt;
+    int newId;
+    try {
+        stmt = con->createStatement();
+        // vytvorime novy riadok
+        pstmt = con->prepareStatement("INSERT INTO spustenia(timestarted) VALUES(null)");
+        pstmt->executeQuery();
+        // nove id je to najvacsie
+        pstmt = con->prepareStatement("SELECT max(id) from spustenia");
+        res = pstmt->executeQuery();
+        while (res->next()) {
+            newId = atoi(res->getString("max(id)").c_str());
+        }
+
+        delete res;
+        delete stmt;
+        delete pstmt;
+    } catch (sql::SQLException &e) {
+        std::cout << "exception\n";
+        std::cout << "# ERR: SQLException in " << __FILE__;
+        std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << "\n";
+        std::cout << "# ERR: " << e.what() << "\n";
+        std::cout << " (MySQL error code: " << e.getErrorCode() << "\n";
+        std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
+        delete res;
+        delete stmt;
+        delete pstmt;
+        return -1;
+    }
+    return newId;
 }
 
-int dbConnectorClass::getNewPrekazkaId() {
-    // TODO implementovat
+int dbConnectorClass::getNewPrekazkaId(int idSpustenia) {
+    if (!connected) {
+        return -1;
+    }
     
-    return -1;
+    // novu prekazku dostaneme tak ze najdeve navyssie cislo a to zvysime o 1
+    sql::Statement *stmt;
+    sql::ResultSet *res;
+    sql::PreparedStatement *pstmt;
+    int newId;
+    try {
+        stmt = con->createStatement();
+        pstmt = con->prepareStatement("SELECT max(prekazka) from prekazky where id_spustenia=?");
+        pstmt->setInt(1, idSpustenia);
+        res = pstmt->executeQuery();
+        while (res->next()) {
+            newId = atoi(res->getString("max(prekazka)").c_str());
+            newId += 1;
+        }
+
+        delete res;
+        delete stmt;
+        delete pstmt;
+    } catch (sql::SQLException &e) {
+        std::cout << "exception\n";
+        std::cout << "# ERR: SQLException in " << __FILE__;
+        std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << "\n";
+        std::cout << "# ERR: " << e.what() << "\n";
+        std::cout << " (MySQL error code: " << e.getErrorCode() << "\n";
+        std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
+        delete res;
+        delete stmt;
+        delete pstmt;
+        return -1;
+    }
+    return newId;
 }
 
 int dbConnectorClass::savePoloha() {
+    if (!connected) {
+        return -1;
+    }
     // TODO implementovat
     
     return -1;
 }
 
 int dbConnectorClass::savePrekazka() {
+    if (!connected) {
+        return -1;
+    }
     // TODO implementovat
     
     return -1;
@@ -66,6 +137,10 @@ int dbConnectorClass::connect() {
 int dbConnectorClass::createTables() {
     sql::PreparedStatement *pstmt;
     
+    if (!connected) {
+        return -1;
+    }
+    
     try {
         // vytvorime tabulku spustenia ak neexistuje
         pstmt = con->prepareStatement("CREATE TABLE IF NOT EXISTS `spustenia` (`id` int(11) NOT NULL AUTO_INCREMENT,`timestarted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='uklada id spustenia mapovania' AUTO_INCREMENT=1");
@@ -88,13 +163,15 @@ int dbConnectorClass::createTables() {
         std::cout << "# ERR: " << e.what() << "\n";
         std::cout << " (MySQL error code: " << e.getErrorCode() << "\n";
         std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
-        connected = false;
         delete pstmt;
         return -1;
     }
 }
 
 void dbConnectorClass::test() {
+    if (!connected) {
+        return;
+    }
     return;
     try {
         sql::Driver *driver;

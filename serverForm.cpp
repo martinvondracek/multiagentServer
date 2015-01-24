@@ -80,7 +80,9 @@ void serverForm::startServerClicked() {
     }
     
     dbConnectorClass *db = new dbConnectorClass();
-    std::cout << "connected " << db->isConnected() << "\n";
+    //std::cout << "connected " << db->isConnected() << "\n";
+    //std::cout << "newSpustenieId " << db->getNewSpustenieId() << "\n";
+    std::cout << "newPrekazkaId " << db->getNewPrekazkaId(18) << "\n";
     //db->test();
 }
 

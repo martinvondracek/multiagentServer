@@ -42,6 +42,7 @@ int socketClass::connect() {
     
     // TODO implementovat
     connected = true;
+    return -1;
 }
 
 void socketClass::test() {

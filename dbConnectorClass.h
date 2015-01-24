@@ -28,7 +28,7 @@ public:
     void test();
     bool isConnected(); // vrati ci je pripojeny k DB
     int getNewSpustenieId(); //vytvori a vrati nove ID spustenia
-    int getNewPrekazkaId(); //zisti ake je aktualne najvyssie cislo prekazky
+    int getNewPrekazkaId(int idSpustenia); //zisti ake je aktualne najvyssie cislo prekazky
                             //pre dane spustenie a vrati o 1 vacsie
     int savePoloha(); // ulozi polohu robota do DB pre spustenie
     int savePrekazka(); // ulozi prekazku do DB pre spustenie
