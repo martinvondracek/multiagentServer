@@ -220,10 +220,14 @@ void dbConnectorClass::test() {
     }
     
     polohaClass *pol = new polohaClass(0, 2, 1, 1.2, 1.2, 3.14);
-    savePoloha(pol);
+    const char * pom = pol->toJson();
+    polohaClass *pol2 = polohaClass::fromJson(pom);
+    std::cout << pol2->GetX() << "\n";
     
     prekazkaClass *prk = new prekazkaClass(0, 2, 1, 2, 1.2, 1.2, 3.14, 1.2, 1.2, 1, 0, 1);
-    savePrekazka(prk);
+    const char * pom2 = prk->toJson();
+    prekazkaClass *prk2 = prekazkaClass::fromJson(pom2);
+    std::cout << prk2->GetId_spustenia() << "\n";
 }
 
 dbConnectorClass::~dbConnectorClass() {

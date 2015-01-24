@@ -82,8 +82,9 @@ void serverForm::startServerClicked() {
     dbConnectorClass *db = new dbConnectorClass();
     //std::cout << "connected " << db->isConnected() << "\n";
     //std::cout << "newSpustenieId " << db->getNewSpustenieId() << "\n";
-    std::cout << "newPrekazkaId " << db->getNewPrekazkaId(18) << "\n";
-    //db->test();
+    //std::cout << "newPrekazkaId " << db->getNewPrekazkaId(18) << "\n";
+    db->test();
+    delete db;
 }
 
 void serverForm::startMappingClicked() {
@@ -131,5 +132,6 @@ serverForm::~serverForm() {
             // TODO zastavime mapovanie
         }
         // TODO ukoncime server
+        delete socket;
     }
 }

@@ -80,5 +80,6 @@ void socketClass::test() {
 }
 
 socketClass::~socketClass() {
+    std::cout << "destruktor socketClass\n";
 }
 

@@ -8,10 +8,20 @@
 #ifndef POLOHACLASS_H
 #define	POLOHACLASS_H
 
+#include <rapidjson/document.h>
+#include <cstdio>
+#include <string>
+#include <algorithm>
+#include <unistd.h>
+#include <iostream>
+
 class polohaClass {
 public:
     polohaClass(int id, int id_spustenia, int robot, float x, float y, float fi);
     virtual ~polohaClass();
+    
+    const char * toJson();
+    static polohaClass * fromJson(const char *json);
     
     float GetFi();
     void SetFi(float fi);

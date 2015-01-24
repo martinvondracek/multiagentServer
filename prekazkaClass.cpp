@@ -120,6 +120,96 @@ void prekazkaClass::SetY_rob(float y_rob) {
     this->y_rob = y_rob;
 }
 
+const char * prekazkaClass::toJson() {
+    std::string pom;
+    
+    std::string json = "{\n";
+    json.append("\"CLASSTYPE\" : \"PREKAZKACLASS\"");
+    
+    json.append(",\n\"ID\" : ");
+    json.append(std::to_string(id));
+    
+    json.append(",\n\"ID_SPUSTENIA\" : ");
+    json.append(std::to_string(id_spustenia));
+    
+    json.append(",\n\"PREKAZKA\" : ");
+    json.append(std::to_string(prekazka));
+    
+    json.append(",\n\"ROBOT\" : ");
+    json.append(std::to_string(robot));
+    
+    json.append(",\n\"X_ROB\" : ");
+    pom = std::to_string(x_rob);
+    std::replace( pom.begin(), pom.end(), ',', '.');
+    json.append(pom);
+    
+    json.append(",\n\"Y_ROB\" : ");
+    pom = std::to_string(y_rob);
+    std::replace( pom.begin(), pom.end(), ',', '.');
+    json.append(pom);
+    
+    json.append(",\n\"FI_ROB\" : ");
+    pom = std::to_string(fi_rob);
+    std::replace( pom.begin(), pom.end(), ',', '.');
+    json.append(pom);
+    
+    json.append(",\n\"X_P\" : ");
+    pom = std::to_string(x_p);
+    std::replace( pom.begin(), pom.end(), ',', '.');
+    json.append(pom);
+    
+    json.append(",\n\"Y_P\" : ");
+    pom = std::to_string(y_p);
+    std::replace( pom.begin(), pom.end(), ',', '.');
+    json.append(pom);
+    
+    json.append(",\n\"NARAZ_VPRAVO\" : ");
+    json.append(naraz_vpravo ? "true" : "false");
+    
+    json.append(",\n\"NARAZ_VLAVO\" : ");
+    json.append(naraz_vlavo ? "true" : "false");
+    
+    json.append(",\n\"NARAZ_VPREDU\" : ");
+    json.append(naraz_vpredu ? "true" : "false");
+    
+    json.append("\n}\n");
+        
+    return json.c_str();
+}
+
+prekazkaClass * prekazkaClass::fromJson(const char *json) {
+    int id;
+    int id_spustenia;
+    int prekazka;
+    int robot;
+    float x_rob;
+    float y_rob;
+    float fi_rob;
+    float x_p;
+    float y_p;
+    bool naraz_vpravo;
+    bool naraz_vlavo;
+    bool naraz_vpredu;
+    
+    rapidjson::Document document;
+    document.Parse<0>(json);
+    
+    id = document["ID"].GetInt();
+    id_spustenia = document["ID_SPUSTENIA"].GetInt();
+    prekazka = document["PREKAZKA"].GetInt();
+    robot = document["ROBOT"].GetInt();
+    x_rob = document["X_ROB"].GetDouble();
+    y_rob = document["Y_ROB"].GetDouble();
+    fi_rob = document["FI_ROB"].GetDouble();
+    x_p = document["X_P"].GetDouble();
+    y_p = document["Y_P"].GetDouble();
+    naraz_vpravo = document["NARAZ_VPRAVO"].GetBool();
+    naraz_vlavo = document["NARAZ_VLAVO"].GetBool();
+    naraz_vpredu = document["NARAZ_VPREDU"].GetBool();
+    
+    return new prekazkaClass(id, id_spustenia, prekazka, robot, x_rob, y_rob, fi_rob, x_p, y_p, naraz_vpravo, naraz_vlavo, naraz_vpredu);
+}
+
 prekazkaClass::~prekazkaClass() {
 }
 

@@ -8,12 +8,22 @@
 #ifndef PREKAZKACLASS_H
 #define	PREKAZKACLASS_H
 
+#include <rapidjson/document.h>
+#include <cstdio>
+#include <string>
+#include <algorithm>
+#include <unistd.h>
+#include <iostream>
+
 class prekazkaClass {
 public:
     prekazkaClass(int id, int id_spustenia, int prekazka, int robot, float x_rob,
             float y_rob, float fi_rob, float x_p, float y_p, bool naraz_vpravo,
             bool naraz_vlavo, bool naraz_vpredu);
     virtual ~prekazkaClass();
+    
+    const char * toJson();
+    static prekazkaClass * fromJson(const char *json);
     
     float GetFi_rob();
     void SetFi_rob(float fi_rob);
