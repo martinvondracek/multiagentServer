@@ -34,8 +34,8 @@ public:
     int getNewSpustenieId(); //vytvori a vrati nove ID spustenia
     int getNewPrekazkaId(int idSpustenia); //zisti ake je aktualne najvyssie cislo prekazky
                             //pre dane spustenie a vrati o 1 vacsie
-    int savePoloha(polohaClass poloha); // ulozi polohu robota do DB pre spustenie
-    int savePrekazka(prekazkaClass prekazka); // ulozi prekazku do DB pre spustenie
+    int savePoloha(polohaClass *poloha); // ulozi polohu robota do DB pre spustenie
+    int savePrekazka(prekazkaClass *prekazka); // ulozi prekazku do DB pre spustenie
 private:
     bool connected = false;
     

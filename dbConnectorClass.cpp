@@ -97,22 +97,68 @@ int dbConnectorClass::getNewPrekazkaId(int idSpustenia) {
     return newId;
 }
 
-int dbConnectorClass::savePoloha(polohaClass poloha) {
+int dbConnectorClass::savePoloha(polohaClass *poloha) {
     if (!connected) {
         return -1;
     }
-    // TODO implementovat
     
-    return -1;
+    sql::PreparedStatement *pstmt;
+    try {
+        pstmt = con->prepareStatement("INSERT INTO `polohy`(`id_spustenia`, `robot`, `x`, `y`, `fi`) VALUES (?,?,?,?,?)");
+        pstmt->setInt(1, poloha->GetId_spustenia());
+        pstmt->setInt(2, poloha->GetRobot());
+        pstmt->setDouble(3, poloha->GetX());
+        pstmt->setDouble(4, poloha->GetY());
+        pstmt->setDouble(5, poloha->GetFi());
+        pstmt->executeQuery();
+
+        delete pstmt;
+    } catch (sql::SQLException &e) {
+        std::cout << "exception\n";
+        std::cout << "# ERR: SQLException in " << __FILE__;
+        std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << "\n";
+        std::cout << "# ERR: " << e.what() << "\n";
+        std::cout << " (MySQL error code: " << e.getErrorCode() << "\n";
+        std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
+        delete pstmt;
+        return -1;
+    }
+    return 0;
 }
 
-int dbConnectorClass::savePrekazka(prekazkaClass prekazka) {
+int dbConnectorClass::savePrekazka(prekazkaClass *prekazka) {
     if (!connected) {
         return -1;
     }
-    // TODO implementovat
     
-    return -1;
+    sql::PreparedStatement *pstmt;
+    try {
+        pstmt = con->prepareStatement("INSERT INTO `prekazky`(`id_spustenia`, `prekazka`, `robot`, `x_rob`, `y_rob`, `fi_rob`, `x_p`, `y_p`, `naraz_vpravo`, `naraz_vlavo`, `naraz_vpredu`) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+        pstmt->setInt(1, prekazka->GetId_spustenia());
+        pstmt->setInt(2, prekazka->GetPrekazka());
+        pstmt->setInt(3, prekazka->GetRobot());
+        pstmt->setDouble(4, prekazka->GetX_rob());
+        pstmt->setDouble(5, prekazka->GetY_rob());
+        pstmt->setDouble(6, prekazka->GetFi_rob());
+        pstmt->setDouble(7, prekazka->GetX_p());
+        pstmt->setDouble(8, prekazka->GetY_p());
+        pstmt->setBoolean(9, prekazka->IsNaraz_vpravo());
+        pstmt->setBoolean(10, prekazka->IsNaraz_vlavo());
+        pstmt->setBoolean(11, prekazka->IsNaraz_vpredu());
+        pstmt->executeQuery();
+
+        delete pstmt;
+    } catch (sql::SQLException &e) {
+        std::cout << "exception\n";
+        std::cout << "# ERR: SQLException in " << __FILE__;
+        std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << "\n";
+        std::cout << "# ERR: " << e.what() << "\n";
+        std::cout << " (MySQL error code: " << e.getErrorCode() << "\n";
+        std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
+        delete pstmt;
+        return -1;
+    }
+    return 0;
 }
 
 int dbConnectorClass::connect() {
@@ -172,44 +218,12 @@ void dbConnectorClass::test() {
     if (!connected) {
         return;
     }
-    return;
-    try {
-        sql::Driver *driver;
-        sql::Connection *con;
-        sql::Statement *stmt;
-        sql::ResultSet *res;
-        sql::PreparedStatement *pstmt;
-
-        driver = get_driver_instance();
-        con = driver->connect("tcp://localhost:3306", "martin", "heslo");
-        con->setSchema("diplomovka");
-        
-        pstmt = con->prepareStatement("INSERT INTO spustenia(timestarted) VALUES(null)");
-        // INSERT INTO `polohy`(`id_spustenia`, `robot`, `x`, `y`, `fi`) VALUES (18,1,0,1,0);
-        // INSERT INTO `prekazky`(`id_spustenia`, `prekazka`, `x_rob`, `y_rob`, `fi_rob`, `x_p`, `y_p`, `naraz_vpravo`, `naraz_vlavo`, `naraz_vpredu`) VALUES (18,1,0,1,0,1.3,0,0,0,1)
-        //pstmt->setString(1, "CURRENT_TIMESTAMP");
-        //pstmt->executeUpdate();
-        
-        stmt = con->createStatement();
-        res = stmt->executeQuery("SELECT * from spustenia");
-        while (res->next()) {
-            std::cout << res->getString("id") << " : " << res->getString("timestarted") << "\n";
-        }
-        
-        delete pstmt;
-        delete res;
-        delete stmt;
-        delete con;
-
-    } catch (sql::SQLException &e) {
-        std::cout << "exception\n";
-          std::cout << "# ERR: SQLException in " << __FILE__;
-          std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << "\n";
-          std::cout << "# ERR: " << e.what() << "\n";
-          std::cout << " (MySQL error code: " << e.getErrorCode() << "\n";
-          std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
-    }
-
+    
+    polohaClass *pol = new polohaClass(0, 2, 1, 1.2, 1.2, 3.14);
+    savePoloha(pol);
+    
+    prekazkaClass *prk = new prekazkaClass(0, 2, 1, 2, 1.2, 1.2, 3.14, 1.2, 1.2, 1, 0, 1);
+    savePrekazka(prk);
 }
 
 dbConnectorClass::~dbConnectorClass() {
