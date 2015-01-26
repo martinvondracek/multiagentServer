@@ -28,7 +28,7 @@ public:
     int disconnect(); // odpoji sa zo socketu
     int disconnectFd(int sockfd); // odpoji zadany sockFd
     int sendJson(int sockfd, const char *jsonData);
-    const char * receiveJson(int sockfd, char *buffer, int bufSize);
+    int receiveJson(int sockfd, char *buffer, int bufSize);
     int waitAndAcceptClient();
     
     bool getConnected();

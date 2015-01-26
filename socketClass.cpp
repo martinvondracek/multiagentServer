@@ -77,16 +77,18 @@ int socketClass::sendJson(int sockfd, const char *jsonData) {
     return n; // vratime pocet poslanych
 }
 
-const char * socketClass::receiveJson(int sockfd, char *buffer, int bufSize) {
+int socketClass::receiveJson(int sockfd, char *buffer, int bufSize) {
     int n;
     
     bzero(buffer, bufSize);
     n = read(sockfd, buffer, bufSize);
     if (n < 0) {
         std::cout << "ERROR reading from socket";
+        return -1;
     }
     printf("Here is the message: %s\n", buffer);
     return buffer;
+    return 0;
 }
 
 int socketClass::waitAndAcceptClient() {
