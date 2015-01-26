@@ -221,6 +221,7 @@ void dbConnectorClass::test() {
     
     polohaClass *pol = new polohaClass(0, 2, 1, 1.2, 1.2, 3.14);
     const char * pom = pol->toJson();
+    std::cout << pom << "\n";
     polohaClass *pol2 = polohaClass::fromJson(pom);
     std::cout << pol2->GetX() << "\n";
     

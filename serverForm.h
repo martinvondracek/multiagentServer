@@ -28,7 +28,7 @@ private:
     Ui::serverForm widget;
     bool serverStarted = false; //ci je spusteny server
     bool mappingNow = false; //ci je spustene mapovanie
-    socketClass * socket; //objekt pre komunikáciu cez socket
+    socketClass * socketUtil; //objekt pre komunikáciu cez socket
     komunikacia_shm *shm; //
 };
 

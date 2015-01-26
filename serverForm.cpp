@@ -8,8 +8,7 @@
 #include "serverForm.h"
 #include "dbConnectorClass.h"
 
-#include <stdio.h>      
-#include <unistd.h>
+#include <stdio.h>
 #include <sys/types.h>
 #include <ifaddrs.h>
 #include <netinet/in.h> 
@@ -26,6 +25,8 @@ serverForm::serverForm() {
     widget.agentCountLabel->setText("0");
     widget.startMappingButton->setEnabled(false);
     widget.stopMappingButton->setEnabled(false);
+    
+    socketUtil = new socketClass();
     
     struct ifaddrs * ifAddrStruct=NULL;
     struct ifaddrs * ifa=NULL;
@@ -60,10 +61,10 @@ serverForm::serverForm() {
 void serverForm::startServerClicked() {
     std::cout << "startServerClicked\n";
     
-    socket = new socketClass(widget.portEdit->text().toInt());
-    socket->connect();
+    socketUtil->setPortNumber(widget.portEdit->text().toInt());
+    socketUtil->connect();
     
-    if (socket->getConnected()) {
+    if (socketUtil->getConnected()) {
         widget.portEdit->setEnabled(false);
         widget.maxAgentEdit->setEnabled(false);
         widget.startMappingButton->setEnabled(true);
@@ -74,17 +75,17 @@ void serverForm::startServerClicked() {
 
         serverStarted = true;
         widget.infoLabel->setText("Server uspesne spusteny");
-        std::cout << "server started on port " << socket->getPortNumber() << "\n";
     } else {
         std::cout << "failed to start server\n";
+        widget.infoLabel->setText("Nepodarilo sa spustit server");
     }
     
-    dbConnectorClass *db = new dbConnectorClass();
-    //std::cout << "connected " << db->isConnected() << "\n";
-    //std::cout << "newSpustenieId " << db->getNewSpustenieId() << "\n";
-    //std::cout << "newPrekazkaId " << db->getNewPrekazkaId(18) << "\n";
-    db->test();
-    delete db;
+//    dbConnectorClass *db = new dbConnectorClass();
+//    //std::cout << "connected " << db->isConnected() << "\n";
+//    //std::cout << "newSpustenieId " << db->getNewSpustenieId() << "\n";
+//    //std::cout << "newPrekazkaId " << db->getNewPrekazkaId(18) << "\n";
+//    //db->test();
+//    delete db;
 }
 
 void serverForm::startMappingClicked() {
@@ -124,7 +125,7 @@ void serverForm::stopMappingClicked() {
 }
 
 serverForm::~serverForm() {
-    std::cout << "destruktor serverForm";
+    std::cout << "destruktor serverForm\n";
     //ak je server spusteny tak ho zastavime
     //ak prebieha mapovanie tak ho ukoncime
     if (serverStarted) {
@@ -132,6 +133,6 @@ serverForm::~serverForm() {
             // TODO zastavime mapovanie
         }
         // TODO ukoncime server
-        delete socket;
+        delete socketUtil;
     }
 }

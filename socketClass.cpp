@@ -7,16 +7,6 @@
 
 #include "socketClass.h"
 
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h> 
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-
 socketClass::socketClass() {
     this->portNumber = 17005;
 }
@@ -41,8 +31,82 @@ int socketClass::connect() {
     std::cout << "starting socket localhost, port: " << portNumber << "\n";
     
     // TODO implementovat
+    sockfd = socket(AF_INET, SOCK_STREAM, 0); //vytvori novy socket
+    if (sockfd < 0) {
+        std::cout << "error opening socket\n";
+        return -1;
+    }
+    bzero((char *) &serv_addr, sizeof (serv_addr)); //sets all values in a buffer to zero
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = INADDR_ANY;
+    serv_addr.sin_port = htons(portNumber); //converts a port number in host byte order to a port number in network byte order
+    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof (serv_addr)) < 0) { // naviaze socket na adresu
+        std::cout << "ERROR on binding\n";
+        return -1;
+    }
+    listen(sockfd, 5); //kolko moze cakat na spojenie
+    
+    std::cout << "server started on port " << portNumber << "\n";
     connected = true;
-    return -1;
+    return 0;
+}
+
+int socketClass::disconnect() {
+    // todo odpojime zo socketu ak je pripojeny
+    if (!connected) {
+        return -1;
+    }
+    
+    close(sockfd);
+    return 0;
+}
+
+int socketClass::disconnectFd(int sockfd) {
+    close(sockfd);
+    return 0;
+}
+
+int socketClass::sendJson(int sockfd, const char *jsonData) {
+    int n;
+    
+    n = write(sockfd, jsonData, strlen(jsonData));
+    if (n < 0) {
+        std::cout << "ERROR writing to socket\n";
+        return -1;
+    }
+    return n; // vratime pocet poslanych
+}
+
+const char * socketClass::receiveJson(int sockfd, char *buffer, int bufSize) {
+    int n;
+    
+    bzero(buffer, bufSize);
+    n = read(sockfd, buffer, bufSize);
+    if (n < 0) {
+        std::cout << "ERROR reading from socket";
+    }
+    printf("Here is the message: %s\n", buffer);
+    return buffer;
+}
+
+int socketClass::waitAndAcceptClient() {
+    if (!connected) {
+        return -1;
+    }
+    
+    int newSockfd;
+    socklen_t clilen; //velkost adresy clienta
+    struct sockaddr_in cli_addr;
+    
+    clilen = sizeof (cli_addr);
+    newSockfd = accept(sockfd,
+            (struct sockaddr *) &cli_addr,
+            &clilen);
+    if (newSockfd < 0) {
+        std::cout << "ERROR on accept\n";
+    }
+    
+    return newSockfd;
 }
 
 void socketClass::test() {
@@ -81,5 +145,6 @@ void socketClass::test() {
 
 socketClass::~socketClass() {
     std::cout << "destruktor socketClass\n";
+    disconnect();
 }
 
