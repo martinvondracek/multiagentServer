@@ -20,6 +20,59 @@ bool dbConnectorClass::isConnected() {
     return connected;
 }
 
+int dbConnectorClass::connect() {
+    try {
+        driver = get_driver_instance();
+        con = driver->connect(DB_HOST, DB_USERNAME, DB_PASSWORD);
+        con->setSchema(DB_DATABASE);
+        connected = true;
+        return 0;
+    } catch (sql::SQLException &e) {
+        std::cout << "exception\n";
+        std::cout << "# ERR: SQLException in " << __FILE__;
+        std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << "\n";
+        std::cout << "# ERR: " << e.what() << "\n";
+        std::cout << " (MySQL error code: " << e.getErrorCode() << "\n";
+        std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
+        connected = false;
+        return -1;
+    }
+}
+
+int dbConnectorClass::createTables() {
+    sql::PreparedStatement *pstmt;
+    
+    if (!connected) {
+        return -1;
+    }
+    
+    try {
+        // vytvorime tabulku spustenia ak neexistuje
+        pstmt = con->prepareStatement("CREATE TABLE IF NOT EXISTS `spustenia` (`id` int(11) NOT NULL AUTO_INCREMENT,`timestarted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='uklada id spustenia mapovania' AUTO_INCREMENT=1");
+        pstmt->executeUpdate();
+
+        // vytvorime tabulku polohy ak neexistuje
+        pstmt = con->prepareStatement("CREATE TABLE IF NOT EXISTS `polohy` (`id` int(11) NOT NULL AUTO_INCREMENT,`id_spustenia` int(11) NOT NULL,`robot` int(11) NOT NULL,`x` float NOT NULL,`y` float NOT NULL,`fi` float NOT NULL, PRIMARY KEY (id)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='ukladame polohy robota' AUTO_INCREMENT=1");
+        pstmt->executeUpdate();
+
+        // vytvorime tabulku prekazky ak neexistuje
+        pstmt = con->prepareStatement("CREATE TABLE IF NOT EXISTS `prekazky` (`id` int(11) NOT NULL AUTO_INCREMENT,`id_spustenia` int(11) NOT NULL,`prekazka` int(11) NOT NULL,`robot` int(11) NOT NULL, `x_rob` float NOT NULL, `y_rob` float NOT NULL, `fi_rob` float NOT NULL,  `x_p` float NOT NULL,  `y_p` float NOT NULL,  `naraz_vpravo` tinyint(1) NOT NULL,  `naraz_vlavo` tinyint(1) NOT NULL,  `naraz_vpredu` tinyint(1) NOT NULL, PRIMARY KEY (id)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='ukladame sem suradnice prekazok' AUTO_INCREMENT=1");
+        pstmt->executeUpdate();
+
+        delete pstmt;
+        return 0;
+    } catch (sql::SQLException &e) {
+        std::cout << "exception\n";
+        std::cout << "# ERR: SQLException in " << __FILE__;
+        std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << "\n";
+        std::cout << "# ERR: " << e.what() << "\n";
+        std::cout << " (MySQL error code: " << e.getErrorCode() << "\n";
+        std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
+        delete pstmt;
+        return -1;
+    }
+}
+
 int dbConnectorClass::getNewSpustenieId() {
     if (!connected) {
         return -1;
@@ -159,59 +212,6 @@ int dbConnectorClass::savePrekazka(prekazkaClass *prekazka) {
         return -1;
     }
     return 0;
-}
-
-int dbConnectorClass::connect() {
-    try {
-        driver = get_driver_instance();
-        con = driver->connect(DB_HOST, DB_USERNAME, DB_PASSWORD);
-        con->setSchema(DB_DATABASE);
-        connected = true;
-        return 0;
-    } catch (sql::SQLException &e) {
-        std::cout << "exception\n";
-        std::cout << "# ERR: SQLException in " << __FILE__;
-        std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << "\n";
-        std::cout << "# ERR: " << e.what() << "\n";
-        std::cout << " (MySQL error code: " << e.getErrorCode() << "\n";
-        std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
-        connected = false;
-        return -1;
-    }
-}
-
-int dbConnectorClass::createTables() {
-    sql::PreparedStatement *pstmt;
-    
-    if (!connected) {
-        return -1;
-    }
-    
-    try {
-        // vytvorime tabulku spustenia ak neexistuje
-        pstmt = con->prepareStatement("CREATE TABLE IF NOT EXISTS `spustenia` (`id` int(11) NOT NULL AUTO_INCREMENT,`timestarted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='uklada id spustenia mapovania' AUTO_INCREMENT=1");
-        pstmt->executeUpdate();
-
-        // vytvorime tabulku polohy ak neexistuje
-        pstmt = con->prepareStatement("CREATE TABLE IF NOT EXISTS `polohy` (`id` int(11) NOT NULL AUTO_INCREMENT,`id_spustenia` int(11) NOT NULL,`robot` int(11) NOT NULL,`x` float NOT NULL,`y` float NOT NULL,`fi` float NOT NULL, PRIMARY KEY (id)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='ukladame polohy robota' AUTO_INCREMENT=1");
-        pstmt->executeUpdate();
-
-        // vytvorime tabulku prekazky ak neexistuje
-        pstmt = con->prepareStatement("CREATE TABLE IF NOT EXISTS `prekazky` (`id` int(11) NOT NULL AUTO_INCREMENT,`id_spustenia` int(11) NOT NULL,`prekazka` int(11) NOT NULL,`robot` int(11) NOT NULL, `x_rob` float NOT NULL, `y_rob` float NOT NULL, `fi_rob` float NOT NULL,  `x_p` float NOT NULL,  `y_p` float NOT NULL,  `naraz_vpravo` tinyint(1) NOT NULL,  `naraz_vlavo` tinyint(1) NOT NULL,  `naraz_vpredu` tinyint(1) NOT NULL, PRIMARY KEY (id)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='ukladame sem suradnice prekazok' AUTO_INCREMENT=1");
-        pstmt->executeUpdate();
-
-        delete pstmt;
-        return 0;
-    } catch (sql::SQLException &e) {
-        std::cout << "exception\n";
-        std::cout << "# ERR: SQLException in " << __FILE__;
-        std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << "\n";
-        std::cout << "# ERR: " << e.what() << "\n";
-        std::cout << " (MySQL error code: " << e.getErrorCode() << "\n";
-        std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
-        delete pstmt;
-        return -1;
-    }
 }
 
 void dbConnectorClass::test() {

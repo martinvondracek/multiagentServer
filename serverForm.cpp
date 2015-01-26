@@ -6,7 +6,6 @@
  */
 
 #include "serverForm.h"
-#include "dbConnectorClass.h"
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -61,10 +60,13 @@ serverForm::serverForm() {
 void serverForm::startServerClicked() {
     std::cout << "startServerClicked\n";
     
+    // spustíme socket
     socketUtil->setPortNumber(widget.portEdit->text().toInt());
     socketUtil->connect();
+    // spustime databazu
+    dbUtil = new dbConnectorClass();
     
-    if (socketUtil->getConnected()) {
+    if (socketUtil->getConnected() && dbUtil->isConnected()) {
         widget.portEdit->setEnabled(false);
         widget.maxAgentEdit->setEnabled(false);
         widget.startMappingButton->setEnabled(true);
@@ -79,13 +81,6 @@ void serverForm::startServerClicked() {
         std::cout << "failed to start server\n";
         widget.infoLabel->setText("Nepodarilo sa spustit server");
     }
-    
-//    dbConnectorClass *db = new dbConnectorClass();
-//    //std::cout << "connected " << db->isConnected() << "\n";
-//    //std::cout << "newSpustenieId " << db->getNewSpustenieId() << "\n";
-//    //std::cout << "newPrekazkaId " << db->getNewPrekazkaId(18) << "\n";
-//    //db->test();
-//    delete db;
 }
 
 void serverForm::startMappingClicked() {
@@ -105,12 +100,15 @@ void serverForm::startMappingClicked() {
     widget.startMappingButton->setEnabled(false);
     widget.stopMappingButton->setEnabled(true);
     
+    spustenieId = dbUtil->getNewSpustenieId();
+    std::cout << "newSpustenieId " << spustenieId << "\n";
+    std::cout << "newPrekazkaId " << dbUtil->getNewPrekazkaId(spustenieId) << "\n";
     
-    char buf[256];
-    int newFd = socketUtil->waitAndAcceptClient();
-    socketUtil->receiveJson(newFd, buf, 255);
-    std::cout << buf;
-    socketUtil->sendJson(newFd, "i got it!");
+//    char buf[256];
+//    int newFd = socketUtil->waitAndAcceptClient();
+//    socketUtil->receiveJson(newFd, buf, 255);
+//    std::cout << buf;
+//    socketUtil->sendJson(newFd, "i got it!");
 }
 
 void serverForm::stopMappingClicked() {
@@ -141,5 +139,6 @@ serverForm::~serverForm() {
         }
         // TODO ukoncime server
         delete socketUtil;
+        delete dbUtil;
     }
 }

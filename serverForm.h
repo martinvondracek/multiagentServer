@@ -10,9 +10,12 @@
 
 #include "ui_serverForm.h"
 #include "socketClass.h"
+#include "dbConnectorClass.h"
 
 struct komunikacia_shm {
-    socketClass * socket; //objekt pre komunikáciu cez socket
+    socketClass * socketUtil; //objekt pre komunikáciu cez socket
+    dbConnectorClass *dbUtil;
+    int spustenieId;
 };
 
 class serverForm : public QDialog {
@@ -29,6 +32,8 @@ private:
     bool serverStarted = false; //ci je spusteny server
     bool mappingNow = false; //ci je spustene mapovanie
     socketClass * socketUtil; //objekt pre komunikáciu cez socket
+    dbConnectorClass *dbUtil;
+    int spustenieId;
     komunikacia_shm *shm; //
 };
 
