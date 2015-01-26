@@ -58,6 +58,8 @@ int socketClass::disconnect() {
     }
     
     close(sockfd);
+    connected = false;
+    std::cout << "server stopped\n";
     return 0;
 }
 
