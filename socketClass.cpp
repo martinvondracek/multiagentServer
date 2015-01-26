@@ -86,8 +86,7 @@ int socketClass::receiveJson(int sockfd, char *buffer, int bufSize) {
         std::cout << "ERROR reading from socket";
         return -1;
     }
-    printf("Here is the message: %s\n", buffer);
-    return buffer;
+    //printf("Here is the message: %s\n", buffer);
     return 0;
 }
 

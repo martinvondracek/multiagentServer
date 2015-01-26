@@ -104,6 +104,13 @@ void serverForm::startMappingClicked() {
     widget.infoLabel->setText("Mapovanie spustene");
     widget.startMappingButton->setEnabled(false);
     widget.stopMappingButton->setEnabled(true);
+    
+    
+    char buf[256];
+    int newFd = socketUtil->waitAndAcceptClient();
+    socketUtil->receiveJson(newFd, buf, 255);
+    std::cout << buf;
+    socketUtil->sendJson(newFd, "i got it!");
 }
 
 void serverForm::stopMappingClicked() {
