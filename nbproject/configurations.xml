@@ -7,6 +7,7 @@
       <itemPath>dbConnectorClass.h</itemPath>
       <itemPath>polohaClass.h</itemPath>
       <itemPath>prekazkaClass.h</itemPath>
+      <itemPath>serverClass.h</itemPath>
       <itemPath>serverForm.h</itemPath>
       <itemPath>socketClass.h</itemPath>
     </logicalFolder>
@@ -22,6 +23,7 @@
       <itemPath>main.cpp</itemPath>
       <itemPath>polohaClass.cpp</itemPath>
       <itemPath>prekazkaClass.cpp</itemPath>
+      <itemPath>serverClass.cpp</itemPath>
       <itemPath>serverForm.cpp</itemPath>
       <itemPath>socketClass.cpp</itemPath>
     </logicalFolder>
@@ -55,6 +57,8 @@
         <linkerTool>
           <linkerLibItems>
             <linkerLibLibItem>mysqlcppconn</linkerLibLibItem>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+            <linkerOptionItem>-lpthread</linkerOptionItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
@@ -71,6 +75,10 @@
       <item path="prekazkaClass.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="prekazkaClass.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="serverClass.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="serverClass.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="serverForm.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -120,6 +128,10 @@
       <item path="prekazkaClass.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="prekazkaClass.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="serverClass.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="serverClass.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="serverForm.cpp" ex="false" tool="1" flavor2="0">
       </item>

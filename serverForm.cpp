@@ -25,7 +25,11 @@ serverForm::serverForm() {
     widget.startMappingButton->setEnabled(false);
     widget.stopMappingButton->setEnabled(false);
     
-    socketUtil = new socketClass();
+    shm_S_GUI = new komunikacia_shm;
+    shm_S_GUI->ukonci_ulohu = 0;
+    shm_S_GUI->mappingNow = 0;
+    shm_S_GUI->widget = &widget;
+    server = new serverClass(shm_S_GUI);
     
     struct ifaddrs * ifAddrStruct=NULL;
     struct ifaddrs * ifa=NULL;
@@ -60,22 +64,13 @@ serverForm::serverForm() {
 void serverForm::startServerClicked() {
     std::cout << "startServerClicked\n";
     
-    // spustíme socket
-    socketUtil->setPortNumber(widget.portEdit->text().toInt());
-    socketUtil->connect();
-    // spustime databazu
-    dbUtil = new dbConnectorClass();
-    
-    if (socketUtil->getConnected() && dbUtil->isConnected()) {
+    server->startServer(widget.portEdit->text().toInt(), widget.maxAgentEdit->text().toInt());
+    if (server->isServerRunning()) {
         widget.portEdit->setEnabled(false);
         widget.maxAgentEdit->setEnabled(false);
         widget.startMappingButton->setEnabled(true);
         widget.stopMappingButton->setEnabled(false);
         widget.startServerButton->setEnabled(false);
-        
-        // TODO spustit nove vlakno na cakanie
-
-        serverStarted = true;
         widget.infoLabel->setText("Server uspesne spusteny");
     } else {
         std::cout << "failed to start server\n";
@@ -86,44 +81,40 @@ void serverForm::startServerClicked() {
 void serverForm::startMappingClicked() {
     std::cout << "startMappingClicked\n";
     
-    if (!serverStarted) {
+    if (!server->isServerRunning()) {
         widget.infoLabel->setText("Najskor spustite server");
         return;
     }
-    if (mappingNow) {
+    if (server->isMapping()) {
         widget.infoLabel->setText("Uz prebieha mapovanie");
         return;
     }
     
-    mappingNow = true;
+    // todo spustime nove vlakno a v nom mapovanie
+    shm_S_GUI->ukonci_ulohu = false;
+    shm_S_GUI->mappingNow = true;
+    
     widget.infoLabel->setText("Mapovanie spustene");
     widget.startMappingButton->setEnabled(false);
     widget.stopMappingButton->setEnabled(true);
     
-    spustenieId = dbUtil->getNewSpustenieId();
-    std::cout << "newSpustenieId " << spustenieId << "\n";
-    std::cout << "newPrekazkaId " << dbUtil->getNewPrekazkaId(spustenieId) << "\n";
-    
-//    char buf[256];
-//    int newFd = socketUtil->waitAndAcceptClient();
-//    socketUtil->receiveJson(newFd, buf, 255);
-//    std::cout << buf;
-//    socketUtil->sendJson(newFd, "i got it!");
 }
 
 void serverForm::stopMappingClicked() {
     std::cout << "stopMappingClicked\n";
     
-    if (!serverStarted) {
+    if (!server->isServerRunning()) {
         widget.infoLabel->setText("Najskor spustite server");
         return;
     }
-    if (!mappingNow) {
+    if (!server->isMapping()) {
         widget.infoLabel->setText("Neprebieha ziadne mapovanie");
         return;
     }
     
-    mappingNow = false;
+    shm_S_GUI->ukonci_ulohu = true;
+    usleep(1000*1000);
+    shm_S_GUI->mappingNow = false;
     widget.infoLabel->setText("Mapovanie ukoncene");
     widget.startMappingButton->setEnabled(true);
     widget.stopMappingButton->setEnabled(false);
@@ -133,12 +124,10 @@ serverForm::~serverForm() {
     std::cout << "destruktor serverForm\n";
     //ak je server spusteny tak ho zastavime
     //ak prebieha mapovanie tak ho ukoncime
-    if (serverStarted) {
-        if (mappingNow) {
-            // TODO zastavime mapovanie
+    if (server->isServerRunning()) {
+        if (server->isMapping()) {
+            stopMappingClicked();
         }
-        // TODO ukoncime server
-        delete socketUtil;
-        delete dbUtil;
     }
+    delete shm_S_GUI;
 }

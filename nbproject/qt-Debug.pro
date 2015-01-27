@@ -8,8 +8,8 @@ CONFIG -= debug_and_release app_bundle lib_bundle
 CONFIG += debug 
 PKGCONFIG +=
 QT = core gui widgets
-SOURCES += dbConnectorClass.cpp main.cpp polohaClass.cpp prekazkaClass.cpp serverForm.cpp socketClass.cpp
-HEADERS += dbConnectorClass.h polohaClass.h prekazkaClass.h serverForm.h socketClass.h
+SOURCES += dbConnectorClass.cpp main.cpp polohaClass.cpp prekazkaClass.cpp serverClass.cpp serverForm.cpp socketClass.cpp
+HEADERS += dbConnectorClass.h polohaClass.h prekazkaClass.h serverClass.h serverForm.h socketClass.h
 FORMS += serverForm.ui
 RESOURCES +=
 TRANSLATIONS +=
@@ -21,7 +21,7 @@ QMAKE_CC = gcc
 QMAKE_CXX = g++
 DEFINES += 
 INCLUDEPATH += 
-LIBS += -lmysqlcppconn  
+LIBS += -lmysqlcppconn -lpthread  -lpthread  
 equals(QT_MAJOR_VERSION, 4) {
 QMAKE_CXXFLAGS += -std=c++11
 }

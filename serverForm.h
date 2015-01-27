@@ -9,14 +9,8 @@
 #define	_SERVERFORM_H
 
 #include "ui_serverForm.h"
-#include "socketClass.h"
-#include "dbConnectorClass.h"
+#include "serverClass.h"
 
-struct komunikacia_shm {
-    socketClass * socketUtil; //objekt pre komunikáciu cez socket
-    dbConnectorClass *dbUtil;
-    int spustenieId;
-};
 
 class serverForm : public QDialog {
     Q_OBJECT
@@ -29,12 +23,9 @@ public slots:
     void stopMappingClicked(); //zastavi mapovanie
 private:
     Ui::serverForm widget;
-    bool serverStarted = false; //ci je spusteny server
-    bool mappingNow = false; //ci je spustene mapovanie
-    socketClass * socketUtil; //objekt pre komunikáciu cez socket
-    dbConnectorClass *dbUtil;
-    int spustenieId;
-    komunikacia_shm *shm; //
+    
+    serverClass *server;
+    komunikacia_shm *shm_S_GUI; //shm medzi gui a serverom
 };
 
 #endif	/* _SERVERFORM_H */
