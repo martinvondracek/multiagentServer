@@ -36,6 +36,11 @@ struct komunikacia_shm {
     std::list<agent_in_shm> agentsList;
 };
 
+struct param_vlakno_prijimanie {
+    agent_in_shm agent_info;
+    komunikacia_shm *shm_S_A;
+};
+
 class serverClass {
 public:
     serverClass(komunikacia_shm *shm_S_GUI);

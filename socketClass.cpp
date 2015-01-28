@@ -86,10 +86,10 @@ int socketClass::receiveJson(int sockfd, char *buffer, int bufSize) {
     n = read(sockfd, buffer, bufSize);
     if (n < 0) {
         std::cout << "ERROR reading from socket";
-        return -1;
+        return n;
     }
     //printf("Here is the message: %s\n", buffer);
-    return 0;
+    return n;
 }
 
 int socketClass::waitAndAcceptClient() {

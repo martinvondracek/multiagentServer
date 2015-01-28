@@ -8,10 +8,18 @@
 #include "serverClass.h"
 
 void *vlaknoPrijimanieDatAgentov(void *arg) {
-    komunikacia_shm *shm_S_GUI = (komunikacia_shm *) arg;
+    int n;
+    
+    param_vlakno_prijimanie *param = (param_vlakno_prijimanie *) arg;
+    komunikacia_shm *shm_S_GUI = param->shm_S_A;
+    agent_in_shm agent = param->agent_info;
     while (1) {
-        std::cout << "vlakno prijimanie dat\n";
-        usleep(1000*1000);
+        char jsonData[256];
+        n = shm_S_GUI->socket->receiveJson(agent.sockFd, jsonData, 255);
+        if (n > 0) { //musia byt prijate byty
+            std::cout << "data=" << jsonData << "\n";
+        }
+        usleep(300*1000);
     }
     
     //todo pri odpojeni agenta treba dekrementovat pocet pripojenych a pripojit dalsich
@@ -37,20 +45,25 @@ void *vlaknoCakanieNaAgentov(void *arg) {
         agent_in_shm agent;
         agent.id = shm_S_GUI->connectedAgentsCount;
         agent.sockFd = newSocketFd;
+        std::cout << "newsocfd " << newSocketFd << "\n";
         const char *jsondata = socketUtilClass::createJsonAgentId_IdSpustenia(agent.id, shm_S_GUI->idSpustenia);
         shm_S_GUI->socket->sendJson(agent.sockFd, jsondata);
-        // todo vytvorit vlakno na prijimanie
+        //vytvorime vlakno na prijimanie
+        param_vlakno_prijimanie param;
+        param.shm_S_A = shm_S_GUI;
+        param.agent_info = agent;
         pthread_attr_t parametre;
         if (pthread_attr_init(&parametre)) {
             std::cout << "chyba v attr_init\n";
             continue;
         }
         pthread_attr_setdetachstate(&parametre, PTHREAD_CREATE_DETACHED);
-        if (pthread_create(&(agent.vlaknoPrijimanie), &parametre, vlaknoPrijimanieDatAgentov, (void*) shm_S_GUI)) {
+        if (pthread_create(&(agent.vlaknoPrijimanie), &parametre, vlaknoPrijimanieDatAgentov, (void*) (&param))) {
             std::cout << "chyba vo vytvarani vlakna na prijimanie\n";
             continue;
         }
         shm_S_GUI->agentsList.push_back(agent);
+        usleep(200*1000);
         std::cout << "dalsi agent pripojeny\n";
     }
     std::cout << "max pocet agentov dosiahnuty\n";
