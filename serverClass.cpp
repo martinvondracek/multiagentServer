@@ -13,7 +13,6 @@ void *vlaknoCakanieNaAgentov(void *arg) {
     komunikacia_shm *shm_S_GUI = (komunikacia_shm *) arg;
     while (shm_S_GUI->connectedAgentsCount < shm_S_GUI->maxAgents) {
         newSocketFd = shm_S_GUI->socket->waitAndAcceptClient();
-        std::cout << "dalsi agent pripojeny\n";
         shm_S_GUI->connectedAgentsCount++;
         shm_S_GUI->widget->agentCountLabel->setText(std::to_string(shm_S_GUI->connectedAgentsCount).c_str());
         // todo autentifikovat a poslat spat id
@@ -21,6 +20,10 @@ void *vlaknoCakanieNaAgentov(void *arg) {
         agent.id = shm_S_GUI->connectedAgentsCount;
         agent.sockFd = newSocketFd;
         shm_S_GUI->agentsList.push_back(agent);
+        
+        const char *jsondata = socketUtilClass::createJsonAgentId(agent.id);
+        shm_S_GUI->socket->sendJson(agent.sockFd, jsondata);
+        std::cout << "dalsi agent pripojeny\n";
     }
     std::cout << "max pocet agentov dosiahnuty\n";
     

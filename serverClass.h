@@ -14,6 +14,7 @@
 #include <list>
 
 #include "socketClass.h"
+#include "socketUtilClass.h"
 #include "dbConnectorClass.h"
 #include "ui_serverForm.h"
 
