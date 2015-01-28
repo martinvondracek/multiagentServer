@@ -18,6 +18,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
         n = shm_S_GUI->socket->receiveJson(agent.sockFd, jsonData, 255);
         if (n > 0) { //musia byt prijate byty
             std::cout << "data=" << jsonData << "\n";
+            //todo rozparsovat a spracovat, ulozit do db
         }
         usleep(300*1000);
     }
