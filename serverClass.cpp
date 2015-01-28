@@ -37,7 +37,7 @@ void *vlaknoCakanieNaAgentov(void *arg) {
         agent_in_shm agent;
         agent.id = shm_S_GUI->connectedAgentsCount;
         agent.sockFd = newSocketFd;
-        const char *jsondata = socketUtilClass::createJsonAgentId(agent.id);
+        const char *jsondata = socketUtilClass::createJsonAgentId_IdSpustenia(agent.id, shm_S_GUI->idSpustenia);
         shm_S_GUI->socket->sendJson(agent.sockFd, jsondata);
         // todo vytvorit vlakno na prijimanie
         pthread_attr_t parametre;
@@ -87,7 +87,9 @@ int serverClass::startServer(int portNumber, int maxAgents) {
     
     socket->connect();
     if (socket->getConnected()) {
-        serverRunning = true;
+        serverRunning = true;   
+        shm_S_GUI->idSpustenia = dbConnector->getNewSpustenieId();
+        std::cout << "idSpustenia: " << this->shm_S_GUI->idSpustenia << "\n";
         // todo implementovat čakacie vlákno
         pthread_attr_t parametre;
         if (pthread_attr_init(&parametre)) exit(-1);
@@ -99,6 +101,8 @@ int serverClass::startServer(int portNumber, int maxAgents) {
 }
 
 int serverClass::stopServer() {
+    //todo zrusime mapovanie
+    
     // zrusime vlakno cakajuce na novych agentov
     pthread_cancel(vlaknoCakanieAgentov);
     //poodpajame agentov - zrusime newSocketFd a vlakno prijimanie

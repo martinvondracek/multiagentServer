@@ -25,6 +25,7 @@ struct agent_in_shm {
 };
 
 struct komunikacia_shm {
+    int idSpustenia;
     bool ukonci_ulohu;
     bool mappingNow;
     int maxAgents;

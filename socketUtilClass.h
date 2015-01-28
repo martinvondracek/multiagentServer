@@ -20,7 +20,7 @@ public:
     socketUtilClass();
     virtual ~socketUtilClass();
     
-    static const char *  createJsonAgentId(int id);
+    static const char *  createJsonAgentId_IdSpustenia(int id, int idSpustenia);
 private:
 
 };
