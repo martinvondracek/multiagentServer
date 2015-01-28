@@ -21,6 +21,7 @@
 struct agent_in_shm {
     int id;
     int sockFd;
+    pthread_t vlaknoPrijimanie; // na vlakno ktore prijima info z agentov
 };
 
 struct komunikacia_shm {
@@ -29,6 +30,7 @@ struct komunikacia_shm {
     int maxAgents;
     int connectedAgentsCount;
     socketClass *socket;
+    dbConnectorClass *dbConnector;
     Ui::serverForm *widget;
     std::list<agent_in_shm> agentsList;
 };
@@ -59,7 +61,7 @@ private:
     
     komunikacia_shm *shm_S_GUI;
     socketClass * socket; //objekt pre komunikáciu cez socket
-    dbConnectorClass *dbUtil;
+    dbConnectorClass *dbConnector;
     
 };
 

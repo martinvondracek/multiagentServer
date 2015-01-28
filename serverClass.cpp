@@ -7,6 +7,24 @@
 
 #include "serverClass.h"
 
+void *vlaknoPrijimanieDatAgentov(void *arg) {
+    komunikacia_shm *shm_S_GUI = (komunikacia_shm *) arg;
+    while (1) {
+        std::cout << "vlakno prijimanie dat\n";
+        usleep(1000*1000);
+    }
+    
+    //todo pri odpojeni agenta treba dekrementovat pocet pripojenych a pripojit dalsich
+}
+
+void *vlaknoNavigaciaMapovania(void *arg) {
+    komunikacia_shm *shm_S_GUI = (komunikacia_shm *) arg;
+    while (1) {
+        std::cout << "vlakno navigacia\n";
+        usleep(1000*1000);
+    }
+}
+
 void *vlaknoCakanieNaAgentov(void *arg) {
     int newSocketFd;
     
@@ -15,14 +33,24 @@ void *vlaknoCakanieNaAgentov(void *arg) {
         newSocketFd = shm_S_GUI->socket->waitAndAcceptClient();
         shm_S_GUI->connectedAgentsCount++;
         shm_S_GUI->widget->agentCountLabel->setText(std::to_string(shm_S_GUI->connectedAgentsCount).c_str());
-        // todo autentifikovat a poslat spat id
+        // todo autentifikovat
         agent_in_shm agent;
         agent.id = shm_S_GUI->connectedAgentsCount;
         agent.sockFd = newSocketFd;
-        shm_S_GUI->agentsList.push_back(agent);
-        
         const char *jsondata = socketUtilClass::createJsonAgentId(agent.id);
         shm_S_GUI->socket->sendJson(agent.sockFd, jsondata);
+        // todo vytvorit vlakno na prijimanie
+        pthread_attr_t parametre;
+        if (pthread_attr_init(&parametre)) {
+            std::cout << "chyba v attr_init\n";
+            continue;
+        }
+        pthread_attr_setdetachstate(&parametre, PTHREAD_CREATE_DETACHED);
+        if (pthread_create(&(agent.vlaknoPrijimanie), &parametre, vlaknoPrijimanieDatAgentov, (void*) shm_S_GUI)) {
+            std::cout << "chyba vo vytvarani vlakna na prijimanie\n";
+            continue;
+        }
+        shm_S_GUI->agentsList.push_back(agent);
         std::cout << "dalsi agent pripojeny\n";
     }
     std::cout << "max pocet agentov dosiahnuty\n";
@@ -31,9 +59,10 @@ void *vlaknoCakanieNaAgentov(void *arg) {
 
 serverClass::serverClass(komunikacia_shm *shm_S_GUI) {
     this->shm_S_GUI = shm_S_GUI;
-    this->dbUtil = new dbConnectorClass();
+    this->dbConnector = new dbConnectorClass();
     this->socket = new socketClass();
     this->shm_S_GUI->socket = socket;
+    this->shm_S_GUI->dbConnector = dbConnector;
 }
 
 int serverClass::getPortNumber() {
@@ -72,7 +101,14 @@ int serverClass::startServer(int portNumber, int maxAgents) {
 int serverClass::stopServer() {
     // zrusime vlakno cakajuce na novych agentov
     pthread_cancel(vlaknoCakanieAgentov);
-    // todo poodpajat agentov
+    //poodpajame agentov - zrusime newSocketFd a vlakno prijimanie
+    std::list<agent_in_shm>::iterator i;
+    for(i=shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+        std::cout << "agent id=" << i->id << " ukoncujem" << "\n";
+        // todo poslat ukoncovaci string agentovi
+        pthread_cancel(i->vlaknoPrijimanie);
+        socket->disconnectFd(i->sockFd);
+    }
     if (socket->getConnected()) {
         socket->disconnect();
     }
@@ -95,9 +131,5 @@ bool serverClass::isMapping() {
 serverClass::~serverClass() {
     std::cout << "destruktor serverClass\n";
     stopServer();
-//    std::list<agent_in_shm>::iterator i;
-//    for(i=shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
-//        std::cout << "agent id=" << i->id << " socFd= " << i->sockFd << "\n";
-//    }
 }
 
