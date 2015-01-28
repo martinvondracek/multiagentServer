@@ -11,18 +11,25 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <list>
 
 #include "socketClass.h"
 #include "dbConnectorClass.h"
 #include "ui_serverForm.h"
+
+struct agent_in_shm {
+    int id;
+    int sockFd;
+};
 
 struct komunikacia_shm {
     bool ukonci_ulohu;
     bool mappingNow;
     int maxAgents;
     int connectedAgentsCount;
-    socketClass *socketUtil;
+    socketClass *socket;
     Ui::serverForm *widget;
+    std::list<agent_in_shm> agentsList;
 };
 
 class serverClass {
@@ -50,7 +57,7 @@ private:
     pthread_t vlaknoCakanieAgentov;
     
     komunikacia_shm *shm_S_GUI;
-    socketClass * socketUtil; //objekt pre komunikáciu cez socket
+    socketClass * socket; //objekt pre komunikáciu cez socket
     dbConnectorClass *dbUtil;
     
 };

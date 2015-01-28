@@ -8,6 +8,16 @@
 #ifndef _SERVERFORM_H
 #define	_SERVERFORM_H
 
+#include <stdio.h>
+#include <sys/types.h>
+#include <ifaddrs.h>
+#include <netinet/in.h> 
+#include <string.h> 
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <iostream>
+#include <list>
+
 #include "ui_serverForm.h"
 #include "serverClass.h"
 

@@ -12,12 +12,15 @@ void *vlaknoCakanieNaAgentov(void *arg) {
     
     komunikacia_shm *shm_S_GUI = (komunikacia_shm *) arg;
     while (shm_S_GUI->connectedAgentsCount < shm_S_GUI->maxAgents) {
-        newSocketFd = shm_S_GUI->socketUtil->waitAndAcceptClient();
+        newSocketFd = shm_S_GUI->socket->waitAndAcceptClient();
         std::cout << "dalsi agent pripojeny\n";
         shm_S_GUI->connectedAgentsCount++;
         shm_S_GUI->widget->agentCountLabel->setText(std::to_string(shm_S_GUI->connectedAgentsCount).c_str());
-        // todo autentifikovat
-        // todo zistit id agenta a ulozit Fd agenta
+        // todo autentifikovat a poslat spat id
+        agent_in_shm agent;
+        agent.id = shm_S_GUI->connectedAgentsCount;
+        agent.sockFd = newSocketFd;
+        shm_S_GUI->agentsList.push_back(agent);
     }
     std::cout << "max pocet agentov dosiahnuty\n";
     
@@ -26,8 +29,8 @@ void *vlaknoCakanieNaAgentov(void *arg) {
 serverClass::serverClass(komunikacia_shm *shm_S_GUI) {
     this->shm_S_GUI = shm_S_GUI;
     this->dbUtil = new dbConnectorClass();
-    this->socketUtil = new socketClass();
-    this->shm_S_GUI->socketUtil = socketUtil;
+    this->socket = new socketClass();
+    this->shm_S_GUI->socket = socket;
 }
 
 int serverClass::getPortNumber() {
@@ -50,8 +53,8 @@ int serverClass::startServer(int portNumber, int maxAgents) {
     shm_S_GUI->connectedAgentsCount = 0;
     shm_S_GUI->maxAgents = maxAgents;
     
-    socketUtil->connect();
-    if (socketUtil->getConnected()) {
+    socket->connect();
+    if (socket->getConnected()) {
         serverRunning = true;
         // todo implementovat čakacie vlákno
         pthread_attr_t parametre;
@@ -67,14 +70,14 @@ int serverClass::stopServer() {
     // zrusime vlakno cakajuce na novych agentov
     pthread_cancel(vlaknoCakanieAgentov);
     // todo poodpajat agentov
-    if (socketUtil->getConnected()) {
-        socketUtil->disconnect();
+    if (socket->getConnected()) {
+        socket->disconnect();
     }
     serverRunning = false;
 }
 
 bool serverClass::isServerRunning() {
-    //serverRunning = socketUtil->getConnected(); //asi nema byt
+    //serverRunning = socket->getConnected(); //asi nema byt
     return serverRunning;
 }
 
@@ -87,6 +90,11 @@ bool serverClass::isMapping() {
 }
 
 serverClass::~serverClass() {
+    std::cout << "destruktor serverClass\n";
     stopServer();
+//    std::list<agent_in_shm>::iterator i;
+//    for(i=shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+//        std::cout << "agent id=" << i->id << " socFd= " << i->sockFd << "\n";
+//    }
 }
 

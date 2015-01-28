@@ -7,15 +7,6 @@
 
 #include "serverForm.h"
 
-#include <stdio.h>
-#include <sys/types.h>
-#include <ifaddrs.h>
-#include <netinet/in.h> 
-#include <string.h> 
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <iostream>
-
 serverForm::serverForm() {
     widget.setupUi(this);
     widget.infoLabel->setText("");
@@ -129,5 +120,6 @@ serverForm::~serverForm() {
             stopMappingClicked();
         }
     }
+    delete server;
     delete shm_S_GUI;
 }
