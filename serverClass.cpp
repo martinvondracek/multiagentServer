@@ -9,7 +9,7 @@
 
 void *vlaknoPrijimanieDatAgentov(void *arg) {
     int n;
-    
+
     param_vlakno_prijimanie *param = (param_vlakno_prijimanie *) arg;
     komunikacia_shm *shm_S_GUI = param->shm_S_A;
     agent_in_shm agent = param->agent_info;
@@ -20,9 +20,9 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
             std::cout << "data=" << jsonData << "\n";
             //todo rozparsovat a spracovat, ulozit do db
         }
-        usleep(300*1000);
+        usleep(300 * 1000);
     }
-    
+
     //todo pri odpojeni agenta treba dekrementovat pocet pripojenych a pripojit dalsich
 }
 
@@ -30,45 +30,49 @@ void *vlaknoNavigaciaMapovania(void *arg) {
     komunikacia_shm *shm_S_GUI = (komunikacia_shm *) arg;
     while (1) {
         std::cout << "vlakno navigacia\n";
-        usleep(1000*1000);
+        usleep(1000 * 1000);
     }
 }
 
 void *vlaknoCakanieNaAgentov(void *arg) {
     int newSocketFd;
-    
+
     komunikacia_shm *shm_S_GUI = (komunikacia_shm *) arg;
-    while (shm_S_GUI->connectedAgentsCount < shm_S_GUI->maxAgents) {
-        newSocketFd = shm_S_GUI->socket->waitAndAcceptClient();
-        shm_S_GUI->connectedAgentsCount++;
-        shm_S_GUI->widget->agentCountLabel->setText(std::to_string(shm_S_GUI->connectedAgentsCount).c_str());
-        // todo autentifikovat
-        agent_in_shm agent;
-        agent.id = shm_S_GUI->connectedAgentsCount;
-        agent.sockFd = newSocketFd;
-        std::cout << "newsocfd " << newSocketFd << "\n";
-        const char *jsondata = socketUtilClass::createJsonAgentId_IdSpustenia(agent.id, shm_S_GUI->idSpustenia);
-        shm_S_GUI->socket->sendJson(agent.sockFd, jsondata);
-        //vytvorime vlakno na prijimanie
-        param_vlakno_prijimanie param;
-        param.shm_S_A = shm_S_GUI;
-        param.agent_info = agent;
-        pthread_attr_t parametre;
-        if (pthread_attr_init(&parametre)) {
-            std::cout << "chyba v attr_init\n";
-            continue;
+    while (1) {
+        if (shm_S_GUI->connectedAgentsCount < shm_S_GUI->maxAgents) {
+            newSocketFd = shm_S_GUI->socket->waitAndAcceptClient();
+            shm_S_GUI->connectedAgentsCount++;
+            shm_S_GUI->widget->agentCountLabel->setText(std::to_string(shm_S_GUI->connectedAgentsCount).c_str());
+            // todo autentifikovat
+            agent_in_shm agent;
+            agent.id = shm_S_GUI->connectedAgentsCount;
+            agent.sockFd = newSocketFd;
+            std::cout << "newsocfd " << newSocketFd << "\n";
+            const char *jsondata = socketUtilClass::createJsonAgentId_IdSpustenia(agent.id, shm_S_GUI->idSpustenia);
+            shm_S_GUI->socket->sendJson(agent.sockFd, jsondata);
+            //vytvorime vlakno na prijimanie
+            param_vlakno_prijimanie param;
+            param.shm_S_A = shm_S_GUI;
+            param.agent_info = agent;
+            pthread_attr_t parametre;
+            if (pthread_attr_init(&parametre)) {
+                std::cout << "chyba v attr_init\n";
+                continue;
+            }
+            pthread_attr_setdetachstate(&parametre, PTHREAD_CREATE_DETACHED);
+            if (pthread_create(&(agent.vlaknoPrijimanie), &parametre, vlaknoPrijimanieDatAgentov, (void*) (&param))) {
+                std::cout << "chyba vo vytvarani vlakna na prijimanie\n";
+                continue;
+            }
+            shm_S_GUI->agentsList.push_back(agent);
+            usleep(200 * 1000);
+            std::cout << "dalsi agent pripojeny\n";
+        } else {
+            usleep(500*1000);
         }
-        pthread_attr_setdetachstate(&parametre, PTHREAD_CREATE_DETACHED);
-        if (pthread_create(&(agent.vlaknoPrijimanie), &parametre, vlaknoPrijimanieDatAgentov, (void*) (&param))) {
-            std::cout << "chyba vo vytvarani vlakna na prijimanie\n";
-            continue;
-        }
-        shm_S_GUI->agentsList.push_back(agent);
-        usleep(200*1000);
-        std::cout << "dalsi agent pripojeny\n";
     }
     std::cout << "max pocet agentov dosiahnuty\n";
-    
+
 }
 
 serverClass::serverClass(komunikacia_shm *shm_S_GUI) {
@@ -98,10 +102,10 @@ int serverClass::startServer(int portNumber, int maxAgents) {
     shm_S_GUI->mappingNow = 0;
     shm_S_GUI->connectedAgentsCount = 0;
     shm_S_GUI->maxAgents = maxAgents;
-    
+
     socket->connect();
     if (socket->getConnected()) {
-        serverRunning = true;   
+        serverRunning = true;
         shm_S_GUI->idSpustenia = dbConnector->getNewSpustenieId();
         std::cout << "idSpustenia: " << this->shm_S_GUI->idSpustenia << "\n";
         // todo implementovat čakacie vlákno
@@ -115,13 +119,15 @@ int serverClass::startServer(int portNumber, int maxAgents) {
 }
 
 int serverClass::stopServer() {
+    std::cout << "stopping server\n";
     //todo zrusime mapovanie
-    
+    stopMapping();
+
     // zrusime vlakno cakajuce na novych agentov
     pthread_cancel(vlaknoCakanieAgentov);
     //poodpajame agentov - zrusime newSocketFd a vlakno prijimanie
     std::list<agent_in_shm>::iterator i;
-    for(i=shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+    for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
         std::cout << "agent id=" << i->id << " ukoncujem" << "\n";
         // todo poslat ukoncovaci string agentovi
         pthread_cancel(i->vlaknoPrijimanie);
@@ -140,22 +146,28 @@ bool serverClass::isServerRunning() {
 
 int serverClass::doMapping() {
     // todo implementovat
+    shm_S_GUI->mappingNow = true;
     std::list<agent_in_shm>::iterator i;
-    for(i=shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+    for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
         std::string send = "{\"CLASSTYPE\" : \"SPUSTIT_MAPOVANIE\"}";
         socket->sendJson(i->sockFd, send.c_str());
     }
-    
+
+    // todo implementovat riadiaci algoritmus pre mapovanie
 }
 
 int serverClass::stopMapping() {
     // todo implementovat
     // todo zrusime mapovaci thread
-    std::list<agent_in_shm>::iterator i;
-    for(i=shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
-        std::string send = "{\"CLASSTYPE\" : \"STOP_MAPOVANIE\"}";
-        socket->sendJson(i->sockFd, send.c_str());
+    if (shm_S_GUI->mappingNow) {
+        std::cout << "stopping mapping\n";
+        std::list<agent_in_shm>::iterator i;
+        for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+            std::string send = "{\"CLASSTYPE\" : \"STOP_MAPOVANIE\"}";
+            socket->sendJson(i->sockFd, send.c_str());
+        }
     }
+    shm_S_GUI->mappingNow = false;
 }
 
 bool serverClass::isMapping() {
@@ -164,6 +176,6 @@ bool serverClass::isMapping() {
 
 serverClass::~serverClass() {
     std::cout << "destruktor serverClass\n";
-    stopServer();
+    stopServer(); //zastavi server aj mapovanie
 }
 

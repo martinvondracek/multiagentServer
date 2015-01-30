@@ -25,6 +25,15 @@ const char *  socketUtilClass::createJsonAgentId_IdSpustenia(int id, int idSpust
     return json.c_str();
 }
 
+const char * socketUtilClass::parseClassTypeFromJson(const char *json) {
+    rapidjson::Document document;
+    document.Parse<0>(json);
+    
+    std::string ctype = document["CLASSTYPE"].GetString();
+    
+    return ctype.c_str();
+}
+
 socketUtilClass::~socketUtilClass() {
 }
 

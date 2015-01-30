@@ -125,6 +125,7 @@ serverForm::~serverForm() {
     if (server->isServerRunning()) {
         if (server->isMapping()) {
             stopMappingClicked();
+            usleep(500*1000);
         }
     }
     delete server;
