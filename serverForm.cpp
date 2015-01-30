@@ -89,6 +89,10 @@ void serverForm::startMappingClicked() {
     widget.startMappingButton->setEnabled(false);
     widget.stopMappingButton->setEnabled(true);
     
+    
+    // todo vymazat
+    server->doMapping();
+    
 }
 
 void serverForm::stopMappingClicked() {
@@ -109,6 +113,9 @@ void serverForm::stopMappingClicked() {
     widget.infoLabel->setText("Mapovanie ukoncene");
     widget.startMappingButton->setEnabled(true);
     widget.stopMappingButton->setEnabled(false);
+    
+    // todo vymazat
+    server->stopMapping();
 }
 
 serverForm::~serverForm() {

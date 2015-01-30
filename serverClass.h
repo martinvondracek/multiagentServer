@@ -55,6 +55,7 @@ public:
     bool isServerRunning();
     
     int doMapping();
+    int stopMapping();
     bool isMapping();
     
 private:

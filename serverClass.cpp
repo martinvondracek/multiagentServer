@@ -140,6 +140,22 @@ bool serverClass::isServerRunning() {
 
 int serverClass::doMapping() {
     // todo implementovat
+    std::list<agent_in_shm>::iterator i;
+    for(i=shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+        std::string send = "{\"CLASSTYPE\" : \"SPUSTIT_MAPOVANIE\"}";
+        socket->sendJson(i->sockFd, send.c_str());
+    }
+    
+}
+
+int serverClass::stopMapping() {
+    // todo implementovat
+    // todo zrusime mapovaci thread
+    std::list<agent_in_shm>::iterator i;
+    for(i=shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+        std::string send = "{\"CLASSTYPE\" : \"STOP_MAPOVANIE\"}";
+        socket->sendJson(i->sockFd, send.c_str());
+    }
 }
 
 bool serverClass::isMapping() {
