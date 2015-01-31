@@ -193,8 +193,8 @@ int serverClass::stopMapping() {
             std::string send = "{\"CLASSTYPE\" : \"STOP_MAPOVANIE\"}";
             socket->sendJson(i->sockFd, send.c_str());
         }
+        // zrusime mapovaci thread - sam sa ukonci
         shm_S_GUI->ukonci_ulohu = true;
-        // todo zrusime mapovaci thread
     }
     shm_S_GUI->mappingNow = false;
 }
