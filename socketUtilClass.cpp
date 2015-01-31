@@ -25,6 +25,15 @@ const char *  socketUtilClass::createJsonAgentId_IdSpustenia(int id, int idSpust
     return json.c_str();
 }
 
+const char *  socketUtilClass::createJsonServerQuit() {
+    std::string json = "{\n";
+    json.append("\"CLASSTYPE\" : \"SERVER_QUIT\"");
+    
+    json.append("\n}\n");
+        
+    return json.c_str();
+}
+
 const char * socketUtilClass::parseClassTypeFromJson(const char *json) {
     rapidjson::Document document;
     document.Parse<0>(json);
@@ -32,6 +41,21 @@ const char * socketUtilClass::parseClassTypeFromJson(const char *json) {
     std::string ctype = document["CLASSTYPE"].GetString();
     
     return ctype.c_str();
+}
+
+int socketUtilClass::parseIdFromQuit(const char *json) {
+    int id;
+    
+    rapidjson::Document document;
+    document.Parse<0>(json);
+    
+    std::string ctype = document["CLASSTYPE"].GetString();
+    if (ctype.compare("QUIT") == 0) {
+        id = document["ID"].GetInt();
+        return id;
+    } else {
+        return -1;
+    }
 }
 
 socketUtilClass::~socketUtilClass() {

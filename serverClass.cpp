@@ -19,17 +19,41 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
         if (n > 0) { //musia byt prijate byty
             std::cout << "data=" << jsonData << "\n";
             //todo rozparsovat a spracovat, ulozit do db
+            std::string ctype = socketUtilClass::parseClassTypeFromJson(jsonData);
+            
+            // ak pride ukoncenie agenta
+            if (ctype.compare("QUIT") == 0) {
+                // todo vymazeme agenta z listu
+                //todo pri odpojeni agenta treba dekrementovat pocet pripojenych a pripojit dalsich
+            }
+            
+            // ak pride poloha
+            if (ctype.compare("POLOHACLASS") == 0) {
+                // todo rozparsujeme a ulozime do premennej aj DB
+            }
+            
+            // ak pride prekazka
+            if (ctype.compare("PREKAZKACLASS") == 0) {
+                // todo rozparsujeme a ulozime do premennej aj DB
+            }
         }
         usleep(300 * 1000);
     }
 
-    //todo pri odpojeni agenta treba dekrementovat pocet pripojenych a pripojit dalsich
 }
 
 void *vlaknoNavigaciaMapovania(void *arg) {
     komunikacia_shm *shm_S_GUI = (komunikacia_shm *) arg;
-    while (1) {
+    
+    std::list<agent_in_shm>::iterator i;
+    for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+        std::string send = "{\"CLASSTYPE\" : \"SPUSTIT_MAPOVANIE\"}";
+        shm_S_GUI->socket->sendJson(i->sockFd, send.c_str());
+    }
+    
+    while (shm_S_GUI->ukonci_ulohu == false) {
         std::cout << "vlakno navigacia\n";
+        // todo implementovat riadiaci algoritmus
         usleep(1000 * 1000);
     }
 }
@@ -108,7 +132,6 @@ int serverClass::startServer(int portNumber, int maxAgents) {
         serverRunning = true;
         shm_S_GUI->idSpustenia = dbConnector->getNewSpustenieId();
         std::cout << "idSpustenia: " << this->shm_S_GUI->idSpustenia << "\n";
-        // todo implementovat čakacie vlákno
         pthread_attr_t parametre;
         if (pthread_attr_init(&parametre)) exit(-1);
         pthread_attr_setdetachstate(&parametre, PTHREAD_CREATE_DETACHED);
@@ -120,7 +143,7 @@ int serverClass::startServer(int portNumber, int maxAgents) {
 
 int serverClass::stopServer() {
     std::cout << "stopping server\n";
-    //todo zrusime mapovanie
+    //zrusime mapovanie
     stopMapping();
 
     // zrusime vlakno cakajuce na novych agentov
@@ -129,7 +152,8 @@ int serverClass::stopServer() {
     std::list<agent_in_shm>::iterator i;
     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
         std::cout << "agent id=" << i->id << " ukoncujem" << "\n";
-        // todo poslat ukoncovaci string agentovi
+        // posleme ukoncovaci string agentovi
+        shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonServerQuit());
         pthread_cancel(i->vlaknoPrijimanie);
         socket->disconnectFd(i->sockFd);
     }
@@ -145,20 +169,23 @@ bool serverClass::isServerRunning() {
 }
 
 int serverClass::doMapping() {
-    // todo implementovat
-    shm_S_GUI->mappingNow = true;
-    std::list<agent_in_shm>::iterator i;
-    for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
-        std::string send = "{\"CLASSTYPE\" : \"SPUSTIT_MAPOVANIE\"}";
-        socket->sendJson(i->sockFd, send.c_str());
+    if (shm_S_GUI->mappingNow == false) {
+        pthread_attr_t parametre;
+        if (pthread_attr_init(&parametre)) {
+            return -1;
+        }
+        pthread_attr_setdetachstate(&parametre, PTHREAD_CREATE_DETACHED);
+        if (pthread_create(&vlaknoMapovanie, &parametre, vlaknoNavigaciaMapovania, (void*) shm_S_GUI)) {
+            return -1;
+        }
     }
-
-    // todo implementovat riadiaci algoritmus pre mapovanie
+    
+    shm_S_GUI->mappingNow = true;
+    return 0;
 }
 
 int serverClass::stopMapping() {
     // todo implementovat
-    // todo zrusime mapovaci thread
     if (shm_S_GUI->mappingNow) {
         std::cout << "stopping mapping\n";
         std::list<agent_in_shm>::iterator i;
@@ -166,6 +193,8 @@ int serverClass::stopMapping() {
             std::string send = "{\"CLASSTYPE\" : \"STOP_MAPOVANIE\"}";
             socket->sendJson(i->sockFd, send.c_str());
         }
+        shm_S_GUI->ukonci_ulohu = true;
+        // todo zrusime mapovaci thread
     }
     shm_S_GUI->mappingNow = false;
 }

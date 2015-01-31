@@ -81,17 +81,14 @@ void serverForm::startMappingClicked() {
         return;
     }
     
-    // todo spustime nove vlakno a v nom mapovanie
+    server->doMapping();
+    
     shm_S_GUI->ukonci_ulohu = false;
     shm_S_GUI->mappingNow = true;
     
     widget.infoLabel->setText("Mapovanie spustene");
     widget.startMappingButton->setEnabled(false);
     widget.stopMappingButton->setEnabled(true);
-    
-    
-    // todo vymazat
-    server->doMapping();
     
 }
 
@@ -108,14 +105,13 @@ void serverForm::stopMappingClicked() {
     }
     
     shm_S_GUI->ukonci_ulohu = true;
+    server->stopMapping();
     usleep(1000*1000);
     shm_S_GUI->mappingNow = false;
     widget.infoLabel->setText("Mapovanie ukoncene");
     widget.startMappingButton->setEnabled(true);
     widget.stopMappingButton->setEnabled(false);
     
-    // todo vymazat
-    server->stopMapping();
 }
 
 serverForm::~serverForm() {

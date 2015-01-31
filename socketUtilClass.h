@@ -21,7 +21,10 @@ public:
     virtual ~socketUtilClass();
     
     static const char *  createJsonAgentId_IdSpustenia(int id, int idSpustenia);
-    const char * parseClassTypeFromJson(const char *json);
+    static const char *  createJsonServerQuit();
+    
+    static const char * parseClassTypeFromJson(const char *json);
+    static int parseIdFromQuit(const char *json);
 private:
 
 };

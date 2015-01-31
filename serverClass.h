@@ -65,6 +65,7 @@ private:
     int spustenieId;
     
     pthread_t vlaknoCakanieAgentov;
+    pthread_t vlaknoMapovanie;
     
     komunikacia_shm *shm_S_GUI;
     socketClass * socket; //objekt pre komunikáciu cez socket
