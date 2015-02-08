@@ -14,8 +14,8 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
     komunikacia_shm *shm_S_GUI = param->shm_S_A;
     agent_in_shm agent = param->agent_info;
     while (1) {
-        char jsonData[256];
-        n = shm_S_GUI->socket->receiveJson(agent.sockFd, jsonData, 255);
+        char jsonData[1001];
+        n = shm_S_GUI->socket->receiveJson(agent.sockFd, jsonData, 1000);
         if (n > 0) { //musia byt prijate byty
             std::cout << "data=" << jsonData << "\n";
             //rozparsovat a spracovat, ulozit do db
@@ -39,14 +39,14 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
             
             // ak pride poloha
             if (ctype.compare("POLOHACLASS") == 0) {
-                // todo rozparsujeme a ulozime do premennej aj DB
+                // rozparsujeme a ulozime do premennej aj DB
                 polohaClass *poloha = polohaClass::fromJson(jsonData);
                 shm_S_GUI->dbConnector->savePoloha(poloha);
             }
             
             // ak pride prekazka
             if (ctype.compare("PREKAZKACLASS") == 0) {
-                // todo rozparsujeme a ulozime do premennej aj DB
+                // rozparsujeme a ulozime do premennej aj DB
                 prekazkaClass *prekazka = prekazkaClass::fromJson(jsonData);
                 shm_S_GUI->dbConnector->savePrekazka(prekazka);
             }
