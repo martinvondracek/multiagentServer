@@ -155,7 +155,7 @@ int serverClass::stopServer() {
             // posleme ukoncovaci string agentovi
             shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonServerQuit());
         }
-        usleep(5000*1000);
+        usleep(500*1000);
         for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
             std::cout << "agent id=" << i->id << " ukoncujem" << "\n";
             pthread_cancel(i->vlaknoPrijimanie);
