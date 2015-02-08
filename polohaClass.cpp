@@ -81,17 +81,17 @@ const char * polohaClass::toJson() {
     
     json.append(",\n\"X\" : ");
     pom = std::to_string(x);
-    std::replace( pom.begin(), pom.end(), ',', '.'); // replace all 'x' to 'y'
+    std::replace( pom.begin(), pom.end(), ',', '.');
     json.append(pom);
     
     json.append(",\n\"Y\" : ");
     pom = std::to_string(y);
-    std::replace( pom.begin(), pom.end(), ',', '.'); // replace all 'x' to 'y'
+    std::replace( pom.begin(), pom.end(), ',', '.');
     json.append(pom);
     
     json.append(",\n\"FI\" : ");
     pom = std::to_string(fi);
-    std::replace( pom.begin(), pom.end(), ',', '.'); // replace all 'x' to 'y'
+    std::replace( pom.begin(), pom.end(), ',', '.');
     json.append(pom);
     
     json.append("\n}\n");
