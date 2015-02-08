@@ -18,23 +18,37 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
         n = shm_S_GUI->socket->receiveJson(agent.sockFd, jsonData, 255);
         if (n > 0) { //musia byt prijate byty
             std::cout << "data=" << jsonData << "\n";
-            //todo rozparsovat a spracovat, ulozit do db
+            //rozparsovat a spracovat, ulozit do db
             std::string ctype = socketUtilClass::parseClassTypeFromJson(jsonData);
             
             // ak pride ukoncenie agenta
             if (ctype.compare("QUIT") == 0) {
-                // todo vymazeme agenta z listu
-                //todo pri odpojeni agenta treba dekrementovat pocet pripojenych a pripojit dalsich
+                //vymazeme agenta z listu
+                //pri odpojeni agenta treba dekrementovat pocet pripojenych a pripojit dalsich
+                int id = socketUtilClass::parseIdFromQuit(jsonData);
+                std::list<agent_in_shm>::iterator i;
+                for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+                    if (i->id == id) {
+                        shm_S_GUI->agentsList.erase(i);
+                        shm_S_GUI->connectedAgentsCount--;
+                        shm_S_GUI->widget->agentCountLabel->setText(std::to_string(shm_S_GUI->connectedAgentsCount).c_str());
+                        break;
+                    }
+                }
             }
             
             // ak pride poloha
             if (ctype.compare("POLOHACLASS") == 0) {
                 // todo rozparsujeme a ulozime do premennej aj DB
+                polohaClass *poloha = polohaClass::fromJson(jsonData);
+                shm_S_GUI->dbConnector->savePoloha(poloha);
             }
             
             // ak pride prekazka
             if (ctype.compare("PREKAZKACLASS") == 0) {
                 // todo rozparsujeme a ulozime do premennej aj DB
+                prekazkaClass *prekazka = prekazkaClass::fromJson(jsonData);
+                shm_S_GUI->dbConnector->savePrekazka(prekazka);
             }
         }
         usleep(300 * 1000);
@@ -65,10 +79,11 @@ void *vlaknoCakanieNaAgentov(void *arg) {
         if (shm_S_GUI->connectedAgentsCount < shm_S_GUI->maxAgents) {
             newSocketFd = shm_S_GUI->socket->waitAndAcceptClient();
             shm_S_GUI->connectedAgentsCount++;
+            shm_S_GUI->lastAgentId++;
             shm_S_GUI->widget->agentCountLabel->setText(std::to_string(shm_S_GUI->connectedAgentsCount).c_str());
             // todo autentifikovat
             agent_in_shm agent;
-            agent.id = shm_S_GUI->connectedAgentsCount;
+            agent.id = shm_S_GUI->lastAgentId;
             agent.sockFd = newSocketFd;
             std::cout << "newsocfd " << newSocketFd << "\n";
             const char *jsondata = socketUtilClass::createJsonAgentId_IdSpustenia(agent.id, shm_S_GUI->idSpustenia);

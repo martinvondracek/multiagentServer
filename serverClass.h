@@ -30,6 +30,7 @@ struct komunikacia_shm {
     bool mappingNow;
     int maxAgents;
     int connectedAgentsCount;
+    int lastAgentId;
     socketClass *socket;
     dbConnectorClass *dbConnector;
     Ui::serverForm *widget;
