@@ -34,6 +34,24 @@ const char *  socketUtilClass::createJsonServerQuit() {
     return json.c_str();
 }
 
+const char *  socketUtilClass::createJsonStartMapping() {
+    std::string json = "{\n";
+    json.append("\"CLASSTYPE\" : \"SPUSTIT_MAPOVANIE\"");
+    
+    json.append("\n}\n");
+        
+    return json.c_str();
+}
+
+const char *  socketUtilClass::createJsonStopMapping() {
+    std::string json = "{\n";
+    json.append("\"CLASSTYPE\" : \"STOP_MAPOVANIE\"");
+    
+    json.append("\n}\n");
+        
+    return json.c_str();
+}
+
 const char * socketUtilClass::parseClassTypeFromJson(const char *json) {
     rapidjson::Document document;
     document.Parse<0>(json);

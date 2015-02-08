@@ -47,8 +47,7 @@ void *vlaknoNavigaciaMapovania(void *arg) {
     
     std::list<agent_in_shm>::iterator i;
     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
-        std::string send = "{\"CLASSTYPE\" : \"SPUSTIT_MAPOVANIE\"}";
-        shm_S_GUI->socket->sendJson(i->sockFd, send.c_str());
+        shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonStartMapping());
     }
     
     while (shm_S_GUI->ukonci_ulohu == false) {
@@ -143,24 +142,31 @@ int serverClass::startServer(int portNumber, int maxAgents) {
 
 int serverClass::stopServer() {
     std::cout << "stopping server\n";
-    //zrusime mapovanie
-    stopMapping();
+    if (serverRunning) {
+        //zrusime mapovanie
+        stopMapping();
 
-    // zrusime vlakno cakajuce na novych agentov
-    pthread_cancel(vlaknoCakanieAgentov);
-    //poodpajame agentov - zrusime newSocketFd a vlakno prijimanie
-    std::list<agent_in_shm>::iterator i;
-    for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
-        std::cout << "agent id=" << i->id << " ukoncujem" << "\n";
-        // posleme ukoncovaci string agentovi
-        shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonServerQuit());
-        pthread_cancel(i->vlaknoPrijimanie);
-        socket->disconnectFd(i->sockFd);
-    }
-    if (socket->getConnected()) {
-        socket->disconnect();
+        // zrusime vlakno cakajuce na novych agentov
+        pthread_cancel(vlaknoCakanieAgentov);
+        //poodpajame agentov - zrusime newSocketFd a vlakno prijimanie
+        std::list<agent_in_shm>::iterator i;
+        for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+            std::cout << "agent id=" << i->id << " posielam ukoncenie" << "\n";
+            // posleme ukoncovaci string agentovi
+            shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonServerQuit());
+        }
+        usleep(5000*1000);
+        for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+            std::cout << "agent id=" << i->id << " ukoncujem" << "\n";
+            pthread_cancel(i->vlaknoPrijimanie);
+            socket->disconnectFd(i->sockFd);
+        }
+        if (socket->getConnected()) {
+            socket->disconnect();
+        }
     }
     serverRunning = false;
+    
 }
 
 bool serverClass::isServerRunning() {
@@ -190,8 +196,7 @@ int serverClass::stopMapping() {
         std::cout << "stopping mapping\n";
         std::list<agent_in_shm>::iterator i;
         for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
-            std::string send = "{\"CLASSTYPE\" : \"STOP_MAPOVANIE\"}";
-            socket->sendJson(i->sockFd, send.c_str());
+            socket->sendJson(i->sockFd, socketUtilClass::createJsonStopMapping());
         }
         // zrusime mapovaci thread - sam sa ukonci
         shm_S_GUI->ukonci_ulohu = true;

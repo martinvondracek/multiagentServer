@@ -22,6 +22,8 @@ public:
     
     static const char *  createJsonAgentId_IdSpustenia(int id, int idSpustenia);
     static const char *  createJsonServerQuit();
+    static const char *  createJsonStartMapping();
+    static const char *  createJsonStopMapping();
     
     static const char * parseClassTypeFromJson(const char *json);
     static int parseIdFromQuit(const char *json);
