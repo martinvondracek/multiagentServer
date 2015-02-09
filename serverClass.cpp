@@ -34,8 +34,13 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                         shm_S_GUI->agentsList.erase(i);
                         shm_S_GUI->connectedAgentsCount--;
                         shm_S_GUI->widget->agentCountLabel->setText(std::to_string(shm_S_GUI->connectedAgentsCount).c_str());
-                        // todo ak je 0 agentov treba zakazat mapovanie
-                        break;
+                        //ak neni pripojeny agent zakazeme spustenie mapovania
+                        if (!(shm_S_GUI->connectedAgentsCount > 0)) {
+                            shm_S_GUI->widget->startMappingButton->setEnabled(false);
+                            //todo ak neni ziaden agent pripojeny tak treba zrusit pripadne mapovanie
+                        }
+                        //break;
+                        return 0;
                     }
                 }
             }
@@ -106,6 +111,10 @@ void *vlaknoCakanieNaAgentov(void *arg) {
                 continue;
             }
             shm_S_GUI->agentsList.push_back(agent);
+            //ak je pripojenych viac agetov povolime mapovanie
+            if (shm_S_GUI->connectedAgentsCount > 0) {
+                shm_S_GUI->widget->startMappingButton->setEnabled(true);
+            }
             usleep(200 * 1000);
             std::cout << "dalsi agent pripojeny\n";
         } else {

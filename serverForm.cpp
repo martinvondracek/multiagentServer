@@ -59,7 +59,7 @@ void serverForm::startServerClicked() {
     if (server->isServerRunning()) {
         widget.portEdit->setEnabled(false);
         widget.maxAgentEdit->setEnabled(false);
-        widget.startMappingButton->setEnabled(true);
+        widget.startMappingButton->setEnabled(false);
         widget.stopMappingButton->setEnabled(false);
         widget.startServerButton->setEnabled(false);
         widget.infoLabel->setText("Server uspesne spusteny");
@@ -109,7 +109,9 @@ void serverForm::stopMappingClicked() {
     usleep(1000*1000);
     shm_S_GUI->mappingNow = false;
     widget.infoLabel->setText("Mapovanie ukoncene");
-    widget.startMappingButton->setEnabled(true);
+    if (shm_S_GUI->connectedAgentsCount > 0) {
+        widget.startMappingButton->setEnabled(true);
+    }
     widget.stopMappingButton->setEnabled(false);
     
 }
