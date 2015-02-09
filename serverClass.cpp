@@ -15,11 +15,13 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
     agent_in_shm agent = param->agent_info;
     while (1) {
         char jsonData[1001];
+        bzero(jsonData, 1000);
         n = shm_S_GUI->socket->receiveJson(agent.sockFd, jsonData, 1000);
         if (n > 0) { //musia byt prijate byty
-            std::cout << "data=" << jsonData << "\n";
+            //std::cout << "data=" << jsonData << "=KONIEC\n";
             //rozparsovat a spracovat, ulozit do db
             std::string ctype = socketUtilClass::parseClassTypeFromJson(jsonData);
+            std::cout << "ctype=" << ctype << "\n";
             
             // ak pride ukoncenie agenta
             if (ctype.compare("QUIT") == 0) {
@@ -32,6 +34,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                         shm_S_GUI->agentsList.erase(i);
                         shm_S_GUI->connectedAgentsCount--;
                         shm_S_GUI->widget->agentCountLabel->setText(std::to_string(shm_S_GUI->connectedAgentsCount).c_str());
+                        // todo ak je 0 agentov treba zakazat mapovanie
                         break;
                     }
                 }

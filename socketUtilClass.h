@@ -25,7 +25,7 @@ public:
     static const char *  createJsonStartMapping();
     static const char *  createJsonStopMapping();
     
-    static const char * parseClassTypeFromJson(const char *json);
+    static std::string parseClassTypeFromJson(const char *json);
     static int parseIdFromQuit(const char *json);
 private:
 

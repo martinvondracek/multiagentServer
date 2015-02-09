@@ -151,10 +151,12 @@ int dbConnectorClass::getNewPrekazkaId(int idSpustenia) {
 }
 
 int dbConnectorClass::savePoloha(polohaClass *poloha) {
+    std::cout << "savePoloha\n";
     if (!connected) {
         return -1;
     }
     
+    auto t_start = std::chrono::high_resolution_clock::now();
     m.lock();
     sql::PreparedStatement *pstmt;
     try {
@@ -178,14 +180,20 @@ int dbConnectorClass::savePoloha(polohaClass *poloha) {
         m.unlock();
         return -1;
     }
+    auto t_end = std::chrono::high_resolution_clock::now();
+    std::cout << "savePoloha Wall clock time passed: "
+              << std::chrono::duration<double, std::milli>(t_end-t_start).count()
+              << " ms\n";
     return 0;
 }
 
 int dbConnectorClass::savePrekazka(prekazkaClass *prekazka) {
+    std::cout << "savePrekazka\n";
     if (!connected) {
         return -1;
     }
     
+    auto t_start = std::chrono::high_resolution_clock::now();
     m.lock();
     sql::PreparedStatement *pstmt;
     try {
@@ -215,6 +223,10 @@ int dbConnectorClass::savePrekazka(prekazkaClass *prekazka) {
         m.unlock();
         return -1;
     }
+    auto t_end = std::chrono::high_resolution_clock::now();
+    std::cout << "savePrekazka Wall clock time passed: "
+              << std::chrono::duration<double, std::milli>(t_end-t_start).count()
+              << " ms\n";
     return 0;
 }
 
