@@ -155,6 +155,7 @@ int dbConnectorClass::savePoloha(polohaClass *poloha) {
         return -1;
     }
     
+    m.lock();
     sql::PreparedStatement *pstmt;
     try {
         pstmt = con->prepareStatement("INSERT INTO `polohy`(`id_spustenia`, `robot`, `x`, `y`, `fi`) VALUES (?,?,?,?,?)");
@@ -164,8 +165,8 @@ int dbConnectorClass::savePoloha(polohaClass *poloha) {
         pstmt->setDouble(4, poloha->GetY());
         pstmt->setDouble(5, poloha->GetFi());
         pstmt->executeQuery();
-
         delete pstmt;
+        m.unlock();
     } catch (sql::SQLException &e) {
         std::cout << "exception\n";
         std::cout << "# ERR: SQLException in " << __FILE__;
@@ -174,6 +175,7 @@ int dbConnectorClass::savePoloha(polohaClass *poloha) {
         std::cout << " (MySQL error code: " << e.getErrorCode() << "\n";
         std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
         delete pstmt;
+        m.unlock();
         return -1;
     }
     return 0;
@@ -184,6 +186,7 @@ int dbConnectorClass::savePrekazka(prekazkaClass *prekazka) {
         return -1;
     }
     
+    m.lock();
     sql::PreparedStatement *pstmt;
     try {
         pstmt = con->prepareStatement("INSERT INTO `prekazky`(`id_spustenia`, `prekazka`, `robot`, `x_rob`, `y_rob`, `fi_rob`, `x_p`, `y_p`, `naraz_vpravo`, `naraz_vlavo`, `naraz_vpredu`) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
@@ -199,8 +202,8 @@ int dbConnectorClass::savePrekazka(prekazkaClass *prekazka) {
         pstmt->setBoolean(10, prekazka->IsNaraz_vlavo());
         pstmt->setBoolean(11, prekazka->IsNaraz_vpredu());
         pstmt->executeQuery();
-
         delete pstmt;
+        m.unlock();
     } catch (sql::SQLException &e) {
         std::cout << "exception\n";
         std::cout << "# ERR: SQLException in " << __FILE__;
@@ -209,6 +212,7 @@ int dbConnectorClass::savePrekazka(prekazkaClass *prekazka) {
         std::cout << " (MySQL error code: " << e.getErrorCode() << "\n";
         std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
         delete pstmt;
+        m.unlock();
         return -1;
     }
     return 0;

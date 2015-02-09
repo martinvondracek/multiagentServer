@@ -8,6 +8,8 @@
 #ifndef DBCONNECTORCLASS_H
 #define	DBCONNECTORCLASS_H
 
+#include <mutex>
+
 #include "mysql_connection.h"
 #include "mysql_driver.h" 
 #include <cppconn/driver.h>
@@ -37,6 +39,7 @@ public:
     int savePrekazka(prekazkaClass *prekazka); // ulozi prekazku do DB pre spustenie
 private:
     bool connected = false;
+    std::mutex m;
     
     sql::Driver *driver;
     sql::Connection *con;
