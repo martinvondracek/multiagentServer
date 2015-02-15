@@ -35,6 +35,7 @@ struct komunikacia_shm {
     dbConnectorClass *dbConnector;
     Ui::serverForm *widget;
     std::list<agent_in_shm> agentsList;
+    void *serverForm;
 };
 
 struct param_vlakno_prijimanie {

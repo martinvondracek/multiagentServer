@@ -21,6 +21,7 @@ serverForm::serverForm() {
     shm_S_GUI->mappingNow = 0;
     shm_S_GUI->widget = &widget;
     server = new serverClass(shm_S_GUI);
+    shm_S_GUI->serverForm = (void *) this;
     
     struct ifaddrs * ifAddrStruct=NULL;
     struct ifaddrs * ifa=NULL;
@@ -104,6 +105,7 @@ void serverForm::stopMappingClicked() {
         return;
     }
     
+    widget.stopMappingButton->setEnabled(false);
     shm_S_GUI->ukonci_ulohu = true;
     server->stopMapping();
     usleep(1000*1000);

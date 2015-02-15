@@ -6,6 +6,14 @@
  */
 
 #include "serverClass.h"
+#include "serverForm.h"
+
+void *vlaknoZrusitMapovanie(void *arg) {
+    serverForm *server = (serverForm *) arg;
+    
+    server->stopMappingClicked();
+    usleep(300*1000);
+}
 
 void *vlaknoPrijimanieDatAgentov(void *arg) {
     int n;
@@ -38,6 +46,16 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                         if (!(shm_S_GUI->connectedAgentsCount > 0)) {
                             shm_S_GUI->widget->startMappingButton->setEnabled(false);
                             //todo ak neni ziaden agent pripojeny tak treba zrusit pripadne mapovanie
+                            pthread_t thr1;
+                            pthread_attr_t parametre;
+                            if (pthread_attr_init(&parametre)) {
+                                std::cout << "chyba v attr_init\n";
+                            }
+                            pthread_attr_setdetachstate(&parametre, PTHREAD_CREATE_DETACHED);
+                            if (pthread_create(&thr1, &parametre, vlaknoZrusitMapovanie, (void*) shm_S_GUI->serverForm)) {
+                                std::cout << "chyba vo vytvarani vlakna na odpojenie\n";
+                            }
+                            
                         }
                         //break;
                         return 0;
