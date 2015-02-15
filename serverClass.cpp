@@ -45,7 +45,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                         //ak neni pripojeny agent zakazeme spustenie mapovania
                         if (!(shm_S_GUI->connectedAgentsCount > 0)) {
                             shm_S_GUI->widget->startMappingButton->setEnabled(false);
-                            //todo ak neni ziaden agent pripojeny tak treba zrusit pripadne mapovanie
+                            //ak neni ziaden agent pripojeny tak treba zrusit pripadne mapovanie
                             pthread_t thr1;
                             pthread_attr_t parametre;
                             if (pthread_attr_init(&parametre)) {
