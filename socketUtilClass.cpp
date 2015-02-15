@@ -25,6 +25,18 @@ const char *  socketUtilClass::createJsonAgentId_IdSpustenia(int id, int idSpust
     return json.c_str();
 }
 
+const char *  socketUtilClass::createJsonIdSpustenia(int idSpustenia) {
+    std::string json = "{\n";
+    json.append("\"CLASSTYPE\" : \"ID_SPUSTENIA\"");
+    
+    json.append(",\n\"ID_SPUSTENIA\" : ");
+    json.append(std::to_string(idSpustenia));
+    
+    json.append("\n}\n");
+        
+    return json.c_str();
+}
+
 const char *  socketUtilClass::createJsonServerQuit() {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"SERVER_QUIT\"");

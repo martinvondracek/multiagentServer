@@ -67,9 +67,12 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
 void *vlaknoNavigaciaMapovania(void *arg) {
     komunikacia_shm *shm_S_GUI = (komunikacia_shm *) arg;
     
+    // z DB ziskame nove id spustenia a posleme ho spolu s info o zacati mapovania
+    shm_S_GUI->idSpustenia = shm_S_GUI->dbConnector->getNewSpustenieId();
     std::list<agent_in_shm>::iterator i;
     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
         shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonStartMapping());
+        shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonIdSpustenia(shm_S_GUI->idSpustenia));
     }
     
     while (shm_S_GUI->ukonci_ulohu == false) {
@@ -218,7 +221,6 @@ int serverClass::doMapping() {
 }
 
 int serverClass::stopMapping() {
-    // todo implementovat
     if (shm_S_GUI->mappingNow) {
         std::cout << "stopping mapping\n";
         std::list<agent_in_shm>::iterator i;
