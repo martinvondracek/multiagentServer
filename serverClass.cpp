@@ -26,7 +26,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
         bzero(jsonData, 1000);
         n = shm_S_GUI->socket->receiveJson(agent.sockFd, jsonData, 1000);
         if (n > 0) { //musia byt prijate byty
-            //std::cout << "data=" << jsonData << "=KONIEC\n";
+            std::cout << "data=" << jsonData << "=KONIEC\n";
             //rozparsovat a spracovat, ulozit do db
             std::string ctype = socketUtilClass::parseClassTypeFromJson(jsonData);
             std::cout << "ctype=" << ctype << "\n";
@@ -199,13 +199,9 @@ int serverClass::stopServer() {
         //poodpajame agentov - zrusime newSocketFd a vlakno prijimanie
         std::list<agent_in_shm>::iterator i;
         for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
-            std::cout << "agent id=" << i->id << " posielam ukoncenie" << "\n";
+            std::cout << "agent id=" << i->id << " ukoncujem" << "\n";
             // posleme ukoncovaci string agentovi
             shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonServerQuit());
-        }
-        usleep(500*1000);
-        for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
-            std::cout << "agent id=" << i->id << " ukoncujem" << "\n";
             pthread_cancel(i->vlaknoPrijimanie);
             socket->disconnectFd(i->sockFd);
         }
