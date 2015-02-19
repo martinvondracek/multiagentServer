@@ -10,9 +10,9 @@
 
 void *vlaknoZrusitMapovanie(void *arg) {
     serverForm *server = (serverForm *) arg;
-    
+
     server->stopMappingClicked();
-    usleep(300*1000);
+    usleep(300 * 1000);
 }
 
 void *vlaknoPrijimanieDatAgentov(void *arg) {
@@ -22,59 +22,71 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
     komunikacia_shm *shm_S_GUI = param->shm_S_A;
     agent_in_shm agent = param->agent_info;
     while (1) {
-        char jsonData[1001];
-        bzero(jsonData, 1000);
-        n = shm_S_GUI->socket->receiveJson(agent.sockFd, jsonData, 1000);
+        char jsonData[50001];
+        bzero(jsonData, 50000);
+        n = shm_S_GUI->socket->receiveJson(agent.sockFd, jsonData, 50000);
         if (n > 0) { //musia byt prijate byty
-            std::cout << "data=" << jsonData << "=KONIEC\n";
-            //rozparsovat a spracovat, ulozit do db
-            std::string ctype = socketUtilClass::parseClassTypeFromJson(jsonData);
-            std::cout << "ctype=" << ctype << "\n";
-            
-            // ak pride ukoncenie agenta
-            if (ctype.compare("QUIT") == 0) {
-                //vymazeme agenta z listu
-                //pri odpojeni agenta treba dekrementovat pocet pripojenych a pripojit dalsich
-                int id = socketUtilClass::parseIdFromQuit(jsonData);
-                std::list<agent_in_shm>::iterator i;
-                for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
-                    if (i->id == id) {
-                        shm_S_GUI->agentsList.erase(i);
-                        shm_S_GUI->connectedAgentsCount--;
-                        shm_S_GUI->widget->agentCountLabel->setText(std::to_string(shm_S_GUI->connectedAgentsCount).c_str());
-                        //ak neni pripojeny agent zakazeme spustenie mapovania
-                        if (!(shm_S_GUI->connectedAgentsCount > 0)) {
-                            shm_S_GUI->widget->startMappingButton->setEnabled(false);
-                            //ak neni ziaden agent pripojeny tak treba zrusit pripadne mapovanie
-                            pthread_t thr1;
-                            pthread_attr_t parametre;
-                            if (pthread_attr_init(&parametre)) {
-                                std::cout << "chyba v attr_init\n";
+            //std::cout << "data=" << jsonData << "=KONIEC\n";
+
+            //ak pride viacej dat naraz tak ich rozdelime
+            std::string s = jsonData;
+            std::string delimiter = "KKK";
+            size_t pos = 0;
+            std::string token;
+            while ((pos = s.find(delimiter)) != std::string::npos) {
+                token = s.substr(0, pos);
+                std::cout << "data token=" << token << "=KONIEC\n";
+
+                //rozparsovat a spracovat, ulozit do db
+                std::string ctype = socketUtilClass::parseClassTypeFromJson(token.c_str());
+                std::cout << "ctype=" << ctype << "\n";
+
+                // ak pride ukoncenie agenta
+                if (ctype.compare("QUIT") == 0) {
+                    //vymazeme agenta z listu
+                    //pri odpojeni agenta treba dekrementovat pocet pripojenych a pripojit dalsich
+                    int id = socketUtilClass::parseIdFromQuit(token.c_str());
+                    std::list<agent_in_shm>::iterator i;
+                    for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+                        if (i->id == id) {
+                            shm_S_GUI->agentsList.erase(i);
+                            shm_S_GUI->connectedAgentsCount--;
+                            shm_S_GUI->widget->agentCountLabel->setText(std::to_string(shm_S_GUI->connectedAgentsCount).c_str());
+                            //ak neni pripojeny agent zakazeme spustenie mapovania
+                            if (!(shm_S_GUI->connectedAgentsCount > 0)) {
+                                shm_S_GUI->widget->startMappingButton->setEnabled(false);
+                                //ak neni ziaden agent pripojeny tak treba zrusit pripadne mapovanie
+                                pthread_t thr1;
+                                pthread_attr_t parametre;
+                                if (pthread_attr_init(&parametre)) {
+                                    std::cout << "chyba v attr_init\n";
+                                }
+                                pthread_attr_setdetachstate(&parametre, PTHREAD_CREATE_DETACHED);
+                                if (pthread_create(&thr1, &parametre, vlaknoZrusitMapovanie, (void*) shm_S_GUI->serverForm)) {
+                                    std::cout << "chyba vo vytvarani vlakna na odpojenie\n";
+                                }
+
                             }
-                            pthread_attr_setdetachstate(&parametre, PTHREAD_CREATE_DETACHED);
-                            if (pthread_create(&thr1, &parametre, vlaknoZrusitMapovanie, (void*) shm_S_GUI->serverForm)) {
-                                std::cout << "chyba vo vytvarani vlakna na odpojenie\n";
-                            }
-                            
+                            //break;
+                            return 0;
                         }
-                        //break;
-                        return 0;
                     }
                 }
-            }
-            
-            // ak pride poloha
-            if (ctype.compare("POLOHACLASS") == 0) {
-                // rozparsujeme a ulozime do premennej aj DB
-                polohaClass *poloha = polohaClass::fromJson(jsonData);
-                shm_S_GUI->dbConnector->savePoloha(poloha);
-            }
-            
-            // ak pride prekazka
-            if (ctype.compare("PREKAZKACLASS") == 0) {
-                // rozparsujeme a ulozime do premennej aj DB
-                prekazkaClass *prekazka = prekazkaClass::fromJson(jsonData);
-                shm_S_GUI->dbConnector->savePrekazka(prekazka);
+
+                // ak pride poloha
+                if (ctype.compare("POLOHACLASS") == 0) {
+                    // rozparsujeme a ulozime do premennej aj DB
+                    polohaClass *poloha = polohaClass::fromJson(token.c_str());
+                    shm_S_GUI->dbConnector->savePoloha(poloha);
+                }
+
+                // ak pride prekazka
+                if (ctype.compare("PREKAZKACLASS") == 0) {
+                    // rozparsujeme a ulozime do premennej aj DB
+                    prekazkaClass *prekazka = prekazkaClass::fromJson(token.c_str());
+                    shm_S_GUI->dbConnector->savePrekazka(prekazka);
+                }
+                s.erase(0, pos + delimiter.length());
             }
         }
         usleep(300 * 1000);
@@ -84,7 +96,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
 
 void *vlaknoNavigaciaMapovania(void *arg) {
     komunikacia_shm *shm_S_GUI = (komunikacia_shm *) arg;
-    
+
     // z DB ziskame nove id spustenia a posleme ho spolu s info o zacati mapovania
     shm_S_GUI->idSpustenia = shm_S_GUI->dbConnector->getNewSpustenieId();
     std::list<agent_in_shm>::iterator i;
@@ -92,7 +104,7 @@ void *vlaknoNavigaciaMapovania(void *arg) {
         shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonStartMapping());
         shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonIdSpustenia(shm_S_GUI->idSpustenia));
     }
-    
+
     while (shm_S_GUI->ukonci_ulohu == false) {
         std::cout << "vlakno navigacia\n";
         // todo implementovat riadiaci algoritmus
@@ -139,7 +151,7 @@ void *vlaknoCakanieNaAgentov(void *arg) {
             usleep(200 * 1000);
             std::cout << "dalsi agent pripojeny\n";
         } else {
-            usleep(500*1000);
+            usleep(500 * 1000);
         }
     }
     std::cout << "max pocet agentov dosiahnuty\n";
@@ -210,7 +222,7 @@ int serverClass::stopServer() {
         }
     }
     serverRunning = false;
-    
+
 }
 
 bool serverClass::isServerRunning() {
@@ -229,7 +241,7 @@ int serverClass::doMapping() {
             return -1;
         }
     }
-    
+
     shm_S_GUI->mappingNow = true;
     return 0;
 }
