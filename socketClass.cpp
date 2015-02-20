@@ -69,9 +69,14 @@ int socketClass::disconnectFd(int sockfd) {
 }
 
 int socketClass::sendJson(int sockfd, const char *jsonData) {
+    std::string str2 = jsonData;
     int n;
     
-    n = write(sockfd, jsonData, strlen(jsonData));
+    std::string str = "";
+    str.append(str2);
+    str.append("KKK");
+    const char * data = str.c_str();
+    n = write(sockfd, data, strlen(data));
     usleep(10*1000);
     if (n < 0) {
         std::cout << "ERROR writing to socket\n";

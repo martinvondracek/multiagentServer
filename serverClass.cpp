@@ -25,6 +25,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
         char jsonData[50001];
         bzero(jsonData, 50000);
         n = shm_S_GUI->socket->receiveJson(agent.sockFd, jsonData, 50000);
+        //std::cout << "rawdata=" << jsonData << "=KONIEC\n";
         if (n > 0) { //musia byt prijate byty
             //std::cout << "data=" << jsonData << "=KONIEC\n";
 
@@ -101,8 +102,8 @@ void *vlaknoNavigaciaMapovania(void *arg) {
     shm_S_GUI->idSpustenia = shm_S_GUI->dbConnector->getNewSpustenieId();
     std::list<agent_in_shm>::iterator i;
     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
-        shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonStartMapping());
         shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonIdSpustenia(shm_S_GUI->idSpustenia));
+        shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonStartMapping());
     }
 
     while (shm_S_GUI->ukonci_ulohu == false) {
