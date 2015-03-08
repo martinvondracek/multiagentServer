@@ -22,6 +22,7 @@ public:
     
     static const char *  createJsonAgentId_IdSpustenia(int id, int idSpustenia);
     static const char *  createJsonIdSpustenia(int idSpustenia);
+    static const char *  createJsonNewIdPrekazky(int idPrekazky);
     static const char *  createJsonServerQuit();
     static const char *  createJsonStartMapping();
     static const char *  createJsonStopMapping();

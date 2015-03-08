@@ -122,6 +122,7 @@ int dbConnectorClass::getNewPrekazkaId(int idSpustenia) {
     sql::ResultSet *res;
     sql::PreparedStatement *pstmt;
     int newId;
+    m.lock();
     try {
         stmt = con->createStatement();
         pstmt = con->prepareStatement("SELECT max(prekazka) from prekazky where id_spustenia=?");
@@ -135,6 +136,7 @@ int dbConnectorClass::getNewPrekazkaId(int idSpustenia) {
         delete res;
         delete stmt;
         delete pstmt;
+        m.unlock();
     } catch (sql::SQLException &e) {
         std::cout << "exception\n";
         std::cout << "# ERR: SQLException in " << __FILE__;
@@ -145,6 +147,7 @@ int dbConnectorClass::getNewPrekazkaId(int idSpustenia) {
         delete res;
         delete stmt;
         delete pstmt;
+        m.unlock();
         return -1;
     }
     return newId;

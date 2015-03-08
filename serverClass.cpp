@@ -87,6 +87,16 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                     prekazkaClass *prekazka = prekazkaClass::fromJson(token.c_str());
                     shm_S_GUI->dbConnector->savePrekazka(prekazka);
                 }
+                
+                // ak pride ziadost o nove id prekazky
+                if (ctype.compare("NEW_ID_PREKAZKY") == 0) {
+                    //ziskame z DB a posleme spat
+                    int idPrekazky = shm_S_GUI->dbConnector->getNewPrekazkaId(shm_S_GUI->idSpustenia);
+                    std::cout << "nove id prekazky: " << idPrekazky << "id spustenia " << shm_S_GUI->idSpustenia << "\n";
+                    shm_S_GUI->socket->sendJson(agent.sockFd, socketUtilClass::createJsonNewIdPrekazky(idPrekazky));
+                    std::cout << "poslane nove id prekazky: " << idPrekazky << "\n";
+                }
+                
                 s.erase(0, pos + delimiter.length());
             }
         }

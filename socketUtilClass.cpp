@@ -37,6 +37,18 @@ const char *  socketUtilClass::createJsonIdSpustenia(int idSpustenia) {
     return json.c_str();
 }
 
+const char *  socketUtilClass::createJsonNewIdPrekazky(int idPrekazky) {
+    std::string json = "{\n";
+    json.append("\"CLASSTYPE\" : \"NEW_ID_PREKAZKY\"");
+    
+    json.append(",\n\"ID_PREKAZKY\" : ");
+    json.append(std::to_string(idPrekazky));
+    
+    json.append("\n}\n");
+        
+    return json.c_str();
+}
+
 const char *  socketUtilClass::createJsonServerQuit() {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"SERVER_QUIT\"");
