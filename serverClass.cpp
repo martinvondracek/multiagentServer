@@ -36,11 +36,11 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
             std::string token;
             while ((pos = s.find(delimiter)) != std::string::npos) {
                 token = s.substr(0, pos);
-                std::cout << "data token=" << token << "=KONIEC\n";
+                //std::cout << "data token=" << token << "=KONIEC\n";
 
                 //rozparsovat a spracovat, ulozit do db
                 std::string ctype = socketUtilClass::parseClassTypeFromJson(token.c_str());
-                std::cout << "ctype=" << ctype << "\n";
+                //std::cout << "ctype=" << ctype << "\n";
 
                 // ak pride ukoncenie agenta
                 if (ctype.compare("QUIT") == 0) {
@@ -92,9 +92,9 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                 if (ctype.compare("NEW_ID_PREKAZKY") == 0) {
                     //ziskame z DB a posleme spat
                     int idPrekazky = shm_S_GUI->dbConnector->getNewPrekazkaId(shm_S_GUI->idSpustenia);
-                    std::cout << "nove id prekazky: " << idPrekazky << "id spustenia " << shm_S_GUI->idSpustenia << "\n";
+                    std::cout << "nove id prekazky: " << idPrekazky << "id spustenia " << shm_S_GUI->idSpustenia << "agent id=" << agent.id << "\n";
                     shm_S_GUI->socket->sendJson(agent.sockFd, socketUtilClass::createJsonNewIdPrekazky(idPrekazky));
-                    std::cout << "poslane nove id prekazky: " << idPrekazky << "\n";
+                    //std::cout << "poslane nove id prekazky: " << idPrekazky << "\n";
                 }
                 
                 s.erase(0, pos + delimiter.length());
@@ -106,6 +106,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
 }
 
 void *vlaknoNavigaciaMapovania(void *arg) {
+    std::cout << "vlakno navigacia\n";
     komunikacia_shm *shm_S_GUI = (komunikacia_shm *) arg;
 
     // z DB ziskame nove id spustenia a posleme ho spolu s info o zacati mapovania
@@ -117,7 +118,7 @@ void *vlaknoNavigaciaMapovania(void *arg) {
     }
 
     while (shm_S_GUI->ukonci_ulohu == false) {
-        std::cout << "vlakno navigacia\n";
+        //std::cout << "vlakno navigacia\n";
         // todo implementovat riadiaci algoritmus
         usleep(1000 * 1000);
     }
