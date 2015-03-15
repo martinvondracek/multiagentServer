@@ -15,12 +15,12 @@
 #include <unistd.h>
 #include <iostream>
 
-class koordSuradClass {
+class KoordSurad {
 public:
-    koordSuradClass(float x, float y);
+    KoordSurad(float x, float y);
     
     const char * toJson();
-    static koordSuradClass * fromJson(const char *json);
+    static KoordSurad * fromJson(const char *json);
     const char * toString();
     
     float getX();
@@ -28,7 +28,7 @@ public:
     float getY();
     void setY(float y);
 
-    virtual ~koordSuradClass();
+    virtual ~KoordSurad();
 private:
     float x;
     float y;

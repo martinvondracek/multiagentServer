@@ -15,10 +15,10 @@
 #include <unistd.h>
 #include <iostream>
 
-class socketUtilClass {
+class SocketUtil {
 public:
-    socketUtilClass();
-    virtual ~socketUtilClass();
+    SocketUtil();
+    virtual ~SocketUtil();
     
     static const char *  createJsonAgentId_IdSpustenia(int id, int idSpustenia);
     static const char *  createJsonIdSpustenia(int idSpustenia);

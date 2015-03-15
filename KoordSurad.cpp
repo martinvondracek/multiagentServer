@@ -5,14 +5,14 @@
  * Created on Nedeľa, 2015, február 8, 15:53
  */
 
-#include "koordSuradClass.h"
+#include "KoordSurad.h"
 
-koordSuradClass::koordSuradClass(float x, float y) {
+KoordSurad::KoordSurad(float x, float y) {
     this->x = x;
     this->y = y;
 }
 
-const char * koordSuradClass::toJson() {
+const char * KoordSurad::toJson() {
     std::string pom;
     
     std::string json = "{\n";
@@ -33,7 +33,7 @@ const char * koordSuradClass::toJson() {
     return json.c_str();
 }
 
-koordSuradClass * koordSuradClass::fromJson(const char *json) {
+KoordSurad * KoordSurad::fromJson(const char *json) {
     float x;
     float y;
     
@@ -43,29 +43,29 @@ koordSuradClass * koordSuradClass::fromJson(const char *json) {
     x = document["X"].GetDouble();
     y = document["Y"].GetDouble();
     
-    return new koordSuradClass(x, y);
+    return new KoordSurad(x, y);
 }
 
-const char * koordSuradClass::toString() {
+const char * KoordSurad::toString() {
     return toJson();
 }
 
-float koordSuradClass::getX() {
+float KoordSurad::getX() {
     return x;
 }
 
-void koordSuradClass::setX(float x) {
+void KoordSurad::setX(float x) {
     this->x = x;
 }
 
-float koordSuradClass::getY() {
+float KoordSurad::getY() {
     return y;
 }
 
-void koordSuradClass::setY(float y) {
+void KoordSurad::setY(float y) {
     this->y = y;
 }
 
-koordSuradClass::~koordSuradClass() {
+KoordSurad::~KoordSurad() {
 }
 

@@ -5,22 +5,22 @@
  * Created on Nedeľa, 2015, január 18, 21:04
  */
 
-#include "dbConnectorClass.h"
+#include "DbConnector.h"
 #include <stdlib.h>
 #include <iostream>
 //#include <stdio.h>
 
 
-dbConnectorClass::dbConnectorClass() {
+DbConnector::DbConnector() {
     connect();
     createTables();
 }
 
-bool dbConnectorClass::isConnected() {
+bool DbConnector::isConnected() {
     return connected;
 }
 
-int dbConnectorClass::connect() {
+int DbConnector::connect() {
     try {
         driver = get_driver_instance();
         con = driver->connect(DB_HOST, DB_USERNAME, DB_PASSWORD);
@@ -39,7 +39,7 @@ int dbConnectorClass::connect() {
     }
 }
 
-int dbConnectorClass::createTables() {
+int DbConnector::createTables() {
     sql::PreparedStatement *pstmt;
     
     if (!connected) {
@@ -73,7 +73,7 @@ int dbConnectorClass::createTables() {
     }
 }
 
-int dbConnectorClass::getNewSpustenieId() {
+int DbConnector::getNewSpustenieId() {
     if (!connected) {
         return -1;
     }
@@ -112,7 +112,7 @@ int dbConnectorClass::getNewSpustenieId() {
     return newId;
 }
 
-int dbConnectorClass::getNewPrekazkaId(int idSpustenia) {
+int DbConnector::getNewPrekazkaId(int idSpustenia) {
     if (!connected) {
         return -1;
     }
@@ -153,7 +153,7 @@ int dbConnectorClass::getNewPrekazkaId(int idSpustenia) {
     return newId;
 }
 
-int dbConnectorClass::savePoloha(polohaClass *poloha) {
+int DbConnector::savePoloha(Poloha *poloha) {
     //std::cout << "savePoloha\n";
     if (!connected) {
         return -1;
@@ -190,7 +190,7 @@ int dbConnectorClass::savePoloha(polohaClass *poloha) {
     return 0;
 }
 
-int dbConnectorClass::savePrekazka(prekazkaClass *prekazka) {
+int DbConnector::savePrekazka(Prekazka *prekazka) {
     //std::cout << "savePrekazka\n";
     if (!connected) {
         return -1;
@@ -233,24 +233,24 @@ int dbConnectorClass::savePrekazka(prekazkaClass *prekazka) {
     return 0;
 }
 
-void dbConnectorClass::test() {
+void DbConnector::test() {
     if (!connected) {
         return;
     }
     
-    polohaClass *pol = new polohaClass(0, 2, 1, 1.2, 1.2, 3.14);
+    Poloha *pol = new Poloha(0, 2, 1, 1.2, 1.2, 3.14);
     const char * pom = pol->toJson();
     std::cout << pom << "\n";
-    polohaClass *pol2 = polohaClass::fromJson(pom);
+    Poloha *pol2 = Poloha::fromJson(pom);
     std::cout << pol2->GetX() << "\n";
     
-    prekazkaClass *prk = new prekazkaClass(0, 2, 1, 2, 1.2, 1.2, 3.14, 1.2, 1.2, 1, 0, 1);
+    Prekazka *prk = new Prekazka(0, 2, 1, 2, 1.2, 1.2, 3.14, 1.2, 1.2, 1, 0, 1);
     const char * pom2 = prk->toJson();
-    prekazkaClass *prk2 = prekazkaClass::fromJson(pom2);
+    Prekazka *prk2 = Prekazka::fromJson(pom2);
     std::cout << prk2->GetId_spustenia() << "\n";
 }
 
-dbConnectorClass::~dbConnectorClass() {
+DbConnector::~DbConnector() {
     std::cout << "destruktor dbConnectorClass\n";
     delete con;
 }

@@ -5,12 +5,12 @@
  * Created on Streda, 2015, január 28, 9:58
  */
 
-#include "socketUtilClass.h"
+#include "SocketUtil.h"
 
-socketUtilClass::socketUtilClass() {
+SocketUtil::SocketUtil() {
 }
 
-const char *  socketUtilClass::createJsonAgentId_IdSpustenia(int id, int idSpustenia) {
+const char *  SocketUtil::createJsonAgentId_IdSpustenia(int id, int idSpustenia) {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"AGENTID\"");
     
@@ -25,7 +25,7 @@ const char *  socketUtilClass::createJsonAgentId_IdSpustenia(int id, int idSpust
     return json.c_str();
 }
 
-const char *  socketUtilClass::createJsonIdSpustenia(int idSpustenia) {
+const char *  SocketUtil::createJsonIdSpustenia(int idSpustenia) {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"ID_SPUSTENIA\"");
     
@@ -37,7 +37,7 @@ const char *  socketUtilClass::createJsonIdSpustenia(int idSpustenia) {
     return json.c_str();
 }
 
-const char *  socketUtilClass::createJsonNewIdPrekazky(int idPrekazky) {
+const char *  SocketUtil::createJsonNewIdPrekazky(int idPrekazky) {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"NEW_ID_PREKAZKY\"");
     
@@ -49,7 +49,7 @@ const char *  socketUtilClass::createJsonNewIdPrekazky(int idPrekazky) {
     return json.c_str();
 }
 
-const char *  socketUtilClass::createJsonServerQuit() {
+const char *  SocketUtil::createJsonServerQuit() {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"SERVER_QUIT\"");
     
@@ -58,7 +58,7 @@ const char *  socketUtilClass::createJsonServerQuit() {
     return json.c_str();
 }
 
-const char *  socketUtilClass::createJsonStartMapping() {
+const char *  SocketUtil::createJsonStartMapping() {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"SPUSTIT_MAPOVANIE\"");
     
@@ -67,7 +67,7 @@ const char *  socketUtilClass::createJsonStartMapping() {
     return json.c_str();
 }
 
-const char *  socketUtilClass::createJsonStopMapping() {
+const char *  SocketUtil::createJsonStopMapping() {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"STOP_MAPOVANIE\"");
     
@@ -76,7 +76,7 @@ const char *  socketUtilClass::createJsonStopMapping() {
     return json.c_str();
 }
 
-std::string socketUtilClass::parseClassTypeFromJson(const char *json) {
+std::string SocketUtil::parseClassTypeFromJson(const char *json) {
     rapidjson::Document document;
     document.Parse<0>(json);
     
@@ -86,7 +86,7 @@ std::string socketUtilClass::parseClassTypeFromJson(const char *json) {
     return ctype;
 }
 
-int socketUtilClass::parseIdFromQuit(const char *json) {
+int SocketUtil::parseIdFromQuit(const char *json) {
     int id;
     
     rapidjson::Document document;
@@ -101,6 +101,6 @@ int socketUtilClass::parseIdFromQuit(const char *json) {
     }
 }
 
-socketUtilClass::~socketUtilClass() {
+SocketUtil::~SocketUtil() {
 }
 

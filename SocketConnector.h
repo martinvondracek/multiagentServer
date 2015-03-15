@@ -19,11 +19,11 @@
 #include <arpa/inet.h>
 #include <list>
 
-class socketClass {
+class SocketConnector {
 public:
-    socketClass();
-    socketClass(int portNum);
-    virtual ~socketClass();
+    SocketConnector();
+    SocketConnector(int portNum);
+    virtual ~SocketConnector();
     
     int connect(); // pripoji sa na socket
     int disconnect(); // odpoji sa zo socketu

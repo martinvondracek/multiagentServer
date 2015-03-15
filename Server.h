@@ -13,9 +13,9 @@
 #include <stdlib.h>
 #include <list>
 
-#include "socketClass.h"
-#include "socketUtilClass.h"
-#include "dbConnectorClass.h"
+#include "SocketConnector.h"
+#include "SocketUtil.h"
+#include "DbConnector.h"
 #include "ui_serverForm.h"
 
 struct agent_in_shm {
@@ -31,8 +31,8 @@ struct komunikacia_shm {
     int maxAgents;
     int connectedAgentsCount;
     int lastAgentId;
-    socketClass *socket;
-    dbConnectorClass *dbConnector;
+    SocketConnector *socket;
+    DbConnector *dbConnector;
     Ui::serverForm *widget;
     std::list<agent_in_shm> agentsList;
     void *serverForm;
@@ -43,10 +43,10 @@ struct param_vlakno_prijimanie {
     komunikacia_shm *shm_S_A;
 };
 
-class serverClass {
+class Server {
 public:
-    serverClass(komunikacia_shm *shm_S_GUI);
-    virtual ~serverClass();
+    Server(komunikacia_shm *shm_S_GUI);
+    virtual ~Server();
     
     int getPortNumber();
     int getMaxAgents();
@@ -70,8 +70,8 @@ private:
     pthread_t vlaknoMapovanie;
     
     komunikacia_shm *shm_S_GUI;
-    socketClass * socket; //objekt pre komunikáciu cez socket
-    dbConnectorClass *dbConnector;
+    SocketConnector * socket; //objekt pre komunikáciu cez socket
+    DbConnector *dbConnector;
     
 };
 

@@ -18,25 +18,25 @@
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
 
-#include "polohaClass.h"
-#include "prekazkaClass.h"
+#include "Poloha.h"
+#include "Prekazka.h"
 
 #define DB_HOST "tcp://localhost:3306"
 #define DB_USERNAME "martin"
 #define DB_PASSWORD "heslo"
 #define DB_DATABASE "diplomovka"
 
-class dbConnectorClass {
+class DbConnector {
 public:
-    dbConnectorClass();
-    virtual ~dbConnectorClass();
+    DbConnector();
+    virtual ~DbConnector();
     void test();
     bool isConnected(); // vrati ci je pripojeny k DB
     int getNewSpustenieId(); //vytvori a vrati nove ID spustenia
     int getNewPrekazkaId(int idSpustenia); //zisti ake je aktualne najvyssie cislo prekazky
                             //pre dane spustenie a vrati o 1 vacsie
-    int savePoloha(polohaClass *poloha); // ulozi polohu robota do DB pre spustenie
-    int savePrekazka(prekazkaClass *prekazka); // ulozi prekazku do DB pre spustenie
+    int savePoloha(Poloha *poloha); // ulozi polohu robota do DB pre spustenie
+    int savePrekazka(Prekazka *prekazka); // ulozi prekazku do DB pre spustenie
 private:
     bool connected = false;
     std::mutex m;

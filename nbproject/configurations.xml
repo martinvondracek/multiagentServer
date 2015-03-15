@@ -4,14 +4,22 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>dbConnectorClass.h</itemPath>
-      <itemPath>koordSuradClass.h</itemPath>
-      <itemPath>polohaClass.h</itemPath>
-      <itemPath>prekazkaClass.h</itemPath>
-      <itemPath>serverClass.h</itemPath>
+      <logicalFolder name="f2" displayName="Database" projectFiles="true">
+        <itemPath>DbConnector.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="PrekazkyPolohy" projectFiles="true">
+        <itemPath>KoordSurad.h</itemPath>
+        <itemPath>Poloha.h</itemPath>
+        <itemPath>Prekazka.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="Server" projectFiles="true">
+        <itemPath>Server.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="Socket" projectFiles="true">
+        <itemPath>SocketConnector.h</itemPath>
+        <itemPath>SocketUtil.h</itemPath>
+      </logicalFolder>
       <itemPath>serverForm.h</itemPath>
-      <itemPath>socketClass.h</itemPath>
-      <itemPath>socketUtilClass.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -21,15 +29,23 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>dbConnectorClass.cpp</itemPath>
-      <itemPath>koordSuradClass.cpp</itemPath>
+      <logicalFolder name="f1" displayName="Database" projectFiles="true">
+        <itemPath>DbConnector.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="PrekazkyPolohy" projectFiles="true">
+        <itemPath>KoordSurad.cpp</itemPath>
+        <itemPath>Poloha.cpp</itemPath>
+        <itemPath>Prekazka.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="Server" projectFiles="true">
+        <itemPath>Server.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="Socket" projectFiles="true">
+        <itemPath>SocketConnector.cpp</itemPath>
+        <itemPath>SocketUtil.cpp</itemPath>
+      </logicalFolder>
       <itemPath>main.cpp</itemPath>
-      <itemPath>polohaClass.cpp</itemPath>
-      <itemPath>prekazkaClass.cpp</itemPath>
-      <itemPath>serverClass.cpp</itemPath>
       <itemPath>serverForm.cpp</itemPath>
-      <itemPath>socketClass.cpp</itemPath>
-      <itemPath>socketUtilClass.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -66,41 +82,41 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="dbConnectorClass.cpp" ex="false" tool="1" flavor2="0">
+      <item path="DbConnector.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="dbConnectorClass.h" ex="false" tool="3" flavor2="0">
+      <item path="DbConnector.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="koordSuradClass.cpp" ex="false" tool="1" flavor2="0">
+      <item path="KoordSurad.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="koordSuradClass.h" ex="false" tool="3" flavor2="0">
+      <item path="KoordSurad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Poloha.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Poloha.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Prekazka.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Prekazka.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SocketConnector.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SocketConnector.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SocketUtil.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SocketUtil.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="polohaClass.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="polohaClass.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="prekazkaClass.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="prekazkaClass.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="serverClass.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="serverClass.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="serverForm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="serverForm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="serverForm.ui" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="socketClass.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="socketClass.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="socketUtilClass.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="socketUtilClass.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="4">
@@ -127,41 +143,41 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="dbConnectorClass.cpp" ex="false" tool="1" flavor2="0">
+      <item path="DbConnector.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="dbConnectorClass.h" ex="false" tool="3" flavor2="0">
+      <item path="DbConnector.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="koordSuradClass.cpp" ex="false" tool="1" flavor2="0">
+      <item path="KoordSurad.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="koordSuradClass.h" ex="false" tool="3" flavor2="0">
+      <item path="KoordSurad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Poloha.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Poloha.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Prekazka.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Prekazka.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SocketConnector.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SocketConnector.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SocketUtil.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SocketUtil.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="polohaClass.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="polohaClass.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="prekazkaClass.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="prekazkaClass.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="serverClass.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="serverClass.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="serverForm.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="serverForm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="serverForm.ui" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="socketClass.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="socketClass.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="socketUtilClass.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="socketUtilClass.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

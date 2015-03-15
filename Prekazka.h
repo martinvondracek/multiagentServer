@@ -15,15 +15,15 @@
 #include <unistd.h>
 #include <iostream>
 
-class prekazkaClass {
+class Prekazka {
 public:
-    prekazkaClass(int id, int id_spustenia, int prekazka, int robot, float x_rob,
+    Prekazka(int id, int id_spustenia, int prekazka, int robot, float x_rob,
             float y_rob, float fi_rob, float x_p, float y_p, bool naraz_vpravo,
             bool naraz_vlavo, bool naraz_vpredu);
-    virtual ~prekazkaClass();
+    virtual ~Prekazka();
     
     const char * toJson();
-    static prekazkaClass * fromJson(const char *json);
+    static Prekazka * fromJson(const char *json);
     const char * toString();
     
     float GetFi_rob();

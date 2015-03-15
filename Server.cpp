@@ -5,7 +5,7 @@
  * Created on Utorok, 2015, január 27, 17:16
  */
 
-#include "serverClass.h"
+#include "Server.h"
 #include "serverForm.h"
 
 void *vlaknoZrusitMapovanie(void *arg) {
@@ -39,14 +39,14 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                 //std::cout << "data token=" << token << "=KONIEC\n";
 
                 //rozparsovat a spracovat, ulozit do db
-                std::string ctype = socketUtilClass::parseClassTypeFromJson(token.c_str());
+                std::string ctype = SocketUtil::parseClassTypeFromJson(token.c_str());
                 //std::cout << "ctype=" << ctype << "\n";
 
                 // ak pride ukoncenie agenta
                 if (ctype.compare("QUIT") == 0) {
                     //vymazeme agenta z listu
                     //pri odpojeni agenta treba dekrementovat pocet pripojenych a pripojit dalsich
-                    int id = socketUtilClass::parseIdFromQuit(token.c_str());
+                    int id = SocketUtil::parseIdFromQuit(token.c_str());
                     std::list<agent_in_shm>::iterator i;
                     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
                         if (i->id == id) {
@@ -77,14 +77,14 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                 // ak pride poloha
                 if (ctype.compare("POLOHACLASS") == 0) {
                     // rozparsujeme a ulozime do premennej aj DB
-                    polohaClass *poloha = polohaClass::fromJson(token.c_str());
+                    Poloha *poloha = Poloha::fromJson(token.c_str());
                     shm_S_GUI->dbConnector->savePoloha(poloha);
                 }
 
                 // ak pride prekazka
                 if (ctype.compare("PREKAZKACLASS") == 0) {
                     // rozparsujeme a ulozime do premennej aj DB
-                    prekazkaClass *prekazka = prekazkaClass::fromJson(token.c_str());
+                    Prekazka *prekazka = Prekazka::fromJson(token.c_str());
                     shm_S_GUI->dbConnector->savePrekazka(prekazka);
                 }
                 
@@ -93,7 +93,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                     //ziskame z DB a posleme spat
                     int idPrekazky = shm_S_GUI->dbConnector->getNewPrekazkaId(shm_S_GUI->idSpustenia);
                     std::cout << "nove id prekazky: " << idPrekazky << "id spustenia " << shm_S_GUI->idSpustenia << "agent id=" << agent.id << "\n";
-                    shm_S_GUI->socket->sendJson(agent.sockFd, socketUtilClass::createJsonNewIdPrekazky(idPrekazky));
+                    shm_S_GUI->socket->sendJson(agent.sockFd, SocketUtil::createJsonNewIdPrekazky(idPrekazky));
                     //std::cout << "poslane nove id prekazky: " << idPrekazky << "\n";
                 }
                 
@@ -113,8 +113,8 @@ void *vlaknoNavigaciaMapovania(void *arg) {
     shm_S_GUI->idSpustenia = shm_S_GUI->dbConnector->getNewSpustenieId();
     std::list<agent_in_shm>::iterator i;
     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
-        shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonIdSpustenia(shm_S_GUI->idSpustenia));
-        shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonStartMapping());
+        shm_S_GUI->socket->sendJson(i->sockFd, SocketUtil::createJsonIdSpustenia(shm_S_GUI->idSpustenia));
+        shm_S_GUI->socket->sendJson(i->sockFd, SocketUtil::createJsonStartMapping());
     }
 
     while (shm_S_GUI->ukonci_ulohu == false) {
@@ -139,7 +139,7 @@ void *vlaknoCakanieNaAgentov(void *arg) {
             agent.id = shm_S_GUI->lastAgentId;
             agent.sockFd = newSocketFd;
             std::cout << "newsocfd " << newSocketFd << "\n";
-            const char *jsondata = socketUtilClass::createJsonAgentId_IdSpustenia(agent.id, shm_S_GUI->idSpustenia);
+            const char *jsondata = SocketUtil::createJsonAgentId_IdSpustenia(agent.id, shm_S_GUI->idSpustenia);
             shm_S_GUI->socket->sendJson(agent.sockFd, jsondata);
             //vytvorime vlakno na prijimanie
             param_vlakno_prijimanie param;
@@ -170,27 +170,27 @@ void *vlaknoCakanieNaAgentov(void *arg) {
 
 }
 
-serverClass::serverClass(komunikacia_shm *shm_S_GUI) {
+Server::Server(komunikacia_shm *shm_S_GUI) {
     this->shm_S_GUI = shm_S_GUI;
-    this->dbConnector = new dbConnectorClass();
-    this->socket = new socketClass();
+    this->dbConnector = new DbConnector();
+    this->socket = new SocketConnector();
     this->shm_S_GUI->socket = socket;
     this->shm_S_GUI->dbConnector = dbConnector;
 }
 
-int serverClass::getPortNumber() {
+int Server::getPortNumber() {
     return portNumber;
 }
 
-int serverClass::getMaxAgents() {
+int Server::getMaxAgents() {
     return maxAgents;
 }
 
-int serverClass::getConnectedAgentsCount() {
+int Server::getConnectedAgentsCount() {
     return shm_S_GUI->connectedAgentsCount;
 }
 
-int serverClass::startServer(int portNumber, int maxAgents) {
+int Server::startServer(int portNumber, int maxAgents) {
     this->portNumber = portNumber;
     this->maxAgents = maxAgents;
     shm_S_GUI->ukonci_ulohu = 0;
@@ -212,7 +212,7 @@ int serverClass::startServer(int portNumber, int maxAgents) {
     return -1;
 }
 
-int serverClass::stopServer() {
+int Server::stopServer() {
     std::cout << "stopping server\n";
     if (serverRunning) {
         //zrusime mapovanie
@@ -225,7 +225,7 @@ int serverClass::stopServer() {
         for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
             std::cout << "agent id=" << i->id << " ukoncujem" << "\n";
             // posleme ukoncovaci string agentovi
-            shm_S_GUI->socket->sendJson(i->sockFd, socketUtilClass::createJsonServerQuit());
+            shm_S_GUI->socket->sendJson(i->sockFd, SocketUtil::createJsonServerQuit());
             pthread_cancel(i->vlaknoPrijimanie);
             socket->disconnectFd(i->sockFd);
         }
@@ -237,12 +237,12 @@ int serverClass::stopServer() {
 
 }
 
-bool serverClass::isServerRunning() {
+bool Server::isServerRunning() {
     //serverRunning = socket->getConnected(); //asi nema byt
     return serverRunning;
 }
 
-int serverClass::doMapping() {
+int Server::doMapping() {
     if (shm_S_GUI->mappingNow == false) {
         pthread_attr_t parametre;
         if (pthread_attr_init(&parametre)) {
@@ -258,12 +258,12 @@ int serverClass::doMapping() {
     return 0;
 }
 
-int serverClass::stopMapping() {
+int Server::stopMapping() {
     if (shm_S_GUI->mappingNow) {
         std::cout << "stopping mapping\n";
         std::list<agent_in_shm>::iterator i;
         for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
-            socket->sendJson(i->sockFd, socketUtilClass::createJsonStopMapping());
+            socket->sendJson(i->sockFd, SocketUtil::createJsonStopMapping());
         }
         // zrusime mapovaci thread - sam sa ukonci
         shm_S_GUI->ukonci_ulohu = true;
@@ -271,11 +271,11 @@ int serverClass::stopMapping() {
     shm_S_GUI->mappingNow = false;
 }
 
-bool serverClass::isMapping() {
+bool Server::isMapping() {
     return shm_S_GUI->mappingNow;
 }
 
-serverClass::~serverClass() {
+Server::~Server() {
     std::cout << "destruktor serverClass\n";
     stopServer(); //zastavi server aj mapovanie
 }

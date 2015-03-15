@@ -5,29 +5,29 @@
  * Created on Streda, 2015, január 7, 21:08
  */
 
-#include "socketClass.h"
+#include "SocketConnector.h"
 
-socketClass::socketClass() {
+SocketConnector::SocketConnector() {
     this->portNumber = 17005;
 }
 
-socketClass::socketClass(int portNum) {
+SocketConnector::SocketConnector(int portNum) {
     this->portNumber = portNum;
 }
 
-bool socketClass::getConnected() {
+bool SocketConnector::getConnected() {
     return this->connected;
 }
 
-int socketClass::getPortNumber() {
+int SocketConnector::getPortNumber() {
     return this->portNumber;
 }
 
-void socketClass::setPortNumber(int portNum) {
+void SocketConnector::setPortNumber(int portNum) {
     this->portNumber = portNum;
 }
 
-int socketClass::connect() {
+int SocketConnector::connect() {
     std::cout << "starting socket localhost, port: " << portNumber << "\n";
     
     // TODO implementovat
@@ -51,7 +51,7 @@ int socketClass::connect() {
     return 0;
 }
 
-int socketClass::disconnect() {
+int SocketConnector::disconnect() {
     // todo odpojime zo socketu ak je pripojeny
     if (!connected) {
         return -1;
@@ -63,12 +63,12 @@ int socketClass::disconnect() {
     return 0;
 }
 
-int socketClass::disconnectFd(int sockfd) {
+int SocketConnector::disconnectFd(int sockfd) {
     close(sockfd);
     return 0;
 }
 
-int socketClass::sendJson(int sockfd, const char *jsonData) {
+int SocketConnector::sendJson(int sockfd, const char *jsonData) {
     std::string str2 = jsonData;
     int n;
     
@@ -85,7 +85,7 @@ int socketClass::sendJson(int sockfd, const char *jsonData) {
     return n; // vratime pocet poslanych
 }
 
-int socketClass::receiveJson(int sockfd, char *buffer, int bufSize) {
+int SocketConnector::receiveJson(int sockfd, char *buffer, int bufSize) {
     int n;
     
     bzero(buffer, bufSize);
@@ -98,7 +98,7 @@ int socketClass::receiveJson(int sockfd, char *buffer, int bufSize) {
     return n;
 }
 
-int socketClass::waitAndAcceptClient() {
+int SocketConnector::waitAndAcceptClient() {
     if (!connected) {
         return -1;
     }
@@ -118,7 +118,7 @@ int socketClass::waitAndAcceptClient() {
     return newSockfd;
 }
 
-void socketClass::test() {
+void SocketConnector::test() {
     int newsoc = waitAndAcceptClient();
     char buf[256];
     receiveJson(newsoc, buf, 255);
@@ -127,7 +127,7 @@ void socketClass::test() {
     close(newsoc);
 }
 
-socketClass::~socketClass() {
+SocketConnector::~SocketConnector() {
     std::cout << "destruktor socketClass\n";
     disconnect();
 }

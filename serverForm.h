@@ -19,7 +19,7 @@
 #include <list>
 
 #include "ui_serverForm.h"
-#include "serverClass.h"
+#include "Server.h"
 
 
 class serverForm : public QDialog {
@@ -34,7 +34,7 @@ public slots:
 private:
     Ui::serverForm widget;
     
-    serverClass *server;
+    Server *server;
     komunikacia_shm *shm_S_GUI; //shm medzi gui a serverom
 };
 
