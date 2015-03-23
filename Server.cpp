@@ -86,6 +86,17 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                     // rozparsujeme a ulozime do premennej aj DB
                     Prekazka *prekazka = Prekazka::fromJson(token.c_str());
                     shm_S_GUI->dbConnector->savePrekazka(prekazka);
+                    // zaroven ju posleme ostatnym robotom
+                    std::list<agent_in_shm>::iterator i;
+                    for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+                        if (i->id != prekazka->GetRobot()) {
+                            shm_S_GUI->socket->sendJson(i->sockFd, token.c_str());
+                            std::cout << "preposielam prekazku od:" << prekazka->GetRobot() << " k:" << i->id << "\n";
+                        } else {
+                            std::cout << "ignorujem preposlanie\n";
+                        }
+                        
+                    }
                 }
                 
                 // ak pride ziadost o nove id prekazky

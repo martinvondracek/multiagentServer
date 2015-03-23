@@ -214,6 +214,10 @@ const char * Prekazka::toString() {
     return toJson();
 }
 
+float Prekazka::getVzdialenost(Prekazka *p2) {
+    return sqrt((x_p-p2->GetX_p())*(x_p-p2->GetX_p()) + (y_p-p2->GetY_p())*(y_p-p2->GetY_p()));
+}
+
 Prekazka::~Prekazka() {
 }
 
