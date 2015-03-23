@@ -103,7 +103,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                 if (ctype.compare("NEW_ID_PREKAZKY") == 0) {
                     //ziskame z DB a posleme spat
                     int idPrekazky = shm_S_GUI->dbConnector->getNewPrekazkaId(shm_S_GUI->idSpustenia);
-                    std::cout << "nove id prekazky: " << idPrekazky << "id spustenia " << shm_S_GUI->idSpustenia << "agent id=" << agent.id << "\n";
+                    std::cout << "nove id prekazky: " << idPrekazky << " id spustenia " << shm_S_GUI->idSpustenia << " agent id=" << agent.id << "\n";
                     shm_S_GUI->socket->sendJson(agent.sockFd, SocketUtil::createJsonNewIdPrekazky(idPrekazky));
                     //std::cout << "poslane nove id prekazky: " << idPrekazky << "\n";
                 }
