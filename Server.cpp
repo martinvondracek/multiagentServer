@@ -79,6 +79,17 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                     // rozparsujeme a ulozime do premennej aj DB
                     Poloha *poloha = Poloha::fromJson(token.c_str());
                     shm_S_GUI->dbConnector->savePoloha(poloha);
+                    // zaroven ju posleme ostatnym robotom
+                    std::list<agent_in_shm>::iterator i;
+                    for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+                        if (i->id != poloha->GetRobot()) {
+                            shm_S_GUI->socket->sendJson(i->sockFd, token.c_str());
+                            std::cout << "preposielam polohu od:" << poloha->GetRobot() << " k:" << i->id << "\n";
+                        } else {
+                            std::cout << "ignorujem preposlanie\n";
+                        }
+                    }
+                    // todo ulozime do uz zmapovanych casti priestoru
                 }
 
                 // ak pride prekazka
@@ -95,7 +106,6 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                         } else {
                             std::cout << "ignorujem preposlanie\n";
                         }
-                        
                     }
                 }
                 
