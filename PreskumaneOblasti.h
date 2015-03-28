@@ -17,12 +17,14 @@ public:
     
     void addPoloha(Poloha *poloha);
     bool isCovered(int x, int y);
+    bool isCovered(Poloha *poloha);
     float getCoverage();
     
     int getRadius();
     int getX();
     int getY();
 
+    void print();
     
     virtual ~PreskumaneOblasti();
 private:

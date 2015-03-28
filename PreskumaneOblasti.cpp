@@ -18,35 +18,65 @@ PreskumaneOblasti::PreskumaneOblasti(int x, int y, int radius, int idSpustnia) {
     } else {
         n = radius / 1000;
     }
+    n*=2;
+    
+    this->pole = new bool[n*n];
+    for(int i=0; i<(n*n); i++) {
+        pole[i] = false;
+    }
+    
 }
 
 void PreskumaneOblasti::addPoloha(Poloha *poloha) {
     int k;
     int l;
     
-    if (floor(poloha->GetX())-x0 > 0) {
-        l = (floor(poloha->GetX())-x0) + n/2 + 1;
-    } else {
-        l = (floor(poloha->GetX())-x0) + n/2;
+    l =(int) (trunc(poloha->GetX())-x0)/1000 + n/2;
+    if ((poloha->GetX()-x0)-(trunc((poloha->GetX()-x0)/1000)*1000) < 0) {
+        l--;
     }
+    if (l>n-1) l=n-1;
+    if (l<0) l=0;
     
-    if (floor(poloha->GetY())-x0 > 0) {
-        k = (floor(poloha->GetY())-y0) + n/2 + 1;
-    } else {
-        k = (floor(poloha->GetY())-y0) + n/2;
+    k = (int) (trunc(poloha->GetY())-y0)/1000 + n/2;
+    if ((poloha->GetY()-y0)-(trunc((poloha->GetY()-y0)/1000)*1000) < 0) {
+        k--;
     }
+    if (k>n-1) k=n-1;
+    if (k<0) k=0;
     
-    if (k>=0 && k<=n && l>=0 && l<=n) {
+    if (k>=0 && k<n && l>=0 && l<n) {
         pole[k*n+l]=true;
     }
 }
 
 bool PreskumaneOblasti::isCovered(int x, int y) {
-    if (x>=0 && x<=n && y>=0 && y<=n) {
+    if (x>=0 && x<n && y>=0 && y<n) {
         return pole[y*n+x];
     } else {
         return false;
     }
+}
+
+bool PreskumaneOblasti::isCovered(Poloha *poloha) {
+    int k;
+    int l;
+    
+    l =(int) (trunc(poloha->GetX())-x0)/1000 + n/2;
+    if ((poloha->GetX()-x0)-(trunc((poloha->GetX()-x0)/1000)*1000) < 0) {
+        l--;
+    }
+    if (l>n-1) l=n-1;
+    if (l<0) l=0;
+    
+    k = (int) (trunc(poloha->GetY())-y0)/1000 + n/2;
+    if ((poloha->GetY()-y0)-(trunc((poloha->GetY()-y0)/1000)*1000) < 0) {
+        k--;
+    }
+    if (k>n-1) k=n-1;
+    if (k<0) k=0;
+    
+    return pole[k*n+l];
 }
 
 float PreskumaneOblasti::getCoverage() {
@@ -72,6 +102,15 @@ int PreskumaneOblasti::getX() {
 
 int PreskumaneOblasti::getY() {
     return y0;
+}
+
+void PreskumaneOblasti::print() {
+    for (int j=n-1; j>=0; j--) {
+        for (int i=0; i<n; i++) {
+            std::cout << pole[j*n + i] << " ";
+        }
+        std::cout << "\n";
+    }
 }
 
 PreskumaneOblasti::~PreskumaneOblasti() {

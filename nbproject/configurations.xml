@@ -73,10 +73,19 @@
         <modules>core gui widgets</modules>
       </qt>
       <compileType>
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
         <ccTool>
           <standard>8</standard>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
         </ccTool>
         <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
           <linkerLibItems>
             <linkerLibLibItem>mysqlcppconn</linkerLibLibItem>
             <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
@@ -138,9 +147,15 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -148,6 +163,9 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
       </compileType>
       <item path="DbConnector.cpp" ex="false" tool="1" flavor2="0">
       </item>
