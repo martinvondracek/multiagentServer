@@ -292,6 +292,7 @@ int Server::stopMapping() {
         // zrusime mapovaci thread - sam sa ukonci
         shm_S_GUI->ukonci_ulohu = true;
         shm_S_GUI->dbConnector->savePreskumaneOblasti(shm_S_GUI->oblasti);
+        shm_S_GUI->oblasti->print();
     }
     shm_S_GUI->mappingNow = false;
 }
