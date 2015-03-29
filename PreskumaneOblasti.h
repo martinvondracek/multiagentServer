@@ -8,6 +8,8 @@
 #ifndef PRESKUMANEOBLASTI_H
 #define	PRESKUMANEOBLASTI_H
 
+#include <mutex>
+
 #include "Poloha.h"
 
 
@@ -35,6 +37,7 @@ private:
     
     bool *pole;
     int n;
+    std::mutex m;
 };
 
 #endif	/* PRESKUMANEOBLASTI_H */

@@ -28,58 +28,112 @@ PreskumaneOblasti::PreskumaneOblasti(int x, int y, int radius, int idSpustnia) {
 }
 
 void PreskumaneOblasti::addPoloha(Poloha *poloha) {
-    int k;
-    int l;
+    m.lock();
     
-    l =(int) (trunc(poloha->GetX())-x0)/1000 + n/2;
-    if ((poloha->GetX()-x0)-(trunc((poloha->GetX()-x0)/1000)*1000) < 0) {
-        l--;
-    }
-    if (l>n-1) l=n-1;
-    if (l<0) l=0;
+    int k = n/2;
+    int l = n/2;
+    int pomY = poloha->GetY();
+    int pomX = poloha->GetX();
     
-    k = (int) (trunc(poloha->GetY())-y0)/1000 + n/2;
-    if ((poloha->GetY()-y0)-(trunc((poloha->GetY()-y0)/1000)*1000) < 0) {
-        k--;
+    if (pomX > 0) {
+        pomX -= 999;
+        while (pomX > 0) {
+            l++;
+            pomX -= 1000;
+        }
+    } else if (pomX < 0) {
+        pomX -= 1;
+        while (pomX < 0) {
+            l--;
+            pomX += 1000;
+        }
     }
+    
+    if (pomY > 0) {
+        pomY -= 999;
+        while (pomY > 0) {
+            k++;
+            pomY -= 1000;
+        }
+    } else if (pomY < 0) {
+        pomY -= 1;
+        while (pomY < 0) {
+            k--;
+            pomY += 1000;
+        }
+    }
+    
     if (k>n-1) k=n-1;
     if (k<0) k=0;
+    
+    if (l>n-1) l=n-1;
+    if (l<0) l=0;
     
     if (k>=0 && k<n && l>=0 && l<n) {
         pole[k*n+l]=true;
     }
+    
+    m.unlock();
 }
 
 bool PreskumaneOblasti::isCovered(int x, int y) {
+    m.lock();
     if (x>=0 && x<n && y>=0 && y<n) {
+        m.unlock();
         return pole[y*n+x];
     } else {
+        m.unlock();
         return false;
     }
 }
 
 bool PreskumaneOblasti::isCovered(Poloha *poloha) {
-    int k;
-    int l;
+    m.lock();
+    int k = n/2;
+    int l = n/2;
+    int pomY = poloha->GetY();
+    int pomX = poloha->GetX();
     
-    l =(int) (trunc(poloha->GetX())-x0)/1000 + n/2;
-    if ((poloha->GetX()-x0)-(trunc((poloha->GetX()-x0)/1000)*1000) < 0) {
-        l--;
+    if (pomX > 0) {
+        pomX -= 999;
+        while (pomX > 0) {
+            l++;
+            pomX -= 1000;
+        }
+    } else if (pomX < 0) {
+        pomX -= 1;
+        while (pomX < 0) {
+            l--;
+            pomX += 1000;
+        }
     }
-    if (l>n-1) l=n-1;
-    if (l<0) l=0;
     
-    k = (int) (trunc(poloha->GetY())-y0)/1000 + n/2;
-    if ((poloha->GetY()-y0)-(trunc((poloha->GetY()-y0)/1000)*1000) < 0) {
-        k--;
+    if (pomY > 0) {
+        pomY -= 999;
+        while (pomY > 0) {
+            k++;
+            pomY -= 1000;
+        }
+    } else if (pomY < 0) {
+        pomY -= 1;
+        while (pomY < 0) {
+            k--;
+            pomY += 1000;
+        }
     }
+    
     if (k>n-1) k=n-1;
     if (k<0) k=0;
     
+    if (l>n-1) l=n-1;
+    if (l<0) l=0;
+    
+    m.unlock();
     return pole[k*n+l];
 }
 
 float PreskumaneOblasti::getCoverage() {
+    m.lock();
     int i;
     int count = 0;
     
@@ -89,6 +143,7 @@ float PreskumaneOblasti::getCoverage() {
         }
     }
     
+    m.unlock();
     return ((float)count) / (n*n) *100;
 }
 
@@ -105,14 +160,18 @@ int PreskumaneOblasti::getY() {
 }
 
 void PreskumaneOblasti::print() {
+    m.lock();
     for (int j=n-1; j>=0; j--) {
         for (int i=0; i<n; i++) {
             std::cout << pole[j*n + i] << " ";
         }
         std::cout << "\n";
     }
+    m.unlock();
 }
 
 PreskumaneOblasti::~PreskumaneOblasti() {
+    m.lock();
+    m.unlock();
 }
 
