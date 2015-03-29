@@ -9,8 +9,10 @@
 #define	PRESKUMANEOBLASTI_H
 
 #include <mutex>
+#include <list>
 
 #include "Poloha.h"
+#include "PreskumanaBunka.h"
 
 
 class PreskumaneOblasti {
@@ -26,6 +28,7 @@ public:
     int getX();
     int getY();
 
+    std::list<PreskumanaBunka*> toList();
     void print();
     
     virtual ~PreskumaneOblasti();
@@ -34,6 +37,7 @@ private:
     int x0;
     int y0;
     int radius;
+    int rozmerBunky = 1000;
     
     bool *pole;
     int n;

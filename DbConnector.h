@@ -38,6 +38,7 @@ public:
                             //pre dane spustenie a vrati o 1 vacsie
     int savePoloha(Poloha *poloha); // ulozi polohu robota do DB pre spustenie
     int savePrekazka(Prekazka *prekazka); // ulozi prekazku do DB pre spustenie
+    int savePreskumanaBunka(PreskumanaBunka *bunka);
     int savePreskumaneOblasti(PreskumaneOblasti *oblasti);
 private:
     bool connected = false;
