@@ -179,7 +179,7 @@ std::list<PreskumanaBunka*> PreskumaneOblasti::toList() {
         }
     }
     m.unlock();
-    
+    return list;
 }
 
 PreskumaneOblasti::~PreskumaneOblasti() {

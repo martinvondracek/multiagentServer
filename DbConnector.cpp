@@ -254,7 +254,7 @@ int DbConnector::savePreskumanaBunka(PreskumanaBunka *bunka) {
         pstmt->setDouble(5, bunka->GetN());
         pstmt->setDouble(6, bunka->GetRozmerBunky());
         pstmt->setDouble(7, bunka->GetK());
-        pstmt->setDouble(8, bunka->GetId());
+        pstmt->setDouble(8, bunka->GetL());
         pstmt->setBoolean(9, bunka->IsObsadene());
         pstmt->executeQuery();
         delete pstmt;
