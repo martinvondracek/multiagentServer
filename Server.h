@@ -17,6 +17,7 @@
 #include "SocketUtil.h"
 #include "DbConnector.h"
 #include "ui_serverForm.h"
+#include "PreskumaneOblasti.h"
 
 struct agent_in_shm {
     int id;
@@ -35,6 +36,7 @@ struct komunikacia_shm {
     DbConnector *dbConnector;
     Ui::serverForm *widget;
     std::list<agent_in_shm> agentsList;
+    PreskumaneOblasti *oblasti;
     void *serverForm;
 };
 

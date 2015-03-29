@@ -89,7 +89,8 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                             std::cout << "ignorujem preposlanie\n";
                         }
                     }
-                    // todo ulozime do uz zmapovanych casti priestoru
+                    // ulozime do uz zmapovanych casti priestoru
+                    shm_S_GUI->oblasti->addPoloha(poloha);
                 }
 
                 // ak pride prekazka
@@ -132,6 +133,7 @@ void *vlaknoNavigaciaMapovania(void *arg) {
 
     // z DB ziskame nove id spustenia a posleme ho spolu s info o zacati mapovania
     shm_S_GUI->idSpustenia = shm_S_GUI->dbConnector->getNewSpustenieId();
+    shm_S_GUI->oblasti = new PreskumaneOblasti(0, 0, 4000, shm_S_GUI->idSpustenia);
     std::list<agent_in_shm>::iterator i;
     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
         shm_S_GUI->socket->sendJson(i->sockFd, SocketUtil::createJsonIdSpustenia(shm_S_GUI->idSpustenia));
@@ -197,6 +199,7 @@ Server::Server(komunikacia_shm *shm_S_GUI) {
     this->socket = new SocketConnector();
     this->shm_S_GUI->socket = socket;
     this->shm_S_GUI->dbConnector = dbConnector;
+    this->shm_S_GUI->oblasti = new PreskumaneOblasti(0, 0, 4000, 0);
 }
 
 int Server::getPortNumber() {
@@ -288,6 +291,7 @@ int Server::stopMapping() {
         }
         // zrusime mapovaci thread - sam sa ukonci
         shm_S_GUI->ukonci_ulohu = true;
+        shm_S_GUI->dbConnector->savePreskumaneOblasti(shm_S_GUI->oblasti);
     }
     shm_S_GUI->mappingNow = false;
 }

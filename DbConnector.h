@@ -20,6 +20,7 @@
 
 #include "Poloha.h"
 #include "Prekazka.h"
+#include "PreskumaneOblasti.h"
 
 #define DB_HOST "tcp://localhost:3306"
 #define DB_USERNAME "martin"
@@ -37,6 +38,7 @@ public:
                             //pre dane spustenie a vrati o 1 vacsie
     int savePoloha(Poloha *poloha); // ulozi polohu robota do DB pre spustenie
     int savePrekazka(Prekazka *prekazka); // ulozi prekazku do DB pre spustenie
+    int savePreskumaneOblasti(PreskumaneOblasti *oblasti);
 private:
     bool connected = false;
     std::mutex m;

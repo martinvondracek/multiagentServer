@@ -233,6 +233,10 @@ int DbConnector::savePrekazka(Prekazka *prekazka) {
     return 0;
 }
 
+int DbConnector::savePreskumaneOblasti(PreskumaneOblasti *oblasti) {
+    usleep(1000000);
+}
+
 void DbConnector::test() {
     if (!connected) {
         return;
