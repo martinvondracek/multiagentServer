@@ -175,7 +175,7 @@ std::list<PreskumanaBunka*> PreskumaneOblasti::toList() {
     std::list<PreskumanaBunka*> list;
     for (int j=n-1; j>=0; j--) {
         for (int i=0; i<n; i++) {
-            list.push_back(new PreskumanaBunka(0, idSpustnia, x0, y0, radius, n, rozmerBunky, j, i, pole[j*n + i]));
+            list.push_back(new PreskumanaBunka(0, idSpustnia, x0, y0, radius, n, rozmerBunky, i, j, pole[j*n + i]));
         }
     }
     m.unlock();

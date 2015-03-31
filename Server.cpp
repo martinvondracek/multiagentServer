@@ -84,9 +84,9 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
                         if (i->id != poloha->GetRobot()) {
                             shm_S_GUI->socket->sendJson(i->sockFd, token.c_str());
-                            std::cout << "preposielam polohu od:" << poloha->GetRobot() << " k:" << i->id << "\n";
+                            //std::cout << "preposielam polohu od:" << poloha->GetRobot() << " k:" << i->id << "\n";
                         } else {
-                            std::cout << "ignorujem preposlanie\n";
+                            //std::cout << "ignorujem preposlanie\n";
                         }
                     }
                     // ulozime do uz zmapovanych casti priestoru
@@ -103,9 +103,9 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
                         if (i->id != prekazka->GetRobot()) {
                             shm_S_GUI->socket->sendJson(i->sockFd, token.c_str());
-                            std::cout << "preposielam prekazku od:" << prekazka->GetRobot() << " k:" << i->id << "\n";
+                            //std::cout << "preposielam prekazku od:" << prekazka->GetRobot() << " k:" << i->id << "\n";
                         } else {
-                            std::cout << "ignorujem preposlanie\n";
+                            //std::cout << "ignorujem preposlanie\n";
                         }
                     }
                 }

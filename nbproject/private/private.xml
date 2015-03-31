@@ -7,8 +7,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/martin/NetBeansProjects/DP_server/PreskumaneOblasti.h</file>
+            <file>file:/home/martin/NetBeansProjects/DP_server/DbConnector.h</file>
+            <file>file:/home/martin/NetBeansProjects/DP_server/Server.cpp</file>
             <file>file:/home/martin/NetBeansProjects/DP_server/PreskumaneOblasti.cpp</file>
+            <file>file:/home/martin/NetBeansProjects/DP_server/DbConnector.cpp</file>
             <file>file:/home/martin/NetBeansProjects/DP_server/main.cpp</file>
         </group>
     </open-files>
