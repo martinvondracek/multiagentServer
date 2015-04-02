@@ -8,7 +8,7 @@
         <itemPath>DbConnector.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="PrekazkyPolohy" projectFiles="true">
-        <itemPath>KoordSurad.h</itemPath>
+        <itemPath>KoordinacnaSur.h</itemPath>
         <itemPath>Poloha.h</itemPath>
         <itemPath>Prekazka.h</itemPath>
         <itemPath>PreskumanaBunka.h</itemPath>
@@ -35,7 +35,7 @@
         <itemPath>DbConnector.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="PrekazkyPolohy" projectFiles="true">
-        <itemPath>KoordSurad.cpp</itemPath>
+        <itemPath>KoordinacnaSur.cpp</itemPath>
         <itemPath>Poloha.cpp</itemPath>
         <itemPath>Prekazka.cpp</itemPath>
         <itemPath>PreskumanaBunka.cpp</itemPath>
@@ -99,9 +99,9 @@
       </item>
       <item path="DbConnector.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="KoordSurad.cpp" ex="false" tool="1" flavor2="0">
+      <item path="KoordinacnaSur.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="KoordSurad.h" ex="false" tool="3" flavor2="0">
+      <item path="KoordinacnaSur.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Poloha.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -177,9 +177,9 @@
       </item>
       <item path="DbConnector.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="KoordSurad.cpp" ex="false" tool="1" flavor2="0">
+      <item path="KoordinacnaSur.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="KoordSurad.h" ex="false" tool="3" flavor2="0">
+      <item path="KoordinacnaSur.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Poloha.cpp" ex="false" tool="1" flavor2="0">
       </item>
