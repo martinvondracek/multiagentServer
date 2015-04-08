@@ -133,7 +133,13 @@ void *vlaknoNavigaciaMapovania(void *arg) {
 
     // z DB ziskame nove id spustenia a posleme ho spolu s info o zacati mapovania
     shm_S_GUI->idSpustenia = shm_S_GUI->dbConnector->getNewSpustenieId();
-    shm_S_GUI->oblasti = new PreskumaneOblasti(0, 0, 4000, shm_S_GUI->idSpustenia);
+    shm_S_GUI->widget->idSpusteniaLabel->setText(std::to_string(shm_S_GUI->idSpustenia).c_str());
+    int radius = shm_S_GUI->widget->radiusEdit->text().toInt();
+    shm_S_GUI->oblasti = new PreskumaneOblasti(0, 0, radius, shm_S_GUI->idSpustenia);
+    
+    // todo vypocitame a posleme koordiacne suradnice
+    
+    // spustime mapovanie v agentoch
     std::list<agent_in_shm>::iterator i;
     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
         shm_S_GUI->socket->sendJson(i->sockFd, SocketUtil::createJsonIdSpustenia(shm_S_GUI->idSpustenia));
@@ -143,7 +149,7 @@ void *vlaknoNavigaciaMapovania(void *arg) {
     while (shm_S_GUI->ukonci_ulohu == false) {
         //std::cout << "vlakno navigacia\n";
         // todo implementovat riadiaci algoritmus
-        usleep(1000 * 1000);
+        usleep(300 * 1000);
     }
 }
 

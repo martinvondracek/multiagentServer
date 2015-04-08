@@ -14,7 +14,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QDialog>
-#include <QtGui/QHBoxLayout>
+#include <QtGui/QGridLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -42,19 +42,23 @@ public:
     QLineEdit *maxAgentEdit;
     QLabel *agentCountLabel;
     QPushButton *startServerButton;
-    QWidget *layoutWidget2;
-    QHBoxLayout *horizontalLayout;
+    QWidget *widget;
+    QGridLayout *gridLayout;
+    QLabel *label_7;
+    QLineEdit *radiusEdit;
     QPushButton *startMappingButton;
     QPushButton *stopMappingButton;
+    QLabel *label_6;
+    QLabel *idSpusteniaLabel;
 
     void setupUi(QDialog *serverForm)
     {
         if (serverForm->objectName().isEmpty())
             serverForm->setObjectName(QString::fromUtf8("serverForm"));
-        serverForm->resize(444, 392);
+        serverForm->resize(444, 427);
         koniecButton = new QPushButton(serverForm);
         koniecButton->setObjectName(QString::fromUtf8("koniecButton"));
-        koniecButton->setGeometry(QRect(290, 350, 141, 31));
+        koniecButton->setGeometry(QRect(290, 380, 141, 31));
         QFont font;
         font.setPointSize(12);
         koniecButton->setFont(font);
@@ -132,29 +136,57 @@ public:
 
         verticalLayout_2->addWidget(startServerButton);
 
-        layoutWidget2 = new QWidget(serverForm);
-        layoutWidget2->setObjectName(QString::fromUtf8("layoutWidget2"));
-        layoutWidget2->setGeometry(QRect(40, 270, 361, 31));
-        horizontalLayout = new QHBoxLayout(layoutWidget2);
-        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        startMappingButton = new QPushButton(layoutWidget2);
+        widget = new QWidget(serverForm);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        widget->setGeometry(QRect(50, 260, 351, 91));
+        gridLayout = new QGridLayout(widget);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout->setContentsMargins(0, 0, 0, 0);
+        label_7 = new QLabel(widget);
+        label_7->setObjectName(QString::fromUtf8("label_7"));
+        label_7->setFont(font1);
+
+        gridLayout->addWidget(label_7, 0, 0, 1, 1);
+
+        radiusEdit = new QLineEdit(widget);
+        radiusEdit->setObjectName(QString::fromUtf8("radiusEdit"));
+
+        gridLayout->addWidget(radiusEdit, 0, 1, 1, 1);
+
+        startMappingButton = new QPushButton(widget);
         startMappingButton->setObjectName(QString::fromUtf8("startMappingButton"));
         startMappingButton->setFont(font);
 
-        horizontalLayout->addWidget(startMappingButton);
+        gridLayout->addWidget(startMappingButton, 1, 0, 1, 1);
 
-        stopMappingButton = new QPushButton(layoutWidget2);
+        stopMappingButton = new QPushButton(widget);
         stopMappingButton->setObjectName(QString::fromUtf8("stopMappingButton"));
         stopMappingButton->setFont(font);
 
-        horizontalLayout->addWidget(stopMappingButton);
+        gridLayout->addWidget(stopMappingButton, 1, 1, 1, 1);
 
-        layoutWidget->raise();
+        label_6 = new QLabel(widget);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
+        label_6->setFont(font1);
+
+        gridLayout->addWidget(label_6, 2, 0, 1, 1);
+
+        idSpusteniaLabel = new QLabel(widget);
+        idSpusteniaLabel->setObjectName(QString::fromUtf8("idSpusteniaLabel"));
+        idSpusteniaLabel->setFont(font2);
+
+        gridLayout->addWidget(idSpusteniaLabel, 2, 1, 1, 1);
+
         layoutWidget->raise();
         layoutWidget->raise();
         koniecButton->raise();
         infoLabel->raise();
+        label_6->raise();
+        label_7->raise();
+        startMappingButton->raise();
+        stopMappingButton->raise();
+        radiusEdit->raise();
+        idSpusteniaLabel->raise();
 
         retranslateUi(serverForm);
         QObject::connect(koniecButton, SIGNAL(clicked()), serverForm, SLOT(close()));
@@ -170,15 +202,18 @@ public:
         serverForm->setWindowTitle(QApplication::translate("serverForm", "serverForm", 0, QApplication::UnicodeUTF8));
         koniecButton->setText(QApplication::translate("serverForm", "Koniec", 0, QApplication::UnicodeUTF8));
         infoLabel->setText(QApplication::translate("serverForm", "Info", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("serverForm", "IP adresa", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("serverForm", "IP adresa:", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("serverForm", "Port:", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("serverForm", "Max. agentov:", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("serverForm", "Pripojen\303\275ch agentov:", 0, QApplication::UnicodeUTF8));
         ipLabel->setText(QApplication::translate("serverForm", "000.000.000.000", 0, QApplication::UnicodeUTF8));
         agentCountLabel->setText(QApplication::translate("serverForm", "0", 0, QApplication::UnicodeUTF8));
         startServerButton->setText(QApplication::translate("serverForm", "Spusti\305\245 server", 0, QApplication::UnicodeUTF8));
+        label_7->setText(QApplication::translate("serverForm", "Radius:", 0, QApplication::UnicodeUTF8));
         startMappingButton->setText(QApplication::translate("serverForm", "Spusti\305\245 mapovanie", 0, QApplication::UnicodeUTF8));
         stopMappingButton->setText(QApplication::translate("serverForm", "Zastavi\305\245 mapovanie", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("serverForm", "ID spustenia:", 0, QApplication::UnicodeUTF8));
+        idSpusteniaLabel->setText(QApplication::translate("serverForm", "0", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

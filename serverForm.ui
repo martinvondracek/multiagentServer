@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>444</width>
-    <height>392</height>
+    <height>427</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>350</y>
+     <y>380</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -70,7 +70,7 @@
        </font>
       </property>
       <property name="text">
-       <string>IP adresa</string>
+       <string>IP adresa:</string>
       </property>
      </widget>
     </item>
@@ -169,17 +169,32 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>270</y>
-     <width>361</width>
-     <height>31</height>
+     <x>50</x>
+     <y>260</y>
+     <width>351</width>
+     <height>91</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_7">
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Radius:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="radiusEdit"/>
+    </item>
+    <item row="1" column="0">
      <widget class="QPushButton" name="startMappingButton">
       <property name="font">
        <font>
@@ -191,7 +206,7 @@
       </property>
      </widget>
     </item>
-    <item>
+    <item row="1" column="1">
      <widget class="QPushButton" name="stopMappingButton">
       <property name="font">
        <font>
@@ -203,13 +218,42 @@
       </property>
      </widget>
     </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>ID spustenia:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLabel" name="idSpusteniaLabel">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <zorder>layoutWidget</zorder>
   <zorder>layoutWidget</zorder>
-  <zorder>layoutWidget</zorder>
   <zorder>koniecButton</zorder>
   <zorder>infoLabel</zorder>
+  <zorder>label_6</zorder>
+  <zorder>label_7</zorder>
+  <zorder>startMappingButton</zorder>
+  <zorder>stopMappingButton</zorder>
+  <zorder>radiusEdit</zorder>
+  <zorder>idSpusteniaLabel</zorder>
  </widget>
  <resources/>
  <connections>

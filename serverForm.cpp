@@ -13,6 +13,9 @@ serverForm::serverForm() {
     widget.portEdit->setText("17005");
     widget.maxAgentEdit->setText("5");
     widget.agentCountLabel->setText("0");
+    widget.idSpusteniaLabel->setText("");
+    widget.radiusEdit->setText("3000");
+    widget.radiusEdit->setEnabled(false);
     widget.startMappingButton->setEnabled(false);
     widget.stopMappingButton->setEnabled(false);
     
@@ -28,7 +31,7 @@ serverForm::serverForm() {
     void * tmpAddrPtr=NULL;
 
     getifaddrs(&ifAddrStruct);
-    std::string str1 ("wlan0");
+    std::string str1 ("wlan2");
     for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
         if (!ifa->ifa_addr) {
             continue;
@@ -63,6 +66,7 @@ void serverForm::startServerClicked() {
         widget.startMappingButton->setEnabled(false);
         widget.stopMappingButton->setEnabled(false);
         widget.startServerButton->setEnabled(false);
+        widget.radiusEdit->setEnabled(true);
         widget.infoLabel->setText("Server uspesne spusteny");
     } else {
         std::cout << "failed to start server\n";
@@ -90,6 +94,7 @@ void serverForm::startMappingClicked() {
     widget.infoLabel->setText("Mapovanie spustene");
     widget.startMappingButton->setEnabled(false);
     widget.stopMappingButton->setEnabled(true);
+    widget.radiusEdit->setEnabled(false);
     
 }
 
@@ -115,6 +120,7 @@ void serverForm::stopMappingClicked() {
         widget.startMappingButton->setEnabled(true);
     }
     widget.stopMappingButton->setEnabled(false);
+    widget.radiusEdit->setEnabled(true);
     
 }
 
