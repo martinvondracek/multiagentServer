@@ -7,6 +7,7 @@
 
 #include "Server.h"
 #include "serverForm.h"
+#include "KoordinacnaSur.h"
 
 void *vlaknoZrusitMapovanie(void *arg) {
     serverForm *server = (serverForm *) arg;
@@ -138,12 +139,14 @@ void *vlaknoNavigaciaMapovania(void *arg) {
     shm_S_GUI->oblasti = new PreskumaneOblasti(0, 0, radius, shm_S_GUI->idSpustenia);
     
     // todo vypocitame a posleme koordiacne suradnice
+    KoordinacnaSur *koorSur = new KoordinacnaSur(0, 0);
     
     // spustime mapovanie v agentoch
     std::list<agent_in_shm>::iterator i;
     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
         shm_S_GUI->socket->sendJson(i->sockFd, SocketUtil::createJsonIdSpustenia(shm_S_GUI->idSpustenia));
         shm_S_GUI->socket->sendJson(i->sockFd, SocketUtil::createJsonStartMapping());
+        shm_S_GUI->socket->sendJson(i->sockFd, koorSur->toJson().c_str());
     }
 
     while (shm_S_GUI->ukonci_ulohu == false) {
