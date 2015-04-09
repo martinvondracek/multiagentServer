@@ -28,7 +28,8 @@ public:
     int connect(); // pripoji sa na socket
     int disconnect(); // odpoji sa zo socketu
     int disconnectFd(int sockfd); // odpoji zadany sockFd
-    int sendJson(int sockfd, const char *jsonData);
+    //int sendJson(int sockfd, const char *jsonData);
+    int sendJson(int sockfd, std::string jsonData);
     int receiveJson(int sockfd, char *buffer, int bufSize);
     int waitAndAcceptClient();
     

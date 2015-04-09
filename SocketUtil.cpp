@@ -10,7 +10,7 @@
 SocketUtil::SocketUtil() {
 }
 
-const char *  SocketUtil::createJsonAgentId_IdSpustenia(int id, int idSpustenia) {
+std::string  SocketUtil::createJsonAgentId_IdSpustenia(int id, int idSpustenia) {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"AGENTID\"");
     
@@ -22,10 +22,10 @@ const char *  SocketUtil::createJsonAgentId_IdSpustenia(int id, int idSpustenia)
     
     json.append("\n}\n");
         
-    return json.c_str();
+    return json;
 }
 
-const char *  SocketUtil::createJsonIdSpustenia(int idSpustenia) {
+std::string  SocketUtil::createJsonIdSpustenia(int idSpustenia) {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"ID_SPUSTENIA\"");
     
@@ -34,10 +34,10 @@ const char *  SocketUtil::createJsonIdSpustenia(int idSpustenia) {
     
     json.append("\n}\n");
         
-    return json.c_str();
+    return json;
 }
 
-const char *  SocketUtil::createJsonNewIdPrekazky(int idPrekazky) {
+std::string  SocketUtil::createJsonNewIdPrekazky(int idPrekazky) {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"NEW_ID_PREKAZKY\"");
     
@@ -46,34 +46,34 @@ const char *  SocketUtil::createJsonNewIdPrekazky(int idPrekazky) {
     
     json.append("\n}\n");
         
-    return json.c_str();
+    return json;
 }
 
-const char *  SocketUtil::createJsonServerQuit() {
+std::string  SocketUtil::createJsonServerQuit() {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"SERVER_QUIT\"");
     
     json.append("\n}\n");
         
-    return json.c_str();
+    return json;
 }
 
-const char *  SocketUtil::createJsonStartMapping() {
+std::string  SocketUtil::createJsonStartMapping() {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"SPUSTIT_MAPOVANIE\"");
     
     json.append("\n}\n");
         
-    return json.c_str();
+    return json;
 }
 
-const char *  SocketUtil::createJsonStopMapping() {
+std::string  SocketUtil::createJsonStopMapping() {
     std::string json = "{\n";
     json.append("\"CLASSTYPE\" : \"STOP_MAPOVANIE\"");
     
     json.append("\n}\n");
         
-    return json.c_str();
+    return json;
 }
 
 std::string SocketUtil::parseClassTypeFromJson(const char *json) {

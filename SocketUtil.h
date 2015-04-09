@@ -20,12 +20,12 @@ public:
     SocketUtil();
     virtual ~SocketUtil();
     
-    static const char *  createJsonAgentId_IdSpustenia(int id, int idSpustenia);
-    static const char *  createJsonIdSpustenia(int idSpustenia);
-    static const char *  createJsonNewIdPrekazky(int idPrekazky);
-    static const char *  createJsonServerQuit();
-    static const char *  createJsonStartMapping();
-    static const char *  createJsonStopMapping();
+    static std::string  createJsonAgentId_IdSpustenia(int id, int idSpustenia);
+    static std::string  createJsonIdSpustenia(int idSpustenia);
+    static std::string  createJsonNewIdPrekazky(int idPrekazky);
+    static std::string  createJsonServerQuit();
+    static std::string  createJsonStartMapping();
+    static std::string  createJsonStopMapping();
     
     static std::string parseClassTypeFromJson(const char *json);
     static int parseIdFromQuit(const char *json);

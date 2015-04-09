@@ -146,7 +146,7 @@ void *vlaknoNavigaciaMapovania(void *arg) {
     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
         shm_S_GUI->socket->sendJson(i->sockFd, SocketUtil::createJsonIdSpustenia(shm_S_GUI->idSpustenia));
         shm_S_GUI->socket->sendJson(i->sockFd, SocketUtil::createJsonStartMapping());
-        shm_S_GUI->socket->sendJson(i->sockFd, koorSur->toJson().c_str());
+        shm_S_GUI->socket->sendJson(i->sockFd, koorSur->toJson());
     }
 
     while (shm_S_GUI->ukonci_ulohu == false) {
@@ -171,8 +171,9 @@ void *vlaknoCakanieNaAgentov(void *arg) {
             agent.id = shm_S_GUI->lastAgentId;
             agent.sockFd = newSocketFd;
             std::cout << "newsocfd " << newSocketFd << "\n";
-            const char *jsondata = SocketUtil::createJsonAgentId_IdSpustenia(agent.id, shm_S_GUI->idSpustenia);
+            std::string jsondata = SocketUtil::createJsonAgentId_IdSpustenia(agent.id, shm_S_GUI->idSpustenia);
             shm_S_GUI->socket->sendJson(agent.sockFd, jsondata);
+            //std::cout << "sending " << jsondata << "\n";
             //vytvorime vlakno na prijimanie
             param_vlakno_prijimanie param;
             param.shm_S_A = shm_S_GUI;
@@ -228,6 +229,7 @@ int Server::startServer(int portNumber, int maxAgents) {
     this->maxAgents = maxAgents;
     shm_S_GUI->ukonci_ulohu = 0;
     shm_S_GUI->mappingNow = 0;
+    shm_S_GUI->lastAgentId = 0;
     shm_S_GUI->connectedAgentsCount = 0;
     shm_S_GUI->maxAgents = maxAgents;
 

@@ -68,7 +68,7 @@ int SocketConnector::disconnectFd(int sockfd) {
     return 0;
 }
 
-int SocketConnector::sendJson(int sockfd, const char *jsonData) {
+int SocketConnector::sendJson(int sockfd, std::string jsonData) {
     std::string str2 = jsonData;
     int n;
     
@@ -84,6 +84,23 @@ int SocketConnector::sendJson(int sockfd, const char *jsonData) {
     }
     return n; // vratime pocet poslanych
 }
+
+/*int SocketConnector::sendJson(int sockfd, const char *jsonData) {
+    std::string str2 = jsonData;
+    int n;
+    
+    std::string str = "";
+    str.append(str2);
+    str.append("KKK");
+    const char * data = str.c_str();
+    n = write(sockfd, data, strlen(data));
+    usleep(10*1000);
+    if (n < 0) {
+        std::cout << "ERROR writing to socket\n";
+        return -1;
+    }
+    return n; // vratime pocet poslanych
+}*/
 
 int SocketConnector::receiveJson(int sockfd, char *buffer, int bufSize) {
     int n;
