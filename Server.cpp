@@ -8,6 +8,7 @@
 #include "Server.h"
 #include "serverForm.h"
 #include "KoordinacnaSur.h"
+#include "NavigaciaUtil.h"
 
 void *vlaknoZrusitMapovanie(void *arg) {
     serverForm *server = (serverForm *) arg;
@@ -138,20 +139,44 @@ void *vlaknoNavigaciaMapovania(void *arg) {
     int radius = shm_S_GUI->widget->radiusEdit->text().toInt();
     shm_S_GUI->oblasti = new PreskumaneOblasti(0, 0, radius, shm_S_GUI->idSpustenia);
     
-    // todo vypocitame a posleme koordiacne suradnice
-    KoordinacnaSur *koorSur = new KoordinacnaSur(0, 0);
-    
     // spustime mapovanie v agentoch
     std::list<agent_in_shm>::iterator i;
     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
         shm_S_GUI->socket->sendJson(i->sockFd, SocketUtil::createJsonIdSpustenia(shm_S_GUI->idSpustenia));
         shm_S_GUI->socket->sendJson(i->sockFd, SocketUtil::createJsonStartMapping());
-        shm_S_GUI->socket->sendJson(i->sockFd, koorSur->toJson());
     }
 
+    int cyklus = 1;
+    //najskôr po cca 1s vypočítame prvotné koorSur (ked uz pozname polohy robotov))
+    while (shm_S_GUI->ukonci_ulohu==false && cyklus<=3) {
+        cyklus ++;
+        if (cyklus == 3) {            
+            // inicializujeme koorSur a posleme ich agentom
+            //NavigaciaUtil::initializeKoorSuradnice(shm_S_GUI->oblasti, &(shm_S_GUI->agentsList));
+            std::list<agent_in_shm>::iterator i;
+            for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+                shm_S_GUI->socket->sendJson(i->sockFd, i->koordinacnaSuradnica->toJson());
+            }
+        }
+        
+        usleep(300 * 1000);
+    }
     while (shm_S_GUI->ukonci_ulohu == false) {
-        //std::cout << "vlakno navigacia\n";
-        // todo implementovat riadiaci algoritmus
+        cyklus ++;
+        if (cyklus > 10) {
+            cyklus = 1;
+        }
+        
+        if (cyklus == 10) { // každé 3 sekundy počítame
+            // updatneme koorSur a posleme ich agentom
+            //NavigaciaUtil::updateKoorSuradnice(shm_S_GUI->oblasti, &(shm_S_GUI->agentsList));
+            std::list<agent_in_shm>::iterator i;
+            for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+                shm_S_GUI->socket->sendJson(i->sockFd, i->koordinacnaSuradnica->toJson());
+            }
+            
+        }
+        
         usleep(300 * 1000);
     }
 }
@@ -170,6 +195,7 @@ void *vlaknoCakanieNaAgentov(void *arg) {
             agent_in_shm agent;
             agent.id = shm_S_GUI->lastAgentId;
             agent.sockFd = newSocketFd;
+            agent.koordinacnaSuradnica = KoordinacnaSur::newInvalid();
             std::cout << "newsocfd " << newSocketFd << "\n";
             std::string jsondata = SocketUtil::createJsonAgentId_IdSpustenia(agent.id, shm_S_GUI->idSpustenia);
             shm_S_GUI->socket->sendJson(agent.sockFd, jsondata);

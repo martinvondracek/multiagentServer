@@ -18,11 +18,13 @@
 #include "DbConnector.h"
 #include "ui_serverForm.h"
 #include "PreskumaneOblasti.h"
+#include "KoordinacnaSur.h"
 
 struct agent_in_shm {
     int id;
     int sockFd;
     pthread_t vlaknoPrijimanie; // na vlakno ktore prijima info z agentov
+    KoordinacnaSur *koordinacnaSuradnica;
 };
 
 struct komunikacia_shm {
