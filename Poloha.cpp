@@ -120,6 +120,14 @@ Poloha * Poloha::fromJson(const char *json) {
     return new Poloha(id, id_spustenia, robot, x, y, fi);
 }
 
+float Poloha::getVzdialenost(Poloha *p2) {
+    return sqrt((x-p2->GetX())*(x-p2->GetX()) + (y-p2->GetY())*(y-p2->GetY()));
+}
+
+float Poloha::getVzdialenost(KoordinacnaSur *koorSur) {
+    return sqrt((x-koorSur->GetX())*(x-koorSur->GetX()) + (y-koorSur->GetY())*(y-koorSur->GetY()));
+}
+
 const char * Poloha::toString() {
     return toJson();
 }

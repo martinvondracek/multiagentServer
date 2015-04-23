@@ -9,6 +9,7 @@
 #define	NAVIGACIAUTIL_H
 
 #include "PreskumaneOblasti.h"
+#include "KoordinacnaSur.h"
 #include "Server.h"
 #define PI 3.14159265
 

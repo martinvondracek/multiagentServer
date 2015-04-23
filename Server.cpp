@@ -14,7 +14,7 @@ void *vlaknoZrusitMapovanie(void *arg) {
     serverForm *server = (serverForm *) arg;
 
     server->stopMappingClicked();
-    usleep(300 * 1000);
+    usleep(600 * 1000);
 }
 
 void *vlaknoPrijimanieDatAgentov(void *arg) {
@@ -38,7 +38,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
             std::string token;
             while ((pos = s.find(delimiter)) != std::string::npos) {
                 token = s.substr(0, pos);
-                //std::cout << "data token=" << token << "=KONIEC\n";
+                std::cout << "data token=" << token << "=KONIEC\n";
 
                 //rozparsovat a spracovat, ulozit do db
                 std::string ctype = SocketUtil::parseClassTypeFromJson(token.c_str());
@@ -75,6 +75,18 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                         }
                     }
                 }
+                
+                // ak pride ze koor sur neni validna
+                if (ctype.compare("INVALID_KOOR_SUR") == 0) {
+                    // nastavie jeho koor sur na invalid
+                    int id = SocketUtil::parseAgentIdFromInvalidKoorSur(token.c_str());
+                    std::list<agent_in_shm>::iterator i;
+                    for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+                        if (i->id == id) {
+                            i->koordinacnaSuradnica->setInvalid();
+                        }
+                    }
+                }
 
                 // ak pride poloha
                 if (ctype.compare("POLOHACLASS") == 0) {
@@ -89,6 +101,8 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                             //std::cout << "preposielam polohu od:" << poloha->GetRobot() << " k:" << i->id << "\n";
                         } else {
                             //std::cout << "ignorujem preposlanie\n";
+                            // ak je to on tak mu ulozim polohu
+                            i->aktPoloha = Poloha::fromJson(token.c_str());
                         }
                     }
                     // ulozime do uz zmapovanych casti priestoru
@@ -150,9 +164,10 @@ void *vlaknoNavigaciaMapovania(void *arg) {
     //najskôr po cca 1s vypočítame prvotné koorSur (ked uz pozname polohy robotov))
     while (shm_S_GUI->ukonci_ulohu==false && cyklus<=3) {
         cyklus ++;
-        if (cyklus == 3) {            
+        if (cyklus == 3) { 
+            std::cout << "navigacia inicializuje koor sur\n";
             // inicializujeme koorSur a posleme ich agentom
-            //NavigaciaUtil::initializeKoorSuradnice(shm_S_GUI->oblasti, &(shm_S_GUI->agentsList));
+            NavigaciaUtil::initializeKoorSuradnice(shm_S_GUI->oblasti, &(shm_S_GUI->agentsList));
             std::list<agent_in_shm>::iterator i;
             for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
                 shm_S_GUI->socket->sendJson(i->sockFd, i->koordinacnaSuradnica->toJson());
@@ -161,6 +176,7 @@ void *vlaknoNavigaciaMapovania(void *arg) {
         
         usleep(300 * 1000);
     }
+    bool ukoncujeme = false;
     while (shm_S_GUI->ukonci_ulohu == false) {
         cyklus ++;
         if (cyklus > 10) {
@@ -169,12 +185,27 @@ void *vlaknoNavigaciaMapovania(void *arg) {
         
         if (cyklus == 10) { // každé 3 sekundy počítame
             // updatneme koorSur a posleme ich agentom
-            //NavigaciaUtil::updateKoorSuradnice(shm_S_GUI->oblasti, &(shm_S_GUI->agentsList));
+            std::cout << "navigacia\n";
+            NavigaciaUtil::updateKoorSuradnice(shm_S_GUI->oblasti, &(shm_S_GUI->agentsList));
             std::list<agent_in_shm>::iterator i;
             for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
                 shm_S_GUI->socket->sendJson(i->sockFd, i->koordinacnaSuradnica->toJson());
             }
             
+        }
+        
+        // ak je coverage 100% ukoncime mapovanie
+        if (shm_S_GUI->oblasti->getCoverage()==100 && ukoncujeme==false) {
+            // TODO
+            pthread_t thr1;
+            pthread_attr_t parametre;
+            if (pthread_attr_init(&parametre)) {
+                std::cout << "chyba v attr_init\n";
+            }
+            pthread_attr_setdetachstate(&parametre, PTHREAD_CREATE_DETACHED);
+            if (pthread_create(&thr1, &parametre, vlaknoZrusitMapovanie, (void*) shm_S_GUI->serverForm)) {
+                std::cout << "chyba vo vytvarani vlakna na odpojenie\n";
+            }
         }
         
         usleep(300 * 1000);
@@ -196,6 +227,7 @@ void *vlaknoCakanieNaAgentov(void *arg) {
             agent.id = shm_S_GUI->lastAgentId;
             agent.sockFd = newSocketFd;
             agent.koordinacnaSuradnica = KoordinacnaSur::newInvalid();
+            agent.aktPoloha = new Poloha(0, shm_S_GUI->idSpustenia, agent.id, 0, 0, 0);
             std::cout << "newsocfd " << newSocketFd << "\n";
             std::string jsondata = SocketUtil::createJsonAgentId_IdSpustenia(agent.id, shm_S_GUI->idSpustenia);
             shm_S_GUI->socket->sendJson(agent.sockFd, jsondata);

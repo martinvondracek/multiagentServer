@@ -25,6 +25,7 @@ struct agent_in_shm {
     int sockFd;
     pthread_t vlaknoPrijimanie; // na vlakno ktore prijima info z agentov
     KoordinacnaSur *koordinacnaSuradnica;
+    Poloha *aktPoloha;
 };
 
 struct komunikacia_shm {

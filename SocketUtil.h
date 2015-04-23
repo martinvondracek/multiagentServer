@@ -29,6 +29,7 @@ public:
     
     static std::string parseClassTypeFromJson(const char *json);
     static int parseIdFromQuit(const char *json);
+    static int parseAgentIdFromInvalidKoorSur(const char *json);
 private:
 
 };

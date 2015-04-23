@@ -15,6 +15,8 @@
 #include <unistd.h>
 #include <iostream>
 
+#include "KoordinacnaSur.h"
+
 class Poloha {
 public:
     Poloha(int id, int id_spustenia, int robot, float x, float y, float fi);
@@ -23,6 +25,9 @@ public:
     const char * toJson();
     static Poloha * fromJson(const char *json);
     const char * toString();
+    
+    float getVzdialenost(Poloha *p2);
+    float getVzdialenost(KoordinacnaSur *koorSur);
     
     float GetFi();
     void SetFi(float fi);
