@@ -38,7 +38,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
             std::string token;
             while ((pos = s.find(delimiter)) != std::string::npos) {
                 token = s.substr(0, pos);
-                std::cout << "data token=" << token << "=KONIEC\n";
+                //std::cout << "data token=" << token << "=KONIEC\n";
 
                 //rozparsovat a spracovat, ulozit do db
                 std::string ctype = SocketUtil::parseClassTypeFromJson(token.c_str());
@@ -79,11 +79,13 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                 // ak pride ze koor sur neni validna
                 if (ctype.compare("INVALID_KOOR_SUR") == 0) {
                     // nastavie jeho koor sur na invalid
+                    std::cout << "invalid koor\n";
                     int id = SocketUtil::parseAgentIdFromInvalidKoorSur(token.c_str());
                     std::list<agent_in_shm>::iterator i;
                     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
                         if (i->id == id) {
                             i->koordinacnaSuradnica->setInvalid();
+                            std::cout << "nastavujeme invalid koor\n";
                         }
                     }
                 }
@@ -359,8 +361,9 @@ int Server::stopMapping() {
             socket->sendJson(i->sockFd, SocketUtil::createJsonStopMapping());
         }
         // zrusime mapovaci thread - sam sa ukonci
-        shm_S_GUI->ukonci_ulohu = true;
         shm_S_GUI->dbConnector->savePreskumaneOblasti(shm_S_GUI->oblasti);
+        shm_S_GUI->dbConnector->updateSpustenieEnd(shm_S_GUI->idSpustenia);
+        shm_S_GUI->ukonci_ulohu = true;
         shm_S_GUI->oblasti->print();
     }
     shm_S_GUI->mappingNow = false;

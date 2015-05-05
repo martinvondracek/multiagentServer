@@ -48,7 +48,7 @@ int DbConnector::createTables() {
     
     try {
         // vytvorime tabulku spustenia ak neexistuje
-        pstmt = con->prepareStatement("CREATE TABLE IF NOT EXISTS `spustenia` (`id` int(11) NOT NULL AUTO_INCREMENT,`timestarted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='uklada id spustenia mapovania' AUTO_INCREMENT=1");
+        pstmt = con->prepareStatement("CREATE TABLE IF NOT EXISTS `spustenia` (`id` int(11) NOT NULL AUTO_INCREMENT,`timestarted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,`timeend` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='uklada id spustenia mapovania' AUTO_INCREMENT=1");
         pstmt->executeUpdate();
 
         // vytvorime tabulku polohy ak neexistuje
@@ -155,6 +155,35 @@ int DbConnector::getNewPrekazkaId(int idSpustenia) {
         return -1;
     }
     return newId;
+}
+
+int DbConnector::updateSpustenieEnd(int idSpustenia) {
+    if (!connected) {
+        return -1;
+    }
+    
+    sql::PreparedStatement *pstmt;
+    m.lock();
+    try {
+        // vytvorime novy riadok
+        pstmt = con->prepareStatement("UPDATE spustenia SET timeend=null WHERE id=?");
+        pstmt->setInt(1, idSpustenia);
+        pstmt->executeQuery();
+
+        delete pstmt;
+        m.unlock();
+    } catch (sql::SQLException &e) {
+        std::cout << "exception\n";
+        std::cout << "# ERR: SQLException in " << __FILE__;
+        std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << "\n";
+        std::cout << "# ERR: " << e.what() << "\n";
+        std::cout << " (MySQL error code: " << e.getErrorCode() << "\n";
+        std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
+        delete pstmt;
+        m.unlock();
+        return -1;
+    }
+    return 0;
 }
 
 int DbConnector::savePoloha(Poloha *poloha) {

@@ -22,6 +22,8 @@ public:
     void addPoloha(Poloha *poloha);
     bool isCovered(int x, int y);
     bool isCovered(Poloha *poloha);
+    bool isInTargetArea(int x, int y);
+    bool isInTargetArea(Poloha *poloha);
     float getCoverage();
     
     int getRadius();

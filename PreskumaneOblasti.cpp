@@ -132,6 +132,55 @@ bool PreskumaneOblasti::isCovered(Poloha *poloha) {
     return pole[k*n+l];
 }
 
+bool PreskumaneOblasti::isInTargetArea(int x, int y) {
+    if (x>0 && x<n && y>0 && y<=n) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool PreskumaneOblasti::isInTargetArea(Poloha *poloha) {
+    int k = n/2;
+    int l = n/2;
+    int pomY = poloha->GetY();
+    int pomX = poloha->GetX();
+    
+    if (pomX > 0) {
+        pomX -= 999;
+        while (pomX > 0) {
+            l++;
+            pomX -= 1000;
+        }
+    } else if (pomX < 0) {
+        pomX -= 1;
+        while (pomX < 0) {
+            l--;
+            pomX += 1000;
+        }
+    }
+    
+    if (pomY > 0) {
+        pomY -= 999;
+        while (pomY > 0) {
+            k++;
+            pomY -= 1000;
+        }
+    } else if (pomY < 0) {
+        pomY -= 1;
+        while (pomY < 0) {
+            k--;
+            pomY += 1000;
+        }
+    }
+    
+    if (k>0 && k<n && l>0 && l<=n) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 float PreskumaneOblasti::getCoverage() {
     m.lock();
     int i;
