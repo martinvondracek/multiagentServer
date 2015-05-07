@@ -14,7 +14,7 @@ serverForm::serverForm() {
     widget.maxAgentEdit->setText("5");
     widget.agentCountLabel->setText("0");
     widget.idSpusteniaLabel->setText("");
-    widget.radiusEdit->setText("3000");
+    widget.radiusEdit->setText("5000");
     widget.radiusEdit->setEnabled(false);
     widget.startMappingButton->setEnabled(false);
     widget.stopMappingButton->setEnabled(false);
