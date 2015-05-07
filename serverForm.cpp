@@ -31,7 +31,7 @@ serverForm::serverForm() {
     void * tmpAddrPtr=NULL;
 
     getifaddrs(&ifAddrStruct);
-    std::string str1 ("wlan2");
+    std::string str1 ("wlan1");
     for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
         if (!ifa->ifa_addr) {
             continue;

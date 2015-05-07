@@ -32,6 +32,7 @@ void NavigaciaUtil::initializeKoorSuradnice(PreskumaneOblasti *oblasti, std::lis
         for (i = agentsList->begin(); i != agentsList->end(); ++i) {
             if (!i->koordinacnaSuradnica->isValid()) {
                 i->koordinacnaSuradnica = koor;
+                std::cout << koor->toString() << "\n";
                 break;
             } else {
                 if (i->aktPoloha->getVzdialenost(i->koordinacnaSuradnica) >
@@ -39,6 +40,7 @@ void NavigaciaUtil::initializeKoorSuradnice(PreskumaneOblasti *oblasti, std::lis
                     
                     KoordinacnaSur *pom = i->koordinacnaSuradnica;
                     i->koordinacnaSuradnica = koor;
+                    std::cout << koor->toString() << "\n";
                     koor = pom;
                 }
             }
@@ -67,7 +69,7 @@ void NavigaciaUtil::updateKoorSuradnice(PreskumaneOblasti *oblasti, std::list<ag
             // ak uz neni validna (tobot tam bol) tak pridelíme mu dalsiu najblizsiu npreskumanu suradnicu
             // budeme brat radiusy po 1 metre a zistime polohu pre viacer uhov na tomto radiuse
             // bod musi byt v cielovej oblasti a nesmie byt pokryty
-            std::cout << "tu 1\n";
+            /*std::cout << "tu 1\n";
             int x_r = i->aktPoloha->GetX();
             int y_r = i->aktPoloha->GetY();
             
@@ -96,7 +98,11 @@ void NavigaciaUtil::updateKoorSuradnice(PreskumaneOblasti *oblasti, std::list<ag
                 
                 pocetSur *=2;
                 radius += 1000;
-            }
+            }*/
+            
+            KoordinacnaSur *koor = new KoordinacnaSur(1000, 4000);
+            i->koordinacnaSuradnica = koor;
+            std::cout << koor->toString() << "\n";
         }
     }
 }
