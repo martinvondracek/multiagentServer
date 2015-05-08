@@ -78,10 +78,11 @@ void PreskumaneOblasti::addPoloha(Poloha *poloha) {
 
 bool PreskumaneOblasti::isCovered(int x, int y) {
     m.lock();
-    if (x>=0 && x<n && y>=0 && y<n) {
+    if ((x>=0 && x<n) && (y>=0 && y<n)) {
         m.unlock();
         return pole[y*n+x];
     } else {
+        std::cout << "zla suradnica v isCovered\n";
         m.unlock();
         return false;
     }
@@ -133,9 +134,10 @@ bool PreskumaneOblasti::isCovered(Poloha *poloha) {
 }
 
 bool PreskumaneOblasti::isInTargetArea(int x, int y) {
-    if (x>0 && x<n && y>0 && y<=n) {
+    if ((x>=0 && x<n) && (y>=0 && y<n)) {
         return true;
     } else {
+        std::cout << "zla suradnica v isInTargetArea\n";
         return false;
     }
 }
@@ -174,7 +176,7 @@ bool PreskumaneOblasti::isInTargetArea(Poloha *poloha) {
         }
     }
     
-    if (k>0 && k<n && l>0 && l<=n) {
+    if (k>=0 && k<n && l>=0 && l<=n) {
         return true;
     } else {
         return false;
