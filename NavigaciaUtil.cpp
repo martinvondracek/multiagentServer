@@ -14,7 +14,7 @@ void NavigaciaUtil::initializeKoorSuradnice(PreskumaneOblasti *oblasti, std::lis
     // todo vypocitame prvotne koor suradnice tak, ze
     // ich rozmiestnime rovnomerne na kruznici polomeru cieloveho radiusu
     
-    int radius = oblasti->getRadius();
+    int radius = oblasti->getRadius() * 2 / 3;
     int x_0 = oblasti->getX();
     int y_0 = oblasti->getY();
     int agentCount = agentsList->size();
@@ -63,7 +63,7 @@ void NavigaciaUtil::initializeKoorSuradnice(PreskumaneOblasti *oblasti, std::lis
 void NavigaciaUtil::updateKoorSuradnice(PreskumaneOblasti *oblasti, std::list<agent_in_shm> *agentsList) {
     std::list<agent_in_shm>::iterator i;
     for (i = agentsList->begin(); i!=agentsList->end(); ++i) {
-        //std::cout << "update koor sur agenta\n";
+        std::cout << "update koor sur agenta " << i->id << "\n";
         //std::cout << i->koordinacnaSuradnica->toString() << "\n";
         if (! i->koordinacnaSuradnica->isValid() && oblasti->getCoverage()<100) {
             // ak uz neni validna (tobot tam bol) tak pridelíme mu dalsiu najblizsiu npreskumanu suradnicu
@@ -100,9 +100,86 @@ void NavigaciaUtil::updateKoorSuradnice(PreskumaneOblasti *oblasti, std::list<ag
                 radius += 1000;
             }*/
             
-            KoordinacnaSur *koor = new KoordinacnaSur(1000, 4000);
-            i->koordinacnaSuradnica = koor;
-            std::cout << koor->toString() << "\n";
+            int x_r = i->aktPoloha->GetX();
+            int y_r = i->aktPoloha->GetY();
+            int fi_r = i->aktPoloha->GetFi();
+            int x_b = oblasti->convertXtoL(x_r);
+            int y_b = oblasti->convertYtoK(y_r);
+            
+            KoordinacnaSur *koor = KoordinacnaSur::newInvalid();
+            if (! oblasti->isCovered(x_b, y_b)) {
+                i->koordinacnaSuradnica = new KoordinacnaSur(oblasti->getStredBunkyX(x_b, y_b), oblasti->getStredBunkyY(x_b, y_b));
+                std::cout << i->koordinacnaSuradnica->toString() << "\n";
+            } else {
+                bool brk = false;
+                for (int m=1; m<oblasti->getN(); m++) {
+                    if (brk) break;
+                    
+                    // dame sa vlavo dole
+                    int x_p = x_b - m;
+                    int y_p = y_b - m;
+                    if (oblasti->isInTargetArea(x_p, y_p) && !oblasti->isCovered(x_p, y_p)) {
+                        KoordinacnaSur *koor = new KoordinacnaSur(oblasti->getStredBunkyX(x_p, y_p), oblasti->getStredBunkyY(x_p, y_p));
+                        i->koordinacnaSuradnica = new KoordinacnaSur(oblasti->getStredBunkyX(x_p, y_p), oblasti->getStredBunkyY(x_p, y_p));
+                        std::cout << i->koordinacnaSuradnica->toString() << "\n";
+                        brk = true;
+                        break;
+                    }
+                    
+                    // presunieme sa doprava
+                    for (int a=1; a<=2*m; a++) {
+                        if (brk) break;
+                        
+                        x_p++;
+                        if (oblasti->isInTargetArea(x_p, y_p) && !oblasti->isCovered(x_p, y_p)) {
+                            i->koordinacnaSuradnica = new KoordinacnaSur(oblasti->getStredBunkyX(x_p, y_p), oblasti->getStredBunkyY(x_p, y_p));
+                            std::cout << i->koordinacnaSuradnica->toString() << "\n";
+                            brk = true;
+                            break;
+                        }
+                    }
+                    
+                    // presunieme sa hore
+                    for (int a=1; a<=2*m; a++) {
+                        if (brk) break;
+                        
+                        y_p++;
+                        if (oblasti->isInTargetArea(x_p, y_p) && !oblasti->isCovered(x_p, y_p)) {
+                            i->koordinacnaSuradnica = new KoordinacnaSur(oblasti->getStredBunkyX(x_p, y_p), oblasti->getStredBunkyY(x_p, y_p));
+                            std::cout << i->koordinacnaSuradnica->toString() << "\n";
+                            brk = true;
+                            break;
+                        }
+                    }
+                    
+                    // presunieme sa dolava
+                    for (int a=1; a<=2*m; a++) {
+                        if (brk) break;
+                        
+                        x_p--;
+                        if (oblasti->isInTargetArea(x_p, y_p) && !oblasti->isCovered(x_p, y_p)) {
+                            i->koordinacnaSuradnica = new KoordinacnaSur(oblasti->getStredBunkyX(x_p, y_p), oblasti->getStredBunkyY(x_p, y_p));
+                            std::cout << i->koordinacnaSuradnica->toString() << "\n";
+                            brk = true;
+                            break;
+                        }
+                    }
+                    
+                    // presunieme sa dole
+                    for (int a=1; a<2*m; a++) {
+                        if (brk) break;
+                        
+                        y_p--;
+                        if (oblasti->isInTargetArea(x_p, y_p) && !oblasti->isCovered(x_p, y_p)) {
+                            i->koordinacnaSuradnica = new KoordinacnaSur(oblasti->getStredBunkyX(x_p, y_p), oblasti->getStredBunkyY(x_p, y_p));
+                            std::cout << i->koordinacnaSuradnica->toString() << "\n";
+                            brk = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            
         }
     }
 }

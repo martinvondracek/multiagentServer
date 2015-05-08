@@ -208,6 +208,89 @@ int PreskumaneOblasti::getY() {
     return y0;
 }
 
+
+int PreskumaneOblasti::getN() {
+    return n;
+}
+
+int PreskumaneOblasti::convertXtoL(int x) {
+    int l = n/2;
+    int pomX = x;
+    
+    if (pomX > 0) {
+        pomX -= 999;
+        while (pomX > 0) {
+            l++;
+            pomX -= 1000;
+        }
+    } else if (pomX < 0) {
+        pomX -= 1;
+        while (pomX < 0) {
+            l--;
+            pomX += 1000;
+        }
+    }
+    
+    if (l>n-1) l=n-1;
+    if (l<0) l=0;
+    
+    return l;
+}
+
+int PreskumaneOblasti::convertYtoK(int y) {
+    int k = n/2;
+    int pomY = y;
+    
+    if (pomY > 0) {
+        pomY -= 999;
+        while (pomY > 0) {
+            k++;
+            pomY -= 1000;
+        }
+    } else if (pomY < 0) {
+        pomY -= 1;
+        while (pomY < 0) {
+            k--;
+            pomY += 1000;
+        }
+    }
+    
+    if (k>n-1) k=n-1;
+    if (k<0) k=0;
+    
+    return k;
+}
+
+int PreskumaneOblasti::getStredBunkyX(int x, int y) {
+    if (x < 0) {
+        x = 0;
+    }
+    if (x >= n-1) {
+        x = n -1;
+    }
+    
+    // zistime x suradnicu stredu 0tej bunky
+    int stred0 = (-1) * (n/2) * 1000 + 500;
+    
+    // vratime stred ntej bunky
+    return stred0 + x*1000;
+}
+
+int PreskumaneOblasti::getStredBunkyY(int x, int y) {
+    if (y < 0) {
+        y = 0;
+    }
+    if (y >= n-1) {
+        y = n -1;
+    }
+    
+    // zistime x suradnicu stredu 0tej bunky
+    int stred0 = (-1) * (n/2) * 1000 + 500;
+    
+    // vratime stred ntej bunky
+    return stred0 + y*1000;
+}
+
 void PreskumaneOblasti::print() {
     m.lock();
     for (int j=n-1; j>=0; j--) {

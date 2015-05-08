@@ -29,6 +29,12 @@ public:
     int getRadius();
     int getX();
     int getY();
+    int getN();
+    
+    int convertXtoL(int x);
+    int convertYtoK(int y);
+    int getStredBunkyX(int x, int y);
+    int getStredBunkyY(int x, int y);
 
     std::list<PreskumanaBunka*> toList();
     void print();
