@@ -304,6 +304,22 @@ void PreskumaneOblasti::print() {
     m.unlock();
 }
 
+void PreskumaneOblasti::addInaccesibleKoorSur(KoordinacnaSur *sur) {
+    m.lock();
+    inaccesibleList.push_back(sur);
+    m.unlock();
+}
+
+bool PreskumaneOblasti::isAccesible(KoordinacnaSur *sur) {
+    std::list<KoordinacnaSur*>::iterator i;
+    for (i = inaccesibleList.begin(); i != inaccesibleList.end(); ++i) {
+        if ((*i)->equals(sur)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 std::list<PreskumanaBunka*> PreskumaneOblasti::toList() {
     m.lock();
     std::list<PreskumanaBunka*> list;

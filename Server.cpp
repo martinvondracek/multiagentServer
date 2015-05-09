@@ -38,6 +38,9 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
             std::string token;
             while ((pos = s.find(delimiter)) != std::string::npos) {
                 token = s.substr(0, pos);
+                if(token.length()==0 || token.empty()) {
+                    continue;
+                }
                 //std::cout << "data token=" << token << "=KONIEC\n";
 
                 //rozparsovat a spracovat, ulozit do db
@@ -79,13 +82,29 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                 // ak pride ze koor sur neni validna
                 if (ctype.compare("INVALID_KOOR_SUR") == 0) {
                     // nastavie jeho koor sur na invalid
-                    std::cout << "invalid koor\n";
+                    //std::cout << "invalid koor\n";
                     int id = SocketUtil::parseAgentIdFromInvalidKoorSur(token.c_str());
                     std::list<agent_in_shm>::iterator i;
                     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
                         if (i->id == id) {
                             i->koordinacnaSuradnica->setInvalid();
                             std::cout << "nastavujeme invalid koor\n";
+                        }
+                    }
+                }
+                
+                // ak pride ze koor sur je inaccesible
+                if (ctype.compare("INACCESIBLE_KOOR_SUR") == 0) {
+                    // nastavie jeho koor sur na invalid
+                    std::cout << "inaccesible koor\n";
+                    int id = SocketUtil::parseAgentIdFromInaccesibleKoorSur(token.c_str());
+                    std::list<agent_in_shm>::iterator i;
+                    for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
+                        if (i->id == id) {
+                            // pridame do inaccesible
+                            shm_S_GUI->oblasti->addInaccesibleKoorSur(i->koordinacnaSuradnica);
+                            i->koordinacnaSuradnica->setInvalid();
+                            std::cout << "nastavujeme invalid koor koli inaccesible\n";
                         }
                     }
                 }

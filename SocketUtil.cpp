@@ -116,6 +116,21 @@ int SocketUtil::parseAgentIdFromInvalidKoorSur(const char *json) {
     }
 }
 
+int SocketUtil::parseAgentIdFromInaccesibleKoorSur(const char *json) {
+    int id;
+    
+    rapidjson::Document document;
+    document.Parse<0>(json);
+    
+    std::string ctype = document["CLASSTYPE"].GetString();
+    if (ctype.compare("INACCESIBLE_KOOR_SUR") == 0) {
+        id = document["AGENTID"].GetInt();
+        return id;
+    } else {
+        return -1;
+    }
+}
+
 SocketUtil::~SocketUtil() {
 }
 

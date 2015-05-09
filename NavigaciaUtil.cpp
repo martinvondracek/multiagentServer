@@ -14,7 +14,7 @@ void NavigaciaUtil::initializeKoorSuradnice(PreskumaneOblasti *oblasti, std::lis
     // todo vypocitame prvotne koor suradnice tak, ze
     // ich rozmiestnime rovnomerne na kruznici polomeru cieloveho radiusu
     
-    int radius = oblasti->getRadius() * 2 / 3;
+    int radius = oblasti->getRadius();
     int x_0 = oblasti->getX();
     int y_0 = oblasti->getY();
     int agentCount = agentsList->size();
@@ -32,7 +32,7 @@ void NavigaciaUtil::initializeKoorSuradnice(PreskumaneOblasti *oblasti, std::lis
         for (i = agentsList->begin(); i != agentsList->end(); ++i) {
             if (!i->koordinacnaSuradnica->isValid()) {
                 i->koordinacnaSuradnica = koor;
-                std::cout << koor->toString() << "\n";
+                //std::cout << koor->toString() << "\n";
                 break;
             } else {
                 if (i->aktPoloha->getVzdialenost(i->koordinacnaSuradnica) >
@@ -40,7 +40,7 @@ void NavigaciaUtil::initializeKoorSuradnice(PreskumaneOblasti *oblasti, std::lis
                     
                     KoordinacnaSur *pom = i->koordinacnaSuradnica;
                     i->koordinacnaSuradnica = koor;
-                    std::cout << koor->toString() << "\n";
+                    //std::cout << koor->toString() << "\n";
                     koor = pom;
                 }
             }
@@ -75,7 +75,7 @@ void NavigaciaUtil::updateKoorSuradnice(PreskumaneOblasti *oblasti, std::list<ag
             int y_b = oblasti->convertYtoK(y_r);
             
             KoordinacnaSur *koor = new KoordinacnaSur(oblasti->getStredBunkyX(x_b, y_b), oblasti->getStredBunkyY(x_b, y_b));
-            if ((!oblasti->isCovered(x_b, y_b)) && (!isKoorSuradniceAssigned(koor, agentsList))) {
+            if ((!oblasti->isCovered(x_b, y_b)) && (!isKoorSuradniceAssigned(koor, agentsList)) && oblasti->isAccesible(koor)) {
                 i->koordinacnaSuradnica = koor;
                 //std::cout << i->koordinacnaSuradnica->toString() << "\n";
             } else {
@@ -87,7 +87,7 @@ void NavigaciaUtil::updateKoorSuradnice(PreskumaneOblasti *oblasti, std::list<ag
                     int x_p = x_b - m;
                     int y_p = y_b - m;
                     koor = new KoordinacnaSur(oblasti->getStredBunkyX(x_p, y_p), oblasti->getStredBunkyY(x_p, y_p));
-                    if (oblasti->isInTargetArea(x_p, y_p) && (!oblasti->isCovered(x_p, y_p)) && (!isKoorSuradniceAssigned(koor, agentsList))) {
+                    if (oblasti->isInTargetArea(x_p, y_p) && (!oblasti->isCovered(x_p, y_p)) && (!isKoorSuradniceAssigned(koor, agentsList)) && oblasti->isAccesible(koor)) {
                         i->koordinacnaSuradnica = koor;
                         //std::cout << "pre " << x_p << " " << y_p << "\n" <<  i->koordinacnaSuradnica->toString() << "0\n";
                         brk = true;
@@ -100,7 +100,7 @@ void NavigaciaUtil::updateKoorSuradnice(PreskumaneOblasti *oblasti, std::list<ag
                         
                         x_p++;
                         koor = new KoordinacnaSur(oblasti->getStredBunkyX(x_p, y_p), oblasti->getStredBunkyY(x_p, y_p));
-                        if (oblasti->isInTargetArea(x_p, y_p) && (!oblasti->isCovered(x_p, y_p)) && (!isKoorSuradniceAssigned(koor, agentsList))) {
+                        if (oblasti->isInTargetArea(x_p, y_p) && (!oblasti->isCovered(x_p, y_p)) && (!isKoorSuradniceAssigned(koor, agentsList)) && oblasti->isAccesible(koor)) {
                             i->koordinacnaSuradnica = koor;
                             //std::cout << "pre " << x_p << " " << y_p << "\n" <<  i->koordinacnaSuradnica->toString() << "1\n";
                             brk = true;
@@ -114,7 +114,7 @@ void NavigaciaUtil::updateKoorSuradnice(PreskumaneOblasti *oblasti, std::list<ag
                         
                         y_p++;
                         koor = new KoordinacnaSur(oblasti->getStredBunkyX(x_p, y_p), oblasti->getStredBunkyY(x_p, y_p));
-                        if (oblasti->isInTargetArea(x_p, y_p) && (!oblasti->isCovered(x_p, y_p)) && (!isKoorSuradniceAssigned(koor, agentsList))) {
+                        if (oblasti->isInTargetArea(x_p, y_p) && (!oblasti->isCovered(x_p, y_p)) && (!isKoorSuradniceAssigned(koor, agentsList)) && oblasti->isAccesible(koor)) {
                             i->koordinacnaSuradnica = koor;
                             //std::cout << "pre " << x_p << " " << y_p << "\n" <<  i->koordinacnaSuradnica->toString() << "2\n";
                             brk = true;
@@ -128,7 +128,7 @@ void NavigaciaUtil::updateKoorSuradnice(PreskumaneOblasti *oblasti, std::list<ag
                         
                         x_p--;
                         koor = new KoordinacnaSur(oblasti->getStredBunkyX(x_p, y_p), oblasti->getStredBunkyY(x_p, y_p));
-                        if (oblasti->isInTargetArea(x_p, y_p) && (!oblasti->isCovered(x_p, y_p)) && (!isKoorSuradniceAssigned(koor, agentsList))) {
+                        if (oblasti->isInTargetArea(x_p, y_p) && (!oblasti->isCovered(x_p, y_p)) && (!isKoorSuradniceAssigned(koor, agentsList)) && oblasti->isAccesible(koor)) {
                             i->koordinacnaSuradnica = koor;
                             //std::cout << "pre " << x_p << " " << y_p << "\n" <<  i->koordinacnaSuradnica->toString() << "3\n";
                             brk = true;
@@ -142,7 +142,7 @@ void NavigaciaUtil::updateKoorSuradnice(PreskumaneOblasti *oblasti, std::list<ag
                         
                         y_p--;
                         koor = new KoordinacnaSur(oblasti->getStredBunkyX(x_p, y_p), oblasti->getStredBunkyY(x_p, y_p));
-                        if (oblasti->isInTargetArea(x_p, y_p) && (!oblasti->isCovered(x_p, y_p)) && (!isKoorSuradniceAssigned(koor, agentsList))) {
+                        if (oblasti->isInTargetArea(x_p, y_p) && (!oblasti->isCovered(x_p, y_p)) && (!isKoorSuradniceAssigned(koor, agentsList)) && oblasti->isAccesible(koor)) {
                             i->koordinacnaSuradnica = koor;
                             //std::cout << "pre " << x_p << " " << y_p << "\n" <<  i->koordinacnaSuradnica->toString() << "4\n";
                             brk = true;

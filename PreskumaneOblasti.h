@@ -35,6 +35,9 @@ public:
     int convertYtoK(int y);
     int getStredBunkyX(int x, int y);
     int getStredBunkyY(int x, int y);
+    
+    void addInaccesibleKoorSur(KoordinacnaSur *sur);
+    bool isAccesible(KoordinacnaSur *sur);
 
     std::list<PreskumanaBunka*> toList();
     void print();
@@ -46,6 +49,8 @@ private:
     int y0;
     int radius;
     int rozmerBunky = 1000;
+    
+    std::list<KoordinacnaSur*> inaccesibleList;
     
     bool *pole;
     int n;
