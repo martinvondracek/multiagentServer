@@ -59,6 +59,14 @@ std::string KoordinacnaSur::toJson(){
     return json;
 }
 
+bool KoordinacnaSur::equals(KoordinacnaSur *sur2) {
+    if (x==sur2->GetX() && y==sur2->GetY()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 KoordinacnaSur* KoordinacnaSur::fromJson(std::string json) {
     int x;
     int y;

@@ -20,6 +20,7 @@ public:
     
     static void initializeKoorSuradnice(PreskumaneOblasti *oblasti, std::list<agent_in_shm> *agentsList);
     static void updateKoorSuradnice(PreskumaneOblasti *oblasti, std::list<agent_in_shm> *agentsList);
+    static bool isKoorSuradniceAssigned(KoordinacnaSur *sur, std::list<agent_in_shm> *agentsList);
     
     virtual ~NavigaciaUtil();
 private:

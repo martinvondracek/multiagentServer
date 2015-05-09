@@ -26,6 +26,7 @@ public:
     
     static KoordinacnaSur* newInvalid();
     
+    bool equals(KoordinacnaSur *sur2);
     std::string toJson();
     static KoordinacnaSur* fromJson(std::string json);
     std::string toString();
