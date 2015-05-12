@@ -41,7 +41,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                 if(token.length()<3 || token.empty() || token.at(0)!='{') {
                     continue;
                 }
-                std::cout << "data token=" << token << "=KONIEC\n";
+                //std::cout << "data token=" << token << "=KONIEC\n";
 
                 //rozparsovat a spracovat, ulozit do db
                 std::string ctype = SocketUtil::parseClassTypeFromJson(token.c_str());
