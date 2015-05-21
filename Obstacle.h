@@ -17,33 +17,33 @@
 #include <unistd.h>
 #include <iostream>
 
-class Prekazka {
+class Obstacle {
 public:
-    Prekazka(int id, int id_spustenia, int prekazka, int robot, float x_rob,
+    Obstacle(int id, int id_spustenia, int prekazka, int robot, float x_rob,
             float y_rob, float fi_rob, float x_p, float y_p, bool naraz_vpravo,
             bool naraz_vlavo, bool naraz_vpredu);
-    virtual ~Prekazka();
+    virtual ~Obstacle();
     
     const char * toJson();
-    static Prekazka * fromJson(const char *json);
+    static Obstacle * fromJson(const char *json);
     const char * toString();
     
-    float getVzdialenost(Prekazka *p2); // return distance from other obstacle
+    float getDistance(Obstacle *p2); // return distance from other obstacle
     
     float GetFi_rob();
     void SetFi_rob(float fi_rob);
     int GetId();
     void SetId(int id);
-    int GetId_spustenia();
-    void SetId_spustenia(int id_spustenia);
-    bool IsNaraz_vlavo();
-    void SetNaraz_vlavo(bool naraz_vlavo);
-    bool IsNaraz_vpravo();
-    void SetNaraz_vpravo(bool naraz_vpravo);
-    bool IsNaraz_vpredu();
-    void SetNaraz_vpredu(bool naraz_vpredu);
-    int GetPrekazka();
-    void SetPrekazka(int prekazka);
+    int GetId_mapping();
+    void SetId_mapping(int id_spustenia);
+    bool IsHit_left();
+    void SetHit_left(bool naraz_vlavo);
+    bool IsHit_right();
+    void SetHit_right(bool naraz_vpravo);
+    bool IsHit_front();
+    void SetHit_front(bool naraz_vpredu);
+    int GetIdObstacle();
+    void SetIdObstacle(int prekazka);
     int GetRobot();
     void SetRobot(int robot);
     float GetX_p();

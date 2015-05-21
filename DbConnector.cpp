@@ -77,7 +77,7 @@ int DbConnector::createTables() {
     }
 }
 
-int DbConnector::getNewSpustenieId() {
+int DbConnector::getNewMappingId() {
     if (!connected) {
         return -1;
     }
@@ -116,7 +116,7 @@ int DbConnector::getNewSpustenieId() {
     return newId;
 }
 
-int DbConnector::getNewPrekazkaId(int idSpustenia) {
+int DbConnector::getNewObstacleId(int idSpustenia) {
     if (!connected) {
         return -1;
     }
@@ -157,7 +157,7 @@ int DbConnector::getNewPrekazkaId(int idSpustenia) {
     return newId;
 }
 
-int DbConnector::updateSpustenieEnd(int idSpustenia) {
+int DbConnector::updateMappingEnd(int idSpustenia) {
     if (!connected) {
         return -1;
     }
@@ -186,7 +186,7 @@ int DbConnector::updateSpustenieEnd(int idSpustenia) {
     return 0;
 }
 
-int DbConnector::savePoloha(Poloha *poloha) {
+int DbConnector::savePosition(Position *poloha) {
     //std::cout << "savePoloha\n";
     if (!connected) {
         return -1;
@@ -197,7 +197,7 @@ int DbConnector::savePoloha(Poloha *poloha) {
     sql::PreparedStatement *pstmt;
     try {
         pstmt = con->prepareStatement("INSERT INTO `polohy`(`id_spustenia`, `robot`, `x`, `y`, `fi`) VALUES (?,?,?,?,?)");
-        pstmt->setInt(1, poloha->GetId_spustenia());
+        pstmt->setInt(1, poloha->GetId_ofMapping());
         pstmt->setInt(2, poloha->GetRobot());
         pstmt->setDouble(3, poloha->GetX());
         pstmt->setDouble(4, poloha->GetY());
@@ -223,7 +223,7 @@ int DbConnector::savePoloha(Poloha *poloha) {
     return 0;
 }
 
-int DbConnector::savePrekazka(Prekazka *prekazka) {
+int DbConnector::saveObstacle(Obstacle *prekazka) {
     //std::cout << "savePrekazka\n";
     if (!connected) {
         return -1;
@@ -234,17 +234,17 @@ int DbConnector::savePrekazka(Prekazka *prekazka) {
     sql::PreparedStatement *pstmt;
     try {
         pstmt = con->prepareStatement("INSERT INTO `prekazky`(`id_spustenia`, `prekazka`, `robot`, `x_rob`, `y_rob`, `fi_rob`, `x_p`, `y_p`, `naraz_vpravo`, `naraz_vlavo`, `naraz_vpredu`) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
-        pstmt->setInt(1, prekazka->GetId_spustenia());
-        pstmt->setInt(2, prekazka->GetPrekazka());
+        pstmt->setInt(1, prekazka->GetId_mapping());
+        pstmt->setInt(2, prekazka->GetIdObstacle());
         pstmt->setInt(3, prekazka->GetRobot());
         pstmt->setDouble(4, prekazka->GetX_rob());
         pstmt->setDouble(5, prekazka->GetY_rob());
         pstmt->setDouble(6, prekazka->GetFi_rob());
         pstmt->setDouble(7, prekazka->GetX_p());
         pstmt->setDouble(8, prekazka->GetY_p());
-        pstmt->setBoolean(9, prekazka->IsNaraz_vpravo());
-        pstmt->setBoolean(10, prekazka->IsNaraz_vlavo());
-        pstmt->setBoolean(11, prekazka->IsNaraz_vpredu());
+        pstmt->setBoolean(9, prekazka->IsHit_right());
+        pstmt->setBoolean(10, prekazka->IsHit_left());
+        pstmt->setBoolean(11, prekazka->IsHit_front());
         pstmt->executeQuery();
         delete pstmt;
         m.unlock();
@@ -266,7 +266,7 @@ int DbConnector::savePrekazka(Prekazka *prekazka) {
     return 0;
 }
 
-int DbConnector::savePreskumanaBunka(PreskumanaBunka *bunka) {
+int DbConnector::saveCoveredArea(CoveredArea *bunka) {
     if (!connected) {
         return -1;
     }
@@ -276,7 +276,7 @@ int DbConnector::savePreskumanaBunka(PreskumanaBunka *bunka) {
     sql::PreparedStatement *pstmt;
     try {
         pstmt = con->prepareStatement("INSERT INTO `pokrytie`(`id_spustenia`, `x0`, `y0`, `radius`, `n`, `rozmer_bunky`, `k`, `l`, `obsadene`) VALUES (?,?,?,?,?,?,?,?,?)");
-        pstmt->setInt(1, bunka->GetIdSpustenia());
+        pstmt->setInt(1, bunka->GetIdMapping());
         pstmt->setInt(2, bunka->GetX0());
         pstmt->setDouble(3, bunka->GetY0());
         pstmt->setDouble(4, bunka->GetRadius());
@@ -284,7 +284,7 @@ int DbConnector::savePreskumanaBunka(PreskumanaBunka *bunka) {
         pstmt->setDouble(6, bunka->GetRozmerBunky());
         pstmt->setDouble(7, bunka->GetK());
         pstmt->setDouble(8, bunka->GetL());
-        pstmt->setBoolean(9, bunka->IsObsadene());
+        pstmt->setBoolean(9, bunka->IsCovered());
         pstmt->executeQuery();
         delete pstmt;
         m.unlock();
@@ -306,15 +306,15 @@ int DbConnector::savePreskumanaBunka(PreskumanaBunka *bunka) {
     return 0;
 }
 
-int DbConnector::savePreskumaneOblasti(PreskumaneOblasti *oblasti) {
+int DbConnector::saveCoveredAreas(CoveredAreas *oblasti) {
     if (!connected) {
         return -1;
     }
 
-    std::list<PreskumanaBunka*> list = oblasti->toList();
-    std::list<PreskumanaBunka*>::iterator i;
+    std::list<CoveredArea*> list = oblasti->toList();
+    std::list<CoveredArea*>::iterator i;
     for (i = list.begin(); i != list.end(); ++i) {
-        savePreskumanaBunka((*i));
+        saveCoveredArea((*i));
     }
     
     return 0;
@@ -325,16 +325,16 @@ void DbConnector::test() {
         return;
     }
     
-    Poloha *pol = new Poloha(0, 2, 1, 1.2, 1.2, 3.14);
+    Position *pol = new Position(0, 2, 1, 1.2, 1.2, 3.14);
     const char * pom = pol->toJson();
     std::cout << pom << "\n";
-    Poloha *pol2 = Poloha::fromJson(pom);
+    Position *pol2 = Position::fromJson(pom);
     std::cout << pol2->GetX() << "\n";
     
-    Prekazka *prk = new Prekazka(0, 2, 1, 2, 1.2, 1.2, 3.14, 1.2, 1.2, 1, 0, 1);
+    Obstacle *prk = new Obstacle(0, 2, 1, 2, 1.2, 1.2, 3.14, 1.2, 1.2, 1, 0, 1);
     const char * pom2 = prk->toJson();
-    Prekazka *prk2 = Prekazka::fromJson(pom2);
-    std::cout << prk2->GetId_spustenia() << "\n";
+    Obstacle *prk2 = Obstacle::fromJson(pom2);
+    std::cout << prk2->GetId_mapping() << "\n";
 }
 
 DbConnector::~DbConnector() {

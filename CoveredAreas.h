@@ -13,21 +13,21 @@
 #include <mutex>
 #include <list>
 
-#include "Poloha.h"
-#include "PreskumanaBunka.h"
+#include "Position.h"
+#include "CoveredArea.h"
 
 
-class PreskumaneOblasti {
+class CoveredAreas {
 public:
-    PreskumaneOblasti(int x, int y, int radius, int idSpustnia);
+    CoveredAreas(int x, int y, int radius, int idSpustnia);
     
-    void addPoloha(Poloha *poloha); // saves position of robot to equivalent area
+    void addPosition(Position *poloha); // saves position of robot to equivalent area
     bool isCovered(int x, int y); // if area was covered by agent 
                                 // X, Y - Indexes of internal array
-    bool isCovered(Poloha *poloha); // if area was covered by agent
+    bool isCovered(Position *poloha); // if area was covered by agent
     bool isInTargetArea(int x, int y); // if position is in target area
                                 // X, Y - Indexes of internal array
-    bool isInTargetArea(Poloha *poloha);// if position is in target area
+    bool isInTargetArea(Position *poloha);// if position is in target area
     float getCoverage(); //calculates actual coverage in percentage
     
     int getRadius();
@@ -40,13 +40,13 @@ public:
     int getStredBunkyX(int x, int y); // return center of X,Y area
     int getStredBunkyY(int x, int y);
     
-    void addInaccesibleKoorSur(KoordinacnaSur *sur); //collection of inaccesible areas
-    bool isAccesible(KoordinacnaSur *sur); //chcecks if coordination position is on list of inaccesible areas
+    void addInaccesibleKoorSur(CoordinationPosition *sur); //collection of inaccesible areas
+    bool isAccesible(CoordinationPosition *sur); //chcecks if coordination position is on list of inaccesible areas
 
-    std::list<PreskumanaBunka*> toList();
+    std::list<CoveredArea*> toList();
     void print();
     
-    virtual ~PreskumaneOblasti();
+    virtual ~CoveredAreas();
 private:
     int idSpustnia;
     int x0;
@@ -54,7 +54,7 @@ private:
     int radius;
     int rozmerBunky = 1000;
     
-    std::list<KoordinacnaSur*> inaccesibleList;
+    std::list<CoordinationPosition*> inaccesibleList;
     
     bool *pole;
     int n;

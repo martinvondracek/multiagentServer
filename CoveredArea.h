@@ -10,24 +10,24 @@
 #ifndef PRESKUMANABUNKA_H
 #define	PRESKUMANABUNKA_H
 
-class PreskumanaBunka {
+class CoveredArea {
 public:
-    PreskumanaBunka(int id, int idSpustenia, int x0, int y0, int radius, int n, int rozmerBunky, int k, int l, bool obsadene);
+    CoveredArea(int id, int idSpustenia, int x0, int y0, int radius, int n, int rozmerBunky, int k, int l, bool obsadene);
     
-    virtual ~PreskumanaBunka();
+    virtual ~CoveredArea();
 
     int GetId();
     void SetId(int id);
-    int GetIdSpustenia();
-    void SetIdSpustenia(int idSpustenia);
+    int GetIdMapping();
+    void SetIdMapping(int idSpustenia);
     int GetK();
     void SetK(int k);
     int GetL();
     void SetL(int l);
     int GetN();
     void SetN(int n);
-    bool IsObsadene();
-    void SetObsadene(bool obsadene);
+    bool IsCovered();
+    void SetCovered(bool obsadene);
     int GetRadius();
     void SetRadius(int radius);
     int GetRozmerBunky();

@@ -5,9 +5,9 @@
  * Created on Utorok, 2015, marec 24, 23:10
  */
 
-#include "PreskumaneOblasti.h"
+#include "CoveredAreas.h"
 
-PreskumaneOblasti::PreskumaneOblasti(int x, int y, int radius, int idSpustnia) {
+CoveredAreas::CoveredAreas(int x, int y, int radius, int idSpustnia) {
     this->x0 = x;
     this->y0 = y;
     this->radius = radius;
@@ -27,7 +27,7 @@ PreskumaneOblasti::PreskumaneOblasti(int x, int y, int radius, int idSpustnia) {
     
 }
 
-void PreskumaneOblasti::addPoloha(Poloha *poloha) {
+void CoveredAreas::addPosition(Position *poloha) {
     m.lock();
     
     int k = n/2;
@@ -76,7 +76,7 @@ void PreskumaneOblasti::addPoloha(Poloha *poloha) {
     m.unlock();
 }
 
-bool PreskumaneOblasti::isCovered(int x, int y) {
+bool CoveredAreas::isCovered(int x, int y) {
     m.lock();
     if ((x>=0 && x<n) && (y>=0 && y<n)) {
         m.unlock();
@@ -88,7 +88,7 @@ bool PreskumaneOblasti::isCovered(int x, int y) {
     }
 }
 
-bool PreskumaneOblasti::isCovered(Poloha *poloha) {
+bool CoveredAreas::isCovered(Position *poloha) {
     m.lock();
     int k = n/2;
     int l = n/2;
@@ -133,7 +133,7 @@ bool PreskumaneOblasti::isCovered(Poloha *poloha) {
     return pole[k*n+l];
 }
 
-bool PreskumaneOblasti::isInTargetArea(int x, int y) {
+bool CoveredAreas::isInTargetArea(int x, int y) {
     if ((x>=0 && x<n) && (y>=0 && y<n)) {
         return true;
     } else {
@@ -142,7 +142,7 @@ bool PreskumaneOblasti::isInTargetArea(int x, int y) {
     }
 }
 
-bool PreskumaneOblasti::isInTargetArea(Poloha *poloha) {
+bool CoveredAreas::isInTargetArea(Position *poloha) {
     int k = n/2;
     int l = n/2;
     int pomY = poloha->GetY();
@@ -183,7 +183,7 @@ bool PreskumaneOblasti::isInTargetArea(Poloha *poloha) {
     }
 }
 
-float PreskumaneOblasti::getCoverage() {
+float CoveredAreas::getCoverage() {
     m.lock();
     int i;
     int count = 0;
@@ -198,24 +198,24 @@ float PreskumaneOblasti::getCoverage() {
     return ((float)count) / (n*n) *100;
 }
 
-int PreskumaneOblasti::getRadius() {
+int CoveredAreas::getRadius() {
     return radius;
 }
 
-int PreskumaneOblasti::getX() {
+int CoveredAreas::getX() {
     return x0;
 }
 
-int PreskumaneOblasti::getY() {
+int CoveredAreas::getY() {
     return y0;
 }
 
 
-int PreskumaneOblasti::getN() {
+int CoveredAreas::getN() {
     return n;
 }
 
-int PreskumaneOblasti::convertXtoL(int x) {
+int CoveredAreas::convertXtoL(int x) {
     int l = n/2;
     int pomX = x;
     
@@ -239,7 +239,7 @@ int PreskumaneOblasti::convertXtoL(int x) {
     return l;
 }
 
-int PreskumaneOblasti::convertYtoK(int y) {
+int CoveredAreas::convertYtoK(int y) {
     int k = n/2;
     int pomY = y;
     
@@ -263,7 +263,7 @@ int PreskumaneOblasti::convertYtoK(int y) {
     return k;
 }
 
-int PreskumaneOblasti::getStredBunkyX(int x, int y) {
+int CoveredAreas::getStredBunkyX(int x, int y) {
     if (x < 0) {
         x = 0;
     }
@@ -278,7 +278,7 @@ int PreskumaneOblasti::getStredBunkyX(int x, int y) {
     return stred0 + x*1000;
 }
 
-int PreskumaneOblasti::getStredBunkyY(int x, int y) {
+int CoveredAreas::getStredBunkyY(int x, int y) {
     if (y < 0) {
         y = 0;
     }
@@ -293,7 +293,7 @@ int PreskumaneOblasti::getStredBunkyY(int x, int y) {
     return stred0 + y*1000;
 }
 
-void PreskumaneOblasti::print() {
+void CoveredAreas::print() {
     m.lock();
     for (int j=n-1; j>=0; j--) {
         for (int i=0; i<n; i++) {
@@ -304,14 +304,14 @@ void PreskumaneOblasti::print() {
     m.unlock();
 }
 
-void PreskumaneOblasti::addInaccesibleKoorSur(KoordinacnaSur *sur) {
+void CoveredAreas::addInaccesibleKoorSur(CoordinationPosition *sur) {
     m.lock();
     inaccesibleList.push_back(sur);
     m.unlock();
 }
 
-bool PreskumaneOblasti::isAccesible(KoordinacnaSur *sur) {
-    std::list<KoordinacnaSur*>::iterator i;
+bool CoveredAreas::isAccesible(CoordinationPosition *sur) {
+    std::list<CoordinationPosition*>::iterator i;
     for (i = inaccesibleList.begin(); i != inaccesibleList.end(); ++i) {
         if ((*i)->equals(sur)) {
             return false;
@@ -320,19 +320,19 @@ bool PreskumaneOblasti::isAccesible(KoordinacnaSur *sur) {
     return true;
 }
 
-std::list<PreskumanaBunka*> PreskumaneOblasti::toList() {
+std::list<CoveredArea*> CoveredAreas::toList() {
     m.lock();
-    std::list<PreskumanaBunka*> list;
+    std::list<CoveredArea*> list;
     for (int j=n-1; j>=0; j--) {
         for (int i=0; i<n; i++) {
-            list.push_back(new PreskumanaBunka(0, idSpustnia, x0, y0, radius, n, rozmerBunky, i, j, pole[j*n + i]));
+            list.push_back(new CoveredArea(0, idSpustnia, x0, y0, radius, n, rozmerBunky, i, j, pole[j*n + i]));
         }
     }
     m.unlock();
     return list;
 }
 
-PreskumaneOblasti::~PreskumaneOblasti() {
+CoveredAreas::~CoveredAreas() {
     m.lock();
     m.unlock();
 }

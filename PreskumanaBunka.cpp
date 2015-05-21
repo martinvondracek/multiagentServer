@@ -5,9 +5,9 @@
  * Created on Nedeľa, 2015, marec 29, 9:37
  */
 
-#include "PreskumanaBunka.h"
+#include "CoveredArea.h"
 
-PreskumanaBunka::PreskumanaBunka(int id, int idSpustenia, int x0, int y0, int radius, int n, int rozmerBunky, int k, int l, bool obsadene) {
+CoveredArea::CoveredArea(int id, int idSpustenia, int x0, int y0, int radius, int n, int rozmerBunky, int k, int l, bool obsadene) {
     this->id = id;
     this->idSpustenia = idSpustenia;
     this->x0 = x0;
@@ -20,86 +20,86 @@ PreskumanaBunka::PreskumanaBunka(int id, int idSpustenia, int x0, int y0, int ra
     this->obsadene = obsadene;
 }
 
-int PreskumanaBunka::GetId() {
+int CoveredArea::GetId() {
     return id;
 }
 
-void PreskumanaBunka::SetId(int id) {
+void CoveredArea::SetId(int id) {
     this->id = id;
 }
 
-int PreskumanaBunka::GetIdSpustenia() {
+int CoveredArea::GetIdMapping() {
     return idSpustenia;
 }
 
-void PreskumanaBunka::SetIdSpustenia(int idSpustenia) {
+void CoveredArea::SetIdMapping(int idSpustenia) {
     this->idSpustenia = idSpustenia;
 }
 
-int PreskumanaBunka::GetK() {
+int CoveredArea::GetK() {
     return k;
 }
 
-void PreskumanaBunka::SetK(int k) {
+void CoveredArea::SetK(int k) {
     this->k = k;
 }
 
-int PreskumanaBunka::GetL() {
+int CoveredArea::GetL() {
     return l;
 }
 
-void PreskumanaBunka::SetL(int l) {
+void CoveredArea::SetL(int l) {
     this->l = l;
 }
 
-int PreskumanaBunka::GetN() {
+int CoveredArea::GetN() {
     return n;
 }
 
-void PreskumanaBunka::SetN(int n) {
+void CoveredArea::SetN(int n) {
     this->n = n;
 }
 
-bool PreskumanaBunka::IsObsadene() {
+bool CoveredArea::IsCovered() {
     return obsadene;
 }
 
-void PreskumanaBunka::SetObsadene(bool obsadene) {
+void CoveredArea::SetCovered(bool obsadene) {
     this->obsadene = obsadene;
 }
 
-int PreskumanaBunka::GetRadius() {
+int CoveredArea::GetRadius() {
     return radius;
 }
 
-void PreskumanaBunka::SetRadius(int radius) {
+void CoveredArea::SetRadius(int radius) {
     this->radius = radius;
 }
 
-int PreskumanaBunka::GetRozmerBunky() {
+int CoveredArea::GetRozmerBunky() {
     return rozmerBunky;
 }
 
-void PreskumanaBunka::SetRozmerBunky(int rozmerBunky) {
+void CoveredArea::SetRozmerBunky(int rozmerBunky) {
     this->rozmerBunky = rozmerBunky;
 }
 
-int PreskumanaBunka::GetX0() {
+int CoveredArea::GetX0() {
     return x0;
 }
 
-void PreskumanaBunka::SetX0(int x0) {
+void CoveredArea::SetX0(int x0) {
     this->x0 = x0;
 }
 
-int PreskumanaBunka::GetY0() {
+int CoveredArea::GetY0() {
     return y0;
 }
 
-void PreskumanaBunka::SetY0(int y0) {
+void CoveredArea::SetY0(int y0) {
     this->y0 = y0;
 }
 
-PreskumanaBunka::~PreskumanaBunka() {
+CoveredArea::~CoveredArea() {
 }
 

@@ -5,41 +5,41 @@
  * Created on Štvrtok, 2015, apríl 2, 16:50
  */
 
-#include "KoordinacnaSur.h"
+#include "CoordinationPosition.h"
 
-KoordinacnaSur::KoordinacnaSur(int x, int y) {
+CoordinationPosition::CoordinationPosition(int x, int y) {
     this->x = x;
     this->y = y;
     this->valid = true;
 }
 
-KoordinacnaSur::KoordinacnaSur(int x, int y, bool valid) {
+CoordinationPosition::CoordinationPosition(int x, int y, bool valid) {
     this->x = x;
     this->y = y;
     this->valid = valid;
 }
 
-int KoordinacnaSur::GetX() {
+int CoordinationPosition::GetX() {
     return x;
 }
 
-int KoordinacnaSur::GetY() {
+int CoordinationPosition::GetY() {
     return y;
 }
 
-bool KoordinacnaSur::isValid() {
+bool CoordinationPosition::isValid() {
     return valid;
 }
 
-void KoordinacnaSur::setInvalid() {
+void CoordinationPosition::setInvalid() {
     this->valid = false;
 }
 
-KoordinacnaSur* KoordinacnaSur::newInvalid() {
-    return new KoordinacnaSur(0, 0, false);
+CoordinationPosition* CoordinationPosition::newInvalid() {
+    return new CoordinationPosition(0, 0, false);
 }
 
-std::string KoordinacnaSur::toJson(){
+std::string CoordinationPosition::toJson(){
     std::string pom;
     
     std::string json = "{\n";
@@ -59,7 +59,7 @@ std::string KoordinacnaSur::toJson(){
     return json;
 }
 
-bool KoordinacnaSur::equals(KoordinacnaSur *sur2) {
+bool CoordinationPosition::equals(CoordinationPosition *sur2) {
     if (x==sur2->GetX() && y==sur2->GetY()) {
         return true;
     } else {
@@ -67,7 +67,7 @@ bool KoordinacnaSur::equals(KoordinacnaSur *sur2) {
     }
 }
 
-KoordinacnaSur* KoordinacnaSur::fromJson(std::string json) {
+CoordinationPosition* CoordinationPosition::fromJson(std::string json) {
     int x;
     int y;
     int valid;
@@ -79,13 +79,13 @@ KoordinacnaSur* KoordinacnaSur::fromJson(std::string json) {
     y = document["Y"].GetInt();
     valid = document["VALID"].GetBool();
     
-    return new KoordinacnaSur(x, y, valid);
+    return new CoordinationPosition(x, y, valid);
 }
 
-std::string KoordinacnaSur::toString(){
+std::string CoordinationPosition::toString(){
     return toJson();
 }
 
-KoordinacnaSur::~KoordinacnaSur() {
+CoordinationPosition::~CoordinationPosition() {
 }
 

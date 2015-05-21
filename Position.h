@@ -17,26 +17,26 @@
 #include <unistd.h>
 #include <iostream>
 
-#include "KoordinacnaSur.h"
+#include "CoordinationPosition.h"
 
-class Poloha {
+class Position {
 public:
-    Poloha(int id, int id_spustenia, int robot, float x, float y, float fi);
-    virtual ~Poloha();
+    Position(int id, int id_spustenia, int robot, float x, float y, float fi);
+    virtual ~Position();
     
     const char * toJson();
-    static Poloha * fromJson(const char *json);
+    static Position * fromJson(const char *json);
     const char * toString();
     
-    float getVzdialenost(Poloha *p2); // returns distance from other position
-    float getVzdialenost(KoordinacnaSur *koorSur); // returns distance from coordination position
+    float getDistance(Position *p2); // returns distance from other position
+    float getDistance(CoordinationPosition *koorSur); // returns distance from coordination position
     
     float GetFi();
     void SetFi(float fi);
     int GetId();
     void SetId(int id);
-    int GetId_spustenia();
-    void SetId_spustenia(int id_spustenia);
+    int GetId_ofMapping();
+    void SetId_ofMapping(int id_spustenia);
     int GetRobot();
     void SetRobot(int robot);
     float GetX();

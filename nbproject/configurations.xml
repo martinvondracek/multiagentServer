@@ -8,11 +8,11 @@
         <itemPath>DbConnector.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="PrekazkyPolohy" projectFiles="true">
-        <itemPath>KoordinacnaSur.h</itemPath>
-        <itemPath>Poloha.h</itemPath>
-        <itemPath>Prekazka.h</itemPath>
-        <itemPath>PreskumanaBunka.h</itemPath>
-        <itemPath>PreskumaneOblasti.h</itemPath>
+        <itemPath>CoordinationPosition.h</itemPath>
+        <itemPath>CoveredArea.h</itemPath>
+        <itemPath>CoveredAreas.h</itemPath>
+        <itemPath>Obstacle.h</itemPath>
+        <itemPath>Position.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="Server" projectFiles="true">
         <itemPath>NavigaciaUtil.h</itemPath>
@@ -97,33 +97,33 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="CoordinationPosition.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CoveredArea.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CoveredAreas.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="DbConnector.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="DbConnector.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="KoordinacnaSur.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="KoordinacnaSur.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="NavigaciaUtil.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="NavigaciaUtil.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Obstacle.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Poloha.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Poloha.h" ex="false" tool="3" flavor2="0">
+      <item path="Position.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Prekazka.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Prekazka.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="PreskumanaBunka.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="PreskumanaBunka.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="PreskumaneOblasti.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="PreskumaneOblasti.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -179,33 +179,33 @@
           <output>${TESTDIR}/TestFiles/f1</output>
         </linkerTool>
       </compileType>
+      <item path="CoordinationPosition.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CoveredArea.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CoveredAreas.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="DbConnector.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="DbConnector.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="KoordinacnaSur.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="KoordinacnaSur.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="NavigaciaUtil.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="NavigaciaUtil.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Obstacle.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Poloha.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Poloha.h" ex="false" tool="3" flavor2="0">
+      <item path="Position.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Prekazka.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Prekazka.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="PreskumanaBunka.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="PreskumanaBunka.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="PreskumaneOblasti.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="PreskumaneOblasti.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.cpp" ex="false" tool="1" flavor2="0">
       </item>

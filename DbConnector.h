@@ -20,9 +20,9 @@
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
 
-#include "Poloha.h"
-#include "Prekazka.h"
-#include "PreskumaneOblasti.h"
+#include "Position.h"
+#include "Obstacle.h"
+#include "CoveredAreas.h"
 
 #define DB_HOST "tcp://localhost:3306"
 #define DB_USERNAME "martin"
@@ -35,14 +35,14 @@ public:
     virtual ~DbConnector();
     void test(); // only for delevopment
     bool isConnected(); // returns if is connected to database
-    int getNewSpustenieId(); //returns new ID of mapping
-    int updateSpustenieEnd(int idSpustenia); // updates end time of mapping
-    int getNewPrekazkaId(int idSpustenia); //find out highest id of obstacle
+    int getNewMappingId(); //returns new ID of mapping
+    int updateMappingEnd(int idSpustenia); // updates end time of mapping
+    int getNewObstacleId(int idSpustenia); //find out highest id of obstacle
                             //and returns higher
-    int savePoloha(Poloha *poloha); // saves position of robot
-    int savePrekazka(Prekazka *prekazka); // saves obstacle
-    int savePreskumanaBunka(PreskumanaBunka *bunka); //saves coverage area
-    int savePreskumaneOblasti(PreskumaneOblasti *oblasti); // saves all areas
+    int savePosition(Position *poloha); // saves position of robot
+    int saveObstacle(Obstacle *prekazka); // saves obstacle
+    int saveCoveredArea(CoveredArea *bunka); //saves coverage area
+    int saveCoveredAreas(CoveredAreas *oblasti); // saves all areas
 private:
     bool connected = false;
     std::mutex m;

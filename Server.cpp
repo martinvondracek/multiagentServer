@@ -7,8 +7,8 @@
 
 #include "Server.h"
 #include "serverForm.h"
-#include "KoordinacnaSur.h"
-#include "NavigaciaUtil.h"
+#include "CoordinationPosition.h"
+#include "NavigationUtil.h"
 
 void *vlaknoZrusitMapovanie(void *arg) {
     serverForm *server = (serverForm *) arg;
@@ -112,8 +112,8 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                 // ak pride poloha
                 if (ctype.compare("POLOHACLASS") == 0) {
                     // rozparsujeme a ulozime do premennej aj DB
-                    Poloha *poloha = Poloha::fromJson(token.c_str());
-                    shm_S_GUI->dbConnector->savePoloha(poloha);
+                    Position *poloha = Position::fromJson(token.c_str());
+                    shm_S_GUI->dbConnector->savePosition(poloha);
                     // zaroven ju posleme ostatnym robotom
                     std::list<agent_in_shm>::iterator i;
                     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
@@ -123,7 +123,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                         } else {
                             //std::cout << "ignorujem preposlanie\n";
                             // ak je to on tak mu ulozim polohu
-                            i->aktPoloha = Poloha::fromJson(token.c_str());
+                            i->aktPoloha = Position::fromJson(token.c_str());
                         }
                     }
                     // ulozime do uz zmapovanych casti priestoru
@@ -133,8 +133,8 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                 // ak pride prekazka
                 if (ctype.compare("PREKAZKACLASS") == 0) {
                     // rozparsujeme a ulozime do premennej aj DB
-                    Prekazka *prekazka = Prekazka::fromJson(token.c_str());
-                    shm_S_GUI->dbConnector->savePrekazka(prekazka);
+                    Obstacle *prekazka = Obstacle::fromJson(token.c_str());
+                    shm_S_GUI->dbConnector->saveObstacle(prekazka);
                     // zaroven ju posleme ostatnym robotom
                     std::list<agent_in_shm>::iterator i;
                     for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
@@ -150,7 +150,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                 // ak pride ziadost o nove id prekazky
                 if (ctype.compare("NEW_ID_PREKAZKY") == 0) {
                     //ziskame z DB a posleme spat
-                    int idPrekazky = shm_S_GUI->dbConnector->getNewPrekazkaId(shm_S_GUI->idSpustenia);
+                    int idPrekazky = shm_S_GUI->dbConnector->getNewObstacleId(shm_S_GUI->idSpustenia);
                     std::cout << "nove id prekazky: " << idPrekazky << " id spustenia " << shm_S_GUI->idSpustenia << " agent id=" << agent.id << "\n";
                     shm_S_GUI->socket->sendJson(agent.sockFd, SocketUtil::createJsonNewIdPrekazky(idPrekazky));
                     //std::cout << "poslane nove id prekazky: " << idPrekazky << "\n";
@@ -169,10 +169,10 @@ void *vlaknoNavigaciaMapovania(void *arg) {
     komunikacia_shm *shm_S_GUI = (komunikacia_shm *) arg;
 
     // z DB ziskame nove id spustenia a posleme ho spolu s info o zacati mapovania
-    shm_S_GUI->idSpustenia = shm_S_GUI->dbConnector->getNewSpustenieId();
+    shm_S_GUI->idSpustenia = shm_S_GUI->dbConnector->getNewMappingId();
     shm_S_GUI->widget->idSpusteniaLabel->setText(std::to_string(shm_S_GUI->idSpustenia).c_str());
     int radius = shm_S_GUI->widget->radiusEdit->text().toInt();
-    shm_S_GUI->oblasti = new PreskumaneOblasti(0, 0, radius, shm_S_GUI->idSpustenia);
+    shm_S_GUI->oblasti = new CoveredAreas(0, 0, radius, shm_S_GUI->idSpustenia);
     
     // spustime mapovanie v agentoch
     std::list<agent_in_shm>::iterator i;
@@ -188,7 +188,7 @@ void *vlaknoNavigaciaMapovania(void *arg) {
         if (cyklus == 3) { 
             std::cout << "navigacia inicializuje koor sur\n";
             // inicializujeme koorSur a posleme ich agentom
-            NavigaciaUtil::initializeKoorSuradnice(shm_S_GUI->oblasti, &(shm_S_GUI->agentsList));
+            NavigationUtil::initializeKoorSuradnice(shm_S_GUI->oblasti, &(shm_S_GUI->agentsList));
             std::list<agent_in_shm>::iterator i;
             for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
                 shm_S_GUI->socket->sendJson(i->sockFd, i->koordinacnaSuradnica->toJson());
@@ -207,7 +207,7 @@ void *vlaknoNavigaciaMapovania(void *arg) {
         if (cyklus == 10) { // každé 3 sekundy počítame
             // updatneme koorSur a posleme ich agentom
             std::cout << "navigacia\n";
-            NavigaciaUtil::updateKoorSuradnice(shm_S_GUI->oblasti, &(shm_S_GUI->agentsList));
+            NavigationUtil::updateKoorSuradnice(shm_S_GUI->oblasti, &(shm_S_GUI->agentsList));
             std::list<agent_in_shm>::iterator i;
             for (i = shm_S_GUI->agentsList.begin(); i != shm_S_GUI->agentsList.end(); ++i) {
                 shm_S_GUI->socket->sendJson(i->sockFd, i->koordinacnaSuradnica->toJson());
@@ -247,8 +247,8 @@ void *vlaknoCakanieNaAgentov(void *arg) {
             agent_in_shm agent;
             agent.id = shm_S_GUI->lastAgentId;
             agent.sockFd = newSocketFd;
-            agent.koordinacnaSuradnica = KoordinacnaSur::newInvalid();
-            agent.aktPoloha = new Poloha(0, shm_S_GUI->idSpustenia, agent.id, 0, 0, 0);
+            agent.koordinacnaSuradnica = CoordinationPosition::newInvalid();
+            agent.aktPoloha = new Position(0, shm_S_GUI->idSpustenia, agent.id, 0, 0, 0);
             std::cout << "newsocfd " << newSocketFd << "\n";
             std::string jsondata = SocketUtil::createJsonAgentId_IdSpustenia(agent.id, shm_S_GUI->idSpustenia);
             shm_S_GUI->socket->sendJson(agent.sockFd, jsondata);
@@ -288,7 +288,7 @@ Server::Server(komunikacia_shm *shm_S_GUI) {
     this->socket = new SocketConnector();
     this->shm_S_GUI->socket = socket;
     this->shm_S_GUI->dbConnector = dbConnector;
-    this->shm_S_GUI->oblasti = new PreskumaneOblasti(0, 0, 4000, 0);
+    this->shm_S_GUI->oblasti = new CoveredAreas(0, 0, 4000, 0);
 }
 
 int Server::getPortNumber() {
@@ -315,7 +315,7 @@ int Server::startServer(int portNumber, int maxAgents) {
     socket->connect();
     if (socket->getConnected()) {
         serverRunning = true;
-        shm_S_GUI->idSpustenia = dbConnector->getNewSpustenieId();
+        shm_S_GUI->idSpustenia = dbConnector->getNewMappingId();
         std::cout << "idSpustenia: " << this->shm_S_GUI->idSpustenia << "\n";
         pthread_attr_t parametre;
         if (pthread_attr_init(&parametre)) exit(-1);
@@ -380,8 +380,8 @@ int Server::stopMapping() {
             socket->sendJson(i->sockFd, SocketUtil::createJsonStopMapping());
         }
         // zrusime mapovaci thread - sam sa ukonci
-        shm_S_GUI->dbConnector->savePreskumaneOblasti(shm_S_GUI->oblasti);
-        shm_S_GUI->dbConnector->updateSpustenieEnd(shm_S_GUI->idSpustenia);
+        shm_S_GUI->dbConnector->saveCoveredAreas(shm_S_GUI->oblasti);
+        shm_S_GUI->dbConnector->updateMappingEnd(shm_S_GUI->idSpustenia);
         shm_S_GUI->ukonci_ulohu = true;
         shm_S_GUI->oblasti->print();
     }

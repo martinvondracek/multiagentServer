@@ -8,7 +8,7 @@
 #include <QApplication>
 
 #include "serverForm.h"
-#include "PreskumaneOblasti.h"
+#include "CoveredAreas.h"
 
 int main(int argc, char *argv[]) {
     // initialize resources, if needed

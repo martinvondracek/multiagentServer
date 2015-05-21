@@ -19,16 +19,16 @@
 #include "SocketUtil.h"
 #include "DbConnector.h"
 #include "ui_serverForm.h"
-#include "PreskumaneOblasti.h"
-#include "KoordinacnaSur.h"
+#include "CoveredAreas.h"
+#include "CoordinationPosition.h"
 
 // storing data of connected agent
 struct agent_in_shm {
     int id;
     int sockFd;
     pthread_t vlaknoPrijimanie; // na vlakno ktore prijima info z agentov
-    KoordinacnaSur *koordinacnaSuradnica;
-    Poloha *aktPoloha;
+    CoordinationPosition *koordinacnaSuradnica;
+    Position *aktPoloha;
 };
 
 // shm for use of threads of server
@@ -43,7 +43,7 @@ struct komunikacia_shm {
     DbConnector *dbConnector;
     Ui::serverForm *widget;
     std::list<agent_in_shm> agentsList;
-    PreskumaneOblasti *oblasti;
+    CoveredAreas *oblasti;
     void *serverForm;
 };
 
