@@ -3,6 +3,8 @@
  * Author: root
  *
  * Created on Nedeľa, 2015, marec 29, 9:37
+ * 
+ * for saving covered / uncovered area
  */
 
 #ifndef PRESKUMANABUNKA_H

@@ -3,6 +3,8 @@
  * Author: root
  *
  * Created on Sobota, 2015, január 24, 10:45
+ * 
+ * for storing obstacles found by agent
  */
 
 #ifndef PREKAZKACLASS_H
@@ -26,7 +28,7 @@ public:
     static Prekazka * fromJson(const char *json);
     const char * toString();
     
-    float getVzdialenost(Prekazka *p2);
+    float getVzdialenost(Prekazka *p2); // return distance from other obstacle
     
     float GetFi_rob();
     void SetFi_rob(float fi_rob);

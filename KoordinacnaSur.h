@@ -3,6 +3,8 @@
  * Author: root
  *
  * Created on Štvrtok, 2015, apríl 2, 16:50
+ * 
+ * position for coordinating agents
  */
 
 #ifndef KOORDINACNASUR_H
@@ -24,9 +26,9 @@ public:
     bool isValid();
     void setInvalid();
     
-    static KoordinacnaSur* newInvalid();
+    static KoordinacnaSur* newInvalid(); // returns invalid position
     
-    bool equals(KoordinacnaSur *sur2);
+    bool equals(KoordinacnaSur *sur2); // if two positions are equal
     std::string toJson();
     static KoordinacnaSur* fromJson(std::string json);
     std::string toString();

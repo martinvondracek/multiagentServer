@@ -3,6 +3,9 @@
  * Author: root
  *
  * Created on Streda, 2015, január 7, 21:08
+ * 
+ * connector to socket
+ * for communication via tcp/ip socket
  */
 
 #ifndef SOCKETCLASS_H
@@ -25,13 +28,13 @@ public:
     SocketConnector(int portNum);
     virtual ~SocketConnector();
     
-    int connect(); // pripoji sa na socket
-    int disconnect(); // odpoji sa zo socketu
-    int disconnectFd(int sockfd); // odpoji zadany sockFd
+    int connect(); // connects to socket
+    int disconnect(); // disconnects from socket
+    int disconnectFd(int sockfd); // disconnects from given sockfd
     //int sendJson(int sockfd, const char *jsonData);
-    int sendJson(int sockfd, std::string jsonData);
-    int receiveJson(int sockfd, char *buffer, int bufSize);
-    int waitAndAcceptClient();
+    int sendJson(int sockfd, std::string jsonData); // sends json as string
+    int receiveJson(int sockfd, char *buffer, int bufSize); //receives json as string
+    int waitAndAcceptClient(); // waits and accepts new agent
     
     bool getConnected();
     int getPortNumber();

@@ -3,6 +3,8 @@
  * Author: root
  *
  * Created on Nedeľa, 2015, január 18, 21:04
+ * 
+ * connector to MySQL database
  */
 
 #ifndef DBCONNECTORCLASS_H
@@ -31,16 +33,16 @@ class DbConnector {
 public:
     DbConnector();
     virtual ~DbConnector();
-    void test();
-    bool isConnected(); // vrati ci je pripojeny k DB
-    int getNewSpustenieId(); //vytvori a vrati nove ID spustenia
-    int updateSpustenieEnd(int idSpustenia);
-    int getNewPrekazkaId(int idSpustenia); //zisti ake je aktualne najvyssie cislo prekazky
-                            //pre dane spustenie a vrati o 1 vacsie
-    int savePoloha(Poloha *poloha); // ulozi polohu robota do DB pre spustenie
-    int savePrekazka(Prekazka *prekazka); // ulozi prekazku do DB pre spustenie
-    int savePreskumanaBunka(PreskumanaBunka *bunka);
-    int savePreskumaneOblasti(PreskumaneOblasti *oblasti);
+    void test(); // only for delevopment
+    bool isConnected(); // returns if is connected to database
+    int getNewSpustenieId(); //returns new ID of mapping
+    int updateSpustenieEnd(int idSpustenia); // updates end time of mapping
+    int getNewPrekazkaId(int idSpustenia); //find out highest id of obstacle
+                            //and returns higher
+    int savePoloha(Poloha *poloha); // saves position of robot
+    int savePrekazka(Prekazka *prekazka); // saves obstacle
+    int savePreskumanaBunka(PreskumanaBunka *bunka); //saves coverage area
+    int savePreskumaneOblasti(PreskumaneOblasti *oblasti); // saves all areas
 private:
     bool connected = false;
     std::mutex m;
@@ -48,8 +50,8 @@ private:
     sql::Driver *driver;
     sql::Connection *con;
     
-    int connect();
-    int createTables();
+    int connect(); //connects to database
+    int createTables(); //creates necessary table in DB if not existing
 };
 
 #endif	/* DBCONNECTORCLASS_H */

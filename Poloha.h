@@ -3,6 +3,8 @@
  * Author: root
  *
  * Created on Sobota, 2015, január 24, 10:45
+ * 
+ * for saving position of robot
  */
 
 #ifndef POLOHACLASS_H
@@ -26,8 +28,8 @@ public:
     static Poloha * fromJson(const char *json);
     const char * toString();
     
-    float getVzdialenost(Poloha *p2);
-    float getVzdialenost(KoordinacnaSur *koorSur);
+    float getVzdialenost(Poloha *p2); // returns distance from other position
+    float getVzdialenost(KoordinacnaSur *koorSur); // returns distance from coordination position
     
     float GetFi();
     void SetFi(float fi);
@@ -43,9 +45,9 @@ public:
     void SetY(float y);
 private:
     int id;
-    int id_spustenia;
-    int robot;
-    float x;
+    int id_spustenia; // id of mapping
+    int robot; // id of agent
+    float x; // position of agent
     float y;
     float fi;
 };

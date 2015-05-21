@@ -3,6 +3,8 @@
  * Author: root
  *
  * Created on Pondelok, 2015, január 5, 23:20
+ * 
+ * GUI form
  */
 
 #ifndef _SERVERFORM_H
@@ -28,14 +30,14 @@ public:
     serverForm();
     virtual ~serverForm();
 public slots:
-    void startServerClicked(); //spusti server
-    void startMappingClicked(); //spusti mapovanie
-    void stopMappingClicked(); //zastavi mapovanie
+    void startServerClicked(); // starts server
+    void startMappingClicked(); //starts mapping
+    void stopMappingClicked(); // stops mapping
 private:
     Ui::serverForm widget;
     
     Server *server;
-    komunikacia_shm *shm_S_GUI; //shm medzi gui a serverom
+    komunikacia_shm *shm_S_GUI; //shm between gui and server
 };
 
 #endif	/* _SERVERFORM_H */

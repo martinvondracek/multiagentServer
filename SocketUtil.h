@@ -20,17 +20,17 @@ public:
     SocketUtil();
     virtual ~SocketUtil();
     
-    static std::string  createJsonAgentId_IdSpustenia(int id, int idSpustenia);
-    static std::string  createJsonIdSpustenia(int idSpustenia);
-    static std::string  createJsonNewIdPrekazky(int idPrekazky);
-    static std::string  createJsonServerQuit();
-    static std::string  createJsonStartMapping();
-    static std::string  createJsonStopMapping();
+    static std::string  createJsonAgentId_IdSpustenia(int id, int idSpustenia); // creates agent his id and id of mapping
+    static std::string  createJsonIdSpustenia(int idSpustenia); // creates agent new id of mapping
+    static std::string  createJsonNewIdPrekazky(int idPrekazky); // creates agent new id of obstacle
+    static std::string  createJsonServerQuit(); // creates agent server quits
+    static std::string  createJsonStartMapping(); // creates json for starting mapping
+    static std::string  createJsonStopMapping(); // creates json for stopping mapping
     
-    static std::string parseClassTypeFromJson(const char *json);
-    static int parseIdFromQuit(const char *json);
-    static int parseAgentIdFromInvalidKoorSur(const char *json);
-    static int parseAgentIdFromInaccesibleKoorSur(const char *json);
+    static std::string parseClassTypeFromJson(const char *json); // parse type of json information
+    static int parseIdFromQuit(const char *json); //parse id of agent that quits
+    static int parseAgentIdFromInvalidKoorSur(const char *json); // parse agent id sending invalid coordiantion position
+    static int parseAgentIdFromInaccesibleKoorSur(const char *json);// parse agent id sending inaccesible coordiantion position
 private:
 
 };

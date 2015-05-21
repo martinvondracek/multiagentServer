@@ -3,6 +3,8 @@
  * Author: root
  *
  * Created on Utorok, 2015, január 27, 17:16
+ * 
+ * methods for functioning of server
  */
 
 #ifndef SERVERCLASS_H
@@ -20,6 +22,7 @@
 #include "PreskumaneOblasti.h"
 #include "KoordinacnaSur.h"
 
+// storing data of connected agent
 struct agent_in_shm {
     int id;
     int sockFd;
@@ -28,6 +31,7 @@ struct agent_in_shm {
     Poloha *aktPoloha;
 };
 
+// shm for use of threads of server
 struct komunikacia_shm {
     int idSpustenia;
     bool ukonci_ulohu;
@@ -43,6 +47,7 @@ struct komunikacia_shm {
     void *serverForm;
 };
 
+// for passing params to thread for accepting new agents
 struct param_vlakno_prijimanie {
     agent_in_shm agent_info;
     komunikacia_shm *shm_S_A;
