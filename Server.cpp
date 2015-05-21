@@ -127,7 +127,7 @@ void *vlaknoPrijimanieDatAgentov(void *arg) {
                         }
                     }
                     // ulozime do uz zmapovanych casti priestoru
-                    shm_S_GUI->oblasti->addPoloha(poloha);
+                    shm_S_GUI->oblasti->addPosition(poloha);
                 }
 
                 // ak pride prekazka
